@@ -3,13 +3,12 @@
  */
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { CodeTypeBadge } from '@/components/codes/code-type-badge';
-import { CodeStatusBadge } from '@/components/codes/code-status-badge';
 import { CodeImportWizard } from '@/components/codes/code-import-wizard';
 import { CodeFilters } from '@/components/codes/code-filters';
 import type { MedicalCode, CodeSearchResult, CodeStatistics, CodeFilters as CodeFiltersType } from '@/types/codes';
@@ -52,11 +51,13 @@ export default function CodesPage() {
     }, 500); // 500ms debounce
 
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   // Fetch codes when filters or page changes
   useEffect(() => {
     fetchCodes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, page]);
 
   // Fetch statistics on mount

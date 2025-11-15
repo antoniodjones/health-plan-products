@@ -41,8 +41,12 @@ export interface MedicalCode {
   category?: string | null;
   subcategory?: string | null;
   status: CodeStatus;
+  isActive: boolean; // Database field
   effectiveDate: Date;
+  terminationDate?: Date | null; // Database field (replaces expirationDate)
   expirationDate?: Date | null;
+  version?: string; // Database field
+  sourceSystem?: string | null; // Database field (replaces source)
   source: CodeSource;
   sourceVersion?: string | null;
   additionalData?: Record<string, any>;

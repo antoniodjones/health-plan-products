@@ -4,7 +4,14 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import type { CodeSearchParams, MedicalCode } from '@/types/codes';
 
-const prisma = new PrismaClient();
+// Singleton pattern to prevent connection pool exhaustion
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 /**
  * Search and filter medical codes

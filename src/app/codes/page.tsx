@@ -3,7 +3,7 @@
  */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { CodeTypeBadge } from '@/components/codes/code-type-badge';
 import { CodeStatusBadge } from '@/components/codes/code-status-badge';
 import { CodeImportWizard } from '@/components/codes/code-import-wizard';
-import type { MedicalCode, CodeSearchResult, CodeStatistics } from '@/types/codes';
+import { CodeFilters } from '@/components/codes/code-filters';
+import type { MedicalCode, CodeSearchResult, CodeStatistics, CodeFilters as CodeFiltersType } from '@/types/codes';
 import {
   Plus,
   Search,
@@ -34,14 +35,33 @@ export default function CodesPage() {
   const [codes, setCodes] = useState<MedicalCode[]>([]);
   const [statistics, setStatistics] = useState<CodeStatistics | null>(null);
   const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState<CodeFiltersType>({});
+  const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [importOpen, setImportOpen] = useState(false);
 
+  // Debounced search effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (search !== (filters.search || '')) {
+        setFilters((prev) => ({ ...prev, search }));
+        setPage(1); // Reset to page 1 on search
+      }
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Fetch codes when filters or page changes
+  useEffect(() => {
+    fetchCodes();
+  }, [filters, page]);
+
+  // Fetch statistics on mount
   useEffect(() => {
     fetchStatistics();
-    fetchCodes();
   }, []);
 
   const fetchStatistics = async () => {
@@ -60,7 +80,14 @@ export default function CodesPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (search) params.append('search', search);
+      
+      // Add all filter params
+      if (filters.search) params.append('search', filters.search);
+      if (filters.codeType?.length) {
+        filters.codeType.forEach(type => params.append('codeType', type));
+      }
+      if (filters.category) params.append('category', filters.category);
+      
       params.append('page', String(page));
       params.append('pageSize', '20');
 
@@ -75,6 +102,17 @@ export default function CodesPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFiltersChange = (newFilters: CodeFiltersType) => {
+    setFilters(newFilters);
+    setPage(1); // Reset to page 1 when filters change
+  };
+
+  const handleResetFilters = () => {
+    setFilters({});
+    setSearch('');
+    setPage(1);
   };
 
   const handleImportSuccess = () => {
@@ -185,8 +223,23 @@ export default function CodesPage() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline">Advanced Filters</Button>
+        <Button 
+          variant="outline" 
+          onClick={() => setShowFilters(!showFilters)}
+          className={showFilters ? 'bg-primary/10' : ''}
+        >
+          Advanced Filters
+        </Button>
       </div>
+
+      {/* Advanced Filters Panel */}
+      {showFilters && (
+        <CodeFilters
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
+          onReset={handleResetFilters}
+        />
+      )}
 
       {/* Codes List */}
       {loading ? (

@@ -15,6 +15,7 @@ import {
   Bell,
   Search,
   User,
+  Award,
 } from 'lucide-react'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -23,6 +24,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Products', href: '/products', icon: Package },
   { name: 'Code Library', href: '/codes', icon: FileCode },
+  { name: 'Quality Measures', href: '/quality-measures', icon: Award },
   { name: 'Mappings', href: '/mappings', icon: Link2 },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },

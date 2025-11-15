@@ -32,13 +32,15 @@ export async function searchCodes(params: CodeSearchParams) {
     where.codeType = { in: codeType };
   }
 
-  if (status && status.length > 0) {
-    where.status = { in: status };
-  }
+  // Note: Database uses isActive instead of status
+  // if (status && status.length > 0) {
+  //   where.status = { in: status };
+  // }
 
-  if (source && source.length > 0) {
-    where.source = { in: source };
-  }
+  // Note: Database uses sourceSystem instead of source
+  // if (source && source.length > 0) {
+  //   where.source = { in: source };
+  // }
 
   if (category) {
     where.category = category;
@@ -62,9 +64,10 @@ export async function searchCodes(params: CodeSearchParams) {
     }
   }
 
-  if (typeof isCustom === 'boolean') {
-    where.isCustom = isCustom;
-  }
+  // Note: Database doesn't have isCustom field - it has CustomCode table
+  // if (typeof isCustom === 'boolean') {
+  //   where.isCustom = isCustom;
+  // }
 
   // Execute query with pagination
   const [codes, total] = await Promise.all([

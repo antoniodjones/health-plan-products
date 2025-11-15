@@ -28,6 +28,9 @@ export default function RootLayout({
               <Link href="/codes">
                 <Button variant="ghost">Code Library</Button>
               </Link>
+              <Link href="/mappings">
+                <Button variant="ghost">Mappings</Button>
+              </Link>
               <Link href="/products">
                 <Button variant="ghost">Products</Button>
               </Link>

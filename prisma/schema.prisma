@@ -42,22 +42,23 @@ model Organization {
 }
 
 model CodeSet {
-  id              String        @id @default(uuid())
+  id              String         @id @default(uuid())
   code            String
   codeType        CodeType
   description     String
   longDescription String?
   category        String?
-  isActive        Boolean       @default(true)
+  isActive        Boolean        @default(true)
   effectiveDate   DateTime
   terminationDate DateTime?
-  version         String        @default("1.0")
+  version         String         @default("1.0")
   sourceSystem    String?
   metadata        Json?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   mappings        CodeMapping[]
   customCodes     CustomCode[]
+  valueSetCodes   ValueSetCode[] // Quality Measures: Link to value sets
 
   @@unique([code, codeType, version])
   @@index([code, codeType])
@@ -155,6 +156,7 @@ model Product {
   organization      Organization?         @relation(fields: [organizationId], references: [id])
   publications      Publication[]
   ratingConfigs     RatingConfiguration[]
+  productMeasures   ProductMeasure[] // Quality Measures: Link to quality measures
 
   @@index([productId])
   @@index([status, isActive])
@@ -555,4 +557,186 @@ enum AuditAction {
   APPROVED
   REJECTED
   ARCHIVED
+}
+
+// ============================================================================
+// QUALITY MEASURES ENUMS
+// ============================================================================
+
+enum QualityProgram {
+  HEDIS
+  MIPS
+  PQRS
+  NQF
+  CMS_STAR
+  CUSTOM
+}
+
+enum MeasureDomain {
+  EFFECTIVENESS_OF_CARE
+  ACCESS_AVAILABILITY
+  EXPERIENCE_OF_CARE
+  UTILIZATION
+  HEALTH_PLAN_DESCRIPTIVE
+  CLINICAL_DATA_SYSTEMS
+  PREVENTION
+  CHRONIC_CARE
+  BEHAVIORAL_HEALTH
+  PATIENT_SAFETY
+}
+
+enum MeasureStatus {
+  ACTIVE
+  RETIRED
+  DRAFT
+  DEPRECATED
+}
+
+enum LogicType {
+  DENOMINATOR
+  NUMERATOR
+  EXCLUSION
+  EXCEPTION
+  STRATIFICATION
+}
+
+// ============================================================================
+// QUALITY MEASURES MODELS
+// ============================================================================
+
+model QualityMeasure {
+  id             String         @id @default(uuid())
+  measureId      String         @unique // e.g., "CDC-H9", "MIPS-001"
+  name           String // "Diabetes HbA1c Control"
+  description    String         @db.Text
+  program        QualityProgram
+  domain         MeasureDomain
+  version        String         @default("1.0")
+  effectiveDate  DateTime
+  retirementDate DateTime?
+  status         MeasureStatus  @default(ACTIVE)
+
+  // Metadata
+  nqfNumber String? // National Quality Forum ID
+  cmsNumber String? // CMS measure number
+  steward   String? // Measure steward (NCQA, CMS, etc.)
+
+  // Reporting
+  reportingMethod String? // "Claims", "Registry", "EHR", "Hybrid"
+  measureType     String? // "Process", "Outcome", "Structure"
+
+  // Performance
+  nationalBenchmark Float?
+  targetRate        Float?
+
+  // Relationships
+  measureLogic    MeasureLogic[]
+  productMeasures ProductMeasure[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([program, domain])
+  @@index([status, effectiveDate])
+  @@map("quality_measures")
+}
+
+model ValueSet {
+  id          String  @id @default(uuid())
+  valueSetId  String  @unique // e.g., "2.16.840.1.113883.3.464.1003.103.12.1001"
+  name        String // "Diabetes Diagnosis Codes"
+  description String? @db.Text
+  oid         String? // Object Identifier for interoperability
+  version     String  @default("1.0")
+  purpose     String? // "Denominator", "Numerator", etc.
+
+  effectiveDate  DateTime
+  expirationDate DateTime?
+
+  // Relationships
+  codes        ValueSetCode[]
+  measureLogic MeasureLogic[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([oid])
+  @@map("value_sets")
+}
+
+model ValueSetCode {
+  id         String @id @default(uuid())
+  valueSetId String
+  codeSetId  String
+
+  // Inclusion/Exclusion
+  included Boolean @default(true)
+  notes    String?
+
+  // Relationships
+  valueSet ValueSet @relation(fields: [valueSetId], references: [id], onDelete: Cascade)
+  codeSet  CodeSet  @relation(fields: [codeSetId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([valueSetId, codeSetId])
+  @@index([valueSetId])
+  @@index([codeSetId])
+  @@map("value_set_codes")
+}
+
+model MeasureLogic {
+  id        String    @id @default(uuid())
+  measureId String
+  logicType LogicType
+  sequence  Int       @default(0) // Order of logic evaluation
+
+  // Value Set Reference
+  valueSetId String?
+
+  // Logic Operators
+  operator       String? // "AND", "OR", "NOT", "AT_LEAST_ONE"
+  timeframeValue Int? // e.g., 365 days
+  timeframeUnit  String? // "DAYS", "MONTHS", "YEARS"
+
+  // Age/Demographics
+  ageMin Int?
+  ageMax Int?
+  gender String?
+
+  // Additional Criteria
+  criteriaJson Json? // Flexible JSON for complex logic
+
+  // Relationships
+  measure  QualityMeasure @relation(fields: [measureId], references: [id], onDelete: Cascade)
+  valueSet ValueSet?      @relation(fields: [valueSetId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([measureId, logicType])
+  @@map("measure_logic")
+}
+
+model ProductMeasure {
+  id        String @id @default(uuid())
+  productId String
+  measureId String
+
+  // Tracking
+  isRequired    Boolean @default(false)
+  reportingYear Int
+  targetRate    Float?
+
+  // Relationships
+  product Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  measure QualityMeasure @relation(fields: [measureId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, measureId, reportingYear])
+  @@index([productId])
+  @@index([measureId])
+  @@map("product_measures")
 }

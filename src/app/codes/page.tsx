@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { CodeFilters } from '@/components/codes/code-filters';
 import { CodesTable } from '@/components/codes/codes-table';
 import { CodeStatsCards } from '@/components/codes/code-stats-cards';
+import { CodeImportWizard } from '@/components/codes/code-import-wizard';
 import type {
   MedicalCode,
   CodeFilters as CodeFiltersType,
@@ -24,6 +25,7 @@ export default function CodesPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [importOpen, setImportOpen] = useState(false);
 
   // Fetch statistics
   useEffect(() => {
@@ -101,6 +103,11 @@ export default function CodesPage() {
     setPage(newPage);
   };
 
+  const handleImportSuccess = () => {
+    fetchStatistics();
+    fetchCodes();
+  };
+
   return (
     <div className="container mx-auto space-y-6 py-8">
       {/* Header */}
@@ -116,7 +123,7 @@ export default function CodesPage() {
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Button variant="secondary">
+          <Button variant="secondary" onClick={() => setImportOpen(true)}>
             <Upload className="mr-2 h-4 w-4" />
             Import Codes
           </Button>
@@ -126,6 +133,13 @@ export default function CodesPage() {
           </Button>
         </div>
       </div>
+
+      {/* Import Wizard */}
+      <CodeImportWizard
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onSuccess={handleImportSuccess}
+      />
 
       {/* Statistics Cards */}
       {statistics && <CodeStatsCards statistics={statistics} />}

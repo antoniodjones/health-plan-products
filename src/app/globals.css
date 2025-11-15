@@ -4,50 +4,54 @@
 
 @layer base {
   :root {
-    /* Apple-inspired Light Mode */
+    /* Custom Brand Colors - Light Mode */
     --background: 0 0% 100%;
     --foreground: 0 0% 9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 9%;
-    --primary: 221 83% 53%; /* Apple Blue */
+    --primary: 27 96% 61%; /* Brand Orange - Primary actions */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 199 89% 48%; /* Brand Blue - Secondary actions */
+    --secondary-foreground: 0 0% 100%;
+    --success: 142 76% 36%; /* Brand Green - Success states */
+    --success-foreground: 0 0% 100%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 199 89% 48%; /* Brand Blue for accents */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 221 83% 53%;
+    --ring: 27 96% 61%; /* Brand Orange for focus rings */
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Apple-inspired Dark Mode */
+    /* Custom Brand Colors - Dark Mode */
     --background: 0 0% 7%;
     --foreground: 0 0% 98%;
     --card: 0 0% 10%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 209 100% 60%; /* Apple Blue (Dark) */
+    --primary: 27 96% 61%; /* Brand Orange */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 199 89% 58%; /* Brand Blue (lighter for dark) */
+    --secondary-foreground: 0 0% 100%;
+    --success: 142 76% 46%; /* Brand Green (lighter for dark) */
+    --success-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 64%;
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 199 89% 58%; /* Brand Blue for accents */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 209 100% 60%;
+    --ring: 27 96% 61%; /* Brand Orange */
   }
 }
 

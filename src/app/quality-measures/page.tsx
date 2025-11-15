@@ -21,6 +21,7 @@ import { DomainBadge } from '@/components/quality-measures/domain-badge';
 import { MeasureStatusBadge } from '@/components/quality-measures/measure-status-badge';
 import { MeasureFilters } from '@/components/quality-measures/measure-filters';
 import { MeasureLogicViewer } from '@/components/quality-measures/measure-logic-viewer';
+import { MeasureCodesViewer } from '@/components/quality-measures/measure-codes-viewer';
 import type {
   QualityMeasure,
   QualityMeasureSearchResult,
@@ -499,11 +500,12 @@ export default function QualityMeasuresPage() {
                 <h3 className="text-xl font-bold text-gray-900">{selectedMeasure.name}</h3>
               </div>
 
-              {/* Tabs for Overview and Logic */}
+              {/* Tabs for Overview, Logic, Codes, and Products */}
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="logic">Measure Logic</TabsTrigger>
+                  <TabsTrigger value="codes">Billing Codes</TabsTrigger>
                   <TabsTrigger value="products">Products</TabsTrigger>
                 </TabsList>
 
@@ -601,6 +603,10 @@ export default function QualityMeasuresPage() {
 
                 <TabsContent value="logic" className="mt-6">
                   <MeasureLogicViewer logic={selectedMeasure.measureLogic || []} />
+                </TabsContent>
+
+                <TabsContent value="codes" className="mt-6">
+                  <MeasureCodesViewer logic={selectedMeasure.measureLogic || []} />
                 </TabsContent>
 
                 <TabsContent value="products" className="mt-6">

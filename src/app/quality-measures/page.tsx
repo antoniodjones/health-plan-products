@@ -15,10 +15,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProgramBadge } from '@/components/quality-measures/program-badge';
 import { DomainBadge } from '@/components/quality-measures/domain-badge';
 import { MeasureStatusBadge } from '@/components/quality-measures/measure-status-badge';
 import { MeasureFilters } from '@/components/quality-measures/measure-filters';
+import { MeasureLogicViewer } from '@/components/quality-measures/measure-logic-viewer';
 import type {
   QualityMeasure,
   QualityMeasureSearchResult,
@@ -484,7 +486,7 @@ export default function QualityMeasuresPage() {
           </DialogHeader>
 
           {selectedMeasure && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Badges */}
               <div className="flex items-center gap-2">
                 <ProgramBadge program={selectedMeasure.program} />
@@ -497,11 +499,20 @@ export default function QualityMeasuresPage() {
                 <h3 className="text-xl font-bold text-gray-900">{selectedMeasure.name}</h3>
               </div>
 
-              {/* Description */}
-              <div>
-                <h4 className="mb-2 text-sm font-semibold text-gray-700">Description</h4>
-                <p className="text-gray-900">{selectedMeasure.description}</p>
-              </div>
+              {/* Tabs for Overview and Logic */}
+              <Tabs defaultValue="overview" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="logic">Measure Logic</TabsTrigger>
+                  <TabsTrigger value="products">Products</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="overview" className="space-y-6 mt-6">
+                  {/* Description */}
+                  <div>
+                    <h4 className="mb-2 text-sm font-semibold text-gray-700">Description</h4>
+                    <p className="text-gray-900">{selectedMeasure.description}</p>
+                  </div>
 
               {/* Details Grid */}
               <div className="grid gap-4 sm:grid-cols-2">
@@ -562,33 +573,51 @@ export default function QualityMeasuresPage() {
                 )}
               </div>
 
-              {/* Performance Targets */}
-              {(selectedMeasure.nationalBenchmark || selectedMeasure.targetRate) && (
-                <div>
-                  <h4 className="mb-3 text-sm font-semibold text-gray-700">Performance Targets</h4>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {selectedMeasure.nationalBenchmark && (
-                      <div className="rounded-lg border bg-gray-50 p-4">
-                        <div className="text-sm text-gray-500">National Benchmark</div>
-                        <div className="text-2xl font-bold text-gray-900">
-                          {selectedMeasure.nationalBenchmark}%
-                        </div>
+                  {/* Performance Targets */}
+                  {(selectedMeasure.nationalBenchmark || selectedMeasure.targetRate) && (
+                    <div>
+                      <h4 className="mb-3 text-sm font-semibold text-gray-700">Performance Targets</h4>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {selectedMeasure.nationalBenchmark && (
+                          <div className="rounded-lg border bg-gray-50 p-4">
+                            <div className="text-sm text-gray-500">National Benchmark</div>
+                            <div className="text-2xl font-bold text-gray-900">
+                              {selectedMeasure.nationalBenchmark}%
+                            </div>
+                          </div>
+                        )}
+                        {selectedMeasure.targetRate && (
+                          <div className="rounded-lg border bg-primary/5 p-4">
+                            <div className="text-sm text-gray-500">Target Rate</div>
+                            <div className="text-2xl font-bold text-primary">
+                              {selectedMeasure.targetRate}%
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    {selectedMeasure.targetRate && (
-                      <div className="rounded-lg border bg-primary/5 p-4">
-                        <div className="text-sm text-gray-500">Target Rate</div>
-                        <div className="text-2xl font-bold text-primary">
-                          {selectedMeasure.targetRate}%
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="logic" className="mt-6">
+                  <MeasureLogicViewer logic={selectedMeasure.measureLogic || []} />
+                </TabsContent>
+
+                <TabsContent value="products" className="mt-6">
+                  <Card>
+                    <CardContent className="flex flex-col items-center justify-center py-12">
+                      <FileText className="mb-4 h-12 w-12 text-gray-400" />
+                      <p className="text-lg font-medium text-gray-900">Products using this measure</p>
+                      <p className="mt-2 text-sm text-gray-500">
+                        {selectedMeasure.productMeasures?.length || 0} products assigned
+                      </p>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-2 border-t pt-4">
+              <div className="flex items-center justify-end gap-2 border-t pt-4 mt-6">
                 <Button variant="outline" onClick={() => setSelectedMeasure(null)}>
                   Close
                 </Button>
@@ -597,7 +626,8 @@ export default function QualityMeasuresPage() {
                   Edit Measure
                 </Button>
                 <Button>
-                  View Logic & Value Sets
+                  <Download className="mr-2 h-4 w-4" />
+                  Export Specification
                 </Button>
               </div>
             </div>

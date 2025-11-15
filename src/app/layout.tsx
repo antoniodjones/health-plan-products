@@ -31,6 +31,9 @@ export default function RootLayout({
               <Link href="/mappings">
                 <Button variant="ghost">Mappings</Button>
               </Link>
+              <Link href="/analytics">
+                <Button variant="ghost">Analytics</Button>
+              </Link>
               <Link href="/products">
                 <Button variant="ghost">Products</Button>
               </Link>

@@ -7,8 +7,8 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to products page (main landing page)
-    router.push('/products');
+    // Redirect to dashboard (main landing page)
+    router.push('/dashboard');
   }, [router]);
 
   return (

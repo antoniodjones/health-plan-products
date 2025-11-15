@@ -149,23 +149,21 @@ export async function getCodeStatistics() {
     totalCodes,
     activeCount,
     inactiveCount,
-    customCount,
     byType,
     bySource,
     recentlyAdded,
     recentlyUpdated,
   ] = await Promise.all([
     prisma.codeSet.count(),
-    prisma.codeSet.count({ where: { status: 'ACTIVE' } }),
-    prisma.codeSet.count({ where: { status: 'INACTIVE' } }),
-    prisma.codeSet.count({ where: { isCustom: true } }),
+    prisma.codeSet.count({ where: { isActive: true } }),
+    prisma.codeSet.count({ where: { isActive: false } }),
     prisma.codeSet.groupBy({
       by: ['codeType'],
       _count: { codeType: true },
     }),
     prisma.codeSet.groupBy({
-      by: ['source'],
-      _count: { source: true },
+      by: ['sourceSystem'],
+      _count: { sourceSystem: true },
     }),
     prisma.codeSet.count({
       where: {
@@ -187,9 +185,9 @@ export async function getCodeStatistics() {
     totalCodes,
     activeCount,
     inactiveCount,
-    customCount,
+    customCount: 0, // Custom codes are in separate CustomCode table
     byType: Object.fromEntries(byType.map((t) => [t.codeType, t._count.codeType])),
-    bySource: Object.fromEntries(bySource.map((s) => [s.source, s._count.source])),
+    bySource: Object.fromEntries(bySource.map((s) => [s.sourceSystem || 'Unknown', s._count.sourceSystem])),
     recentlyAdded,
     recentlyUpdated,
   };

@@ -220,13 +220,9 @@ export default function CodesPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-mono font-semibold text-gray-900">{code.code}</span>
                         <CodeTypeBadge codeType={code.codeType} />
-                        <CodeStatusBadge status={code.status} />
-                        {code.isCustom && (
-                          <Badge variant="outline">
-                            <Tag className="mr-1 h-3 w-3" />
-                            Custom
-                          </Badge>
-                        )}
+                        <Badge variant="outline" className={code.isActive ? 'bg-success/20 text-success' : 'bg-muted text-muted-foreground'}>
+                          {code.isActive ? '✓ Active' : '✗ Inactive'}
+                        </Badge>
                       </div>
                       <p className="mt-1 text-sm text-gray-600">{code.description}</p>
                       <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">

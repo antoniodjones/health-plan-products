@@ -1,6 +1,3 @@
-// Products & Benefits Platform - Complete Database Schema
-// Covers all 12 Epics across 5 phases
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,30 +7,378 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ============================================================================
-// PHASE 0: AUTHENTICATION & USER MANAGEMENT
-// ============================================================================
-
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  passwordHash  String
-  firstName     String
-  lastName      String
-  role          UserRole  @default(PRODUCT_MANAGER)
-  organizationId String?
-  organization  Organization? @relation(fields: [organizationId], references: [id])
-  isActive      Boolean   @default(true)
-  lastLoginAt   DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  // Relationships
-  createdProducts   Product[]   @relation("ProductCreator")
-  createdMappings   CodeMapping[] @relation("MappingCreator")
-  auditLogs         AuditLog[]
+  id              String        @id @default(uuid())
+  email           String        @unique
+  passwordHash    String
+  firstName       String
+  lastName        String
+  role            UserRole      @default(PRODUCT_MANAGER)
+  organizationId  String?
+  isActive        Boolean       @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  auditLogs       AuditLog[]
+  createdMappings CodeMapping[] @relation("MappingCreator")
+  createdProducts Product[]     @relation("ProductCreator")
+  organization    Organization? @relation(fields: [organizationId], references: [id])
 
   @@map("users")
+}
+
+model Organization {
+  id        String    @id @default(uuid())
+  name      String
+  type      OrgType
+  domain    String?   @unique
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+  users     User[]
+
+  @@map("organizations")
+}
+
+model CodeSet {
+  id              String        @id @default(uuid())
+  code            String
+  codeType        CodeType
+  description     String
+  longDescription String?
+  category        String?
+  isActive        Boolean       @default(true)
+  effectiveDate   DateTime
+  terminationDate DateTime?
+  version         String        @default("1.0")
+  sourceSystem    String?
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  mappings        CodeMapping[]
+  customCodes     CustomCode[]
+
+  @@unique([code, codeType, version])
+  @@index([code, codeType])
+  @@index([codeType, isActive])
+  @@index([effectiveDate, terminationDate])
+  @@map("code_sets")
+}
+
+model CodeMapping {
+  id                String         @id @default(uuid())
+  codeSetId         String
+  benefitSegmentId  String
+  copay             Float?
+  coinsurance       Float?
+  deductibleApplies Boolean        @default(true)
+  oopApplies        Boolean        @default(true)
+  priorAuthRequired Boolean        @default(false)
+  stepTherapy       Boolean        @default(false)
+  quantityLimit     Int?
+  notes             String?
+  isActive          Boolean        @default(true)
+  priority          Int            @default(1)
+  createdById       String
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  benefitSegment    BenefitSegment @relation(fields: [benefitSegmentId], references: [id], onDelete: Cascade)
+  codeSet           CodeSet        @relation(fields: [codeSetId], references: [id], onDelete: Cascade)
+  createdBy         User           @relation("MappingCreator", fields: [createdById], references: [id])
+
+  @@unique([codeSetId, benefitSegmentId])
+  @@index([benefitSegmentId])
+  @@index([isActive])
+  @@map("code_mappings")
+}
+
+model BenefitSegment {
+  id                  String               @id @default(uuid())
+  name                String
+  category            BenefitCategory
+  displayOrder        Int
+  description         String?
+  isEssentialBenefit  Boolean              @default(false)
+  isMandated          Boolean              @default(false)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  benefitPackageItems BenefitPackageItem[]
+  mappings            CodeMapping[]
+
+  @@unique([name, category])
+  @@index([category])
+  @@map("benefit_segments")
+}
+
+model CustomCode {
+  id             String   @id @default(uuid())
+  customCode     String   @unique
+  name           String
+  description    String
+  codeSetId      String?
+  isPublic       Boolean  @default(false)
+  organizationId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  codeSet        CodeSet? @relation(fields: [codeSetId], references: [id])
+
+  @@index([organizationId])
+  @@index([isPublic])
+  @@map("custom_codes")
+}
+
+model Product {
+  id                String                @id @default(uuid())
+  productId         String                @unique
+  name              String
+  description       String?
+  lineOfBusiness    LineOfBusiness
+  marketType        MarketType
+  planType          PlanType
+  metalTier         MetalTier?
+  states            String[]
+  effectiveDate     DateTime
+  terminationDate   DateTime?
+  status            ProductStatus         @default(DRAFT)
+  version           String                @default("1.0")
+  actuarialValue    Float?
+  isActive          Boolean               @default(true)
+  organizationId    String?
+  createdById       String
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  auditLogRelations AuditLogRelation[]
+  plans             Plan[]
+  templates         ProductTemplate[]
+  createdBy         User                  @relation("ProductCreator", fields: [createdById], references: [id])
+  organization      Organization?         @relation(fields: [organizationId], references: [id])
+  publications      Publication[]
+  ratingConfigs     RatingConfiguration[]
+
+  @@index([productId])
+  @@index([status, isActive])
+  @@index([lineOfBusiness, marketType])
+  @@index([effectiveDate, terminationDate])
+  @@map("products")
+}
+
+model Plan {
+  id               String                 @id @default(uuid())
+  planId           String                 @unique
+  name             String
+  productId        String
+  state            String
+  counties         String[]
+  networkType      NetworkType
+  requiresPCP      Boolean                @default(false)
+  requiresReferral Boolean                @default(false)
+  isActive         Boolean                @default(true)
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  benefitPackages  BenefitPackage[]
+  networkConfigs   NetworkConfiguration[]
+  product          Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([state])
+  @@map("plans")
+}
+
+model BenefitPackage {
+  id                   String               @id @default(uuid())
+  name                 String
+  planId               String
+  packageType          PackageType
+  deductibleIndividual Float                @default(0)
+  deductibleFamily     Float                @default(0)
+  oopMaxIndividual     Float
+  oopMaxFamily         Float
+  isActive             Boolean              @default(true)
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  items                BenefitPackageItem[]
+  plan                 Plan                 @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@map("benefit_packages")
+}
+
+model BenefitPackageItem {
+  id                String         @id @default(uuid())
+  benefitPackageId  String
+  benefitSegmentId  String
+  copay             Float?
+  coinsurance       Float?
+  deductibleApplies Boolean        @default(true)
+  isActive          Boolean        @default(true)
+  displayOrder      Int            @default(0)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  benefitPackage    BenefitPackage @relation(fields: [benefitPackageId], references: [id], onDelete: Cascade)
+  benefitSegment    BenefitSegment @relation(fields: [benefitSegmentId], references: [id])
+
+  @@unique([benefitPackageId, benefitSegmentId])
+  @@index([benefitPackageId])
+  @@map("benefit_package_items")
+}
+
+model ProductTemplate {
+  id           String       @id @default(uuid())
+  name         String
+  description  String?
+  templateType TemplateType
+  productId    String?
+  isPublic     Boolean      @default(true)
+  usageCount   Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  product      Product?     @relation(fields: [productId], references: [id])
+
+  @@index([templateType])
+  @@map("product_templates")
+}
+
+model RatingConfiguration {
+  id                   String    @id @default(uuid())
+  productId            String
+  state                String
+  rateVersion          String
+  baseRate             Float
+  ageBands             Json
+  geoFactors           Json
+  tobaccoRate          Float     @default(1.5)
+  sicFactors           Json?
+  participationRate    Float     @default(0.75)
+  contributionStrategy String?
+  effectiveDate        DateTime
+  expirationDate       DateTime?
+  isActive             Boolean   @default(true)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  product              Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, state])
+  @@index([effectiveDate, expirationDate])
+  @@map("rating_configurations")
+}
+
+model ComplianceRule {
+  id              String                 @id @default(uuid())
+  ruleName        String
+  ruleType        ComplianceType
+  jurisdiction    String
+  description     String
+  validationLogic Json
+  severity        Severity
+  isActive        Boolean                @default(true)
+  effectiveDate   DateTime
+  expirationDate  DateTime?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  validations     ComplianceValidation[]
+
+  @@index([ruleType, jurisdiction])
+  @@index([isActive])
+  @@map("compliance_rules")
+}
+
+model ComplianceValidation {
+  id               String           @id @default(uuid())
+  productId        String
+  complianceRuleId String
+  status           ValidationStatus
+  message          String?
+  validatedAt      DateTime         @default(now())
+  createdAt        DateTime         @default(now())
+  complianceRule   ComplianceRule   @relation(fields: [complianceRuleId], references: [id])
+
+  @@index([productId])
+  @@index([status])
+  @@map("compliance_validations")
+}
+
+model Publication {
+  id          String             @id @default(uuid())
+  productId   String
+  channel     PublicationChannel
+  publishedAt DateTime?
+  status      PublicationStatus  @default(PENDING)
+  sbcUrl      String?
+  eocUrl      String?
+  formId      String?
+  metadata    Json?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  product     Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([channel, status])
+  @@map("publications")
+}
+
+model ProductMetrics {
+  id                 String   @id @default(uuid())
+  productId          String
+  metricDate         DateTime
+  enrollment         Int      @default(0)
+  claimsPMPM         Float    @default(0)
+  medicalLossRatio   Float    @default(0)
+  memberSatisfaction Float?
+  churnRate          Float?
+  metadata           Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([productId, metricDate])
+  @@index([productId])
+  @@index([metricDate])
+  @@map("product_metrics")
+}
+
+model NetworkConfiguration {
+  id            String   @id @default(uuid())
+  planId        String
+  networkName   String
+  networkId     String
+  tierLevel     Int      @default(1)
+  providerCount Int?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  plan          Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@map("network_configurations")
+}
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  userId     String
+  entityType String
+  entityId   String
+  action     AuditAction
+  changes    Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model AuditLogRelation {
+  id        String   @id @default(uuid())
+  productId String
+  logId     String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("audit_log_relations")
 }
 
 enum UserRole {
@@ -45,21 +390,6 @@ enum UserRole {
   VIEWER
 }
 
-model Organization {
-  id          String   @id @default(uuid())
-  name        String
-  type        OrgType
-  domain      String?  @unique
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  users       User[]
-  products    Product[]
-
-  @@map("organizations")
-}
-
 enum OrgType {
   HEALTH_PLAN
   BROKER
@@ -67,98 +397,17 @@ enum OrgType {
   CONSULTANT
 }
 
-// ============================================================================
-// PHASE 1: CODE MANAGEMENT (Epics 1-5)
-// ============================================================================
-
-// Epic 1: Code Set Data Management
-model CodeSet {
-  id              String      @id @default(uuid())
-  code            String
-  codeType        CodeType
-  description     String
-  longDescription String?
-  category        String?
-  isActive        Boolean     @default(true)
-  effectiveDate   DateTime
-  terminationDate DateTime?
-  version         String      @default("1.0")
-  sourceSystem    String?     // CMS, AMA, etc.
-  metadata        Json?       // Additional flexible data
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-
-  // Relationships
-  mappings        CodeMapping[]
-  customCodes     CustomCode[]
-
-  @@unique([code, codeType, version])
-  @@index([code, codeType])
-  @@index([codeType, isActive])
-  @@index([effectiveDate, terminationDate])
-  @@map("code_sets")
-}
-
 enum CodeType {
-  CPT           // Current Procedural Terminology
-  HCPCS         // Healthcare Common Procedure Coding System
-  ICD_10_CM     // Diagnosis codes
-  ICD_10_PCS    // Procedure codes
-  NDC           // National Drug Code
-  LOINC         // Lab codes
-  SNOMED        // Clinical terms
-  DRG           // Diagnosis Related Group
-  REVENUE_CODE  // UB-04 revenue codes
-  CUSTOM        // Health plan proprietary codes
-}
-
-// Epic 2: Code-to-Benefit Mapping
-model CodeMapping {
-  id                String      @id @default(uuid())
-  codeSetId         String
-  codeSet           CodeSet     @relation(fields: [codeSetId], references: [id], onDelete: Cascade)
-  benefitSegmentId  String
-  benefitSegment    BenefitSegment @relation(fields: [benefitSegmentId], references: [id], onDelete: Cascade)
-  copay             Float?
-  coinsurance       Float?      // Percentage (e.g., 0.20 for 20%)
-  deductibleApplies Boolean     @default(true)
-  oopApplies        Boolean     @default(true)
-  priorAuthRequired Boolean     @default(false)
-  stepTherapy       Boolean     @default(false)
-  quantityLimit     Int?
-  notes             String?
-  isActive          Boolean     @default(true)
-  priority          Int         @default(1)
-  createdById       String
-  createdBy         User        @relation("MappingCreator", fields: [createdById], references: [id])
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-
-  @@unique([codeSetId, benefitSegmentId])
-  @@index([benefitSegmentId])
-  @@index([isActive])
-  @@map("code_mappings")
-}
-
-// Epic 4: Benefit Segments (Categories)
-model BenefitSegment {
-  id                  String      @id @default(uuid())
-  name                String
-  category            BenefitCategory
-  displayOrder        Int
-  description         String?
-  isEssentialBenefit  Boolean     @default(false)  // ACA EHB
-  isMandated          Boolean     @default(false)  // State/Federal mandate
-  createdAt           DateTime    @default(now())
-  updatedAt           DateTime    @updatedAt
-
-  // Relationships
-  mappings            CodeMapping[]
-  benefitPackageItems BenefitPackageItem[]
-
-  @@unique([name, category])
-  @@index([category])
-  @@map("benefit_segments")
+  CPT
+  HCPCS
+  ICD_10_CM
+  ICD_10_PCS
+  NDC
+  LOINC
+  SNOMED
+  DRG
+  REVENUE_CODE
+  CUSTOM
 }
 
 enum BenefitCategory {
@@ -187,66 +436,6 @@ enum BenefitCategory {
   WELLNESS
   CARE_MANAGEMENT
   OTHER
-}
-
-// Epic 5: Custom/Proprietary Codes
-model CustomCode {
-  id              String    @id @default(uuid())
-  customCode      String    @unique
-  name            String
-  description     String
-  codeSetId       String?   // Link to standard code if derivative
-  codeSet         CodeSet?  @relation(fields: [codeSetId], references: [id])
-  isPublic        Boolean   @default(false)  // Shareable in marketplace
-  organizationId  String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([organizationId])
-  @@index([isPublic])
-  @@map("custom_codes")
-}
-
-// ============================================================================
-// PHASE 2: PRODUCT MANAGEMENT (Epics 6-8)
-// ============================================================================
-
-// Epic 6: Product Catalog & Management
-model Product {
-  id                String        @id @default(uuid())
-  productId         String        @unique  // Business ID (e.g., "GOLD-PPO-2026-CA")
-  name              String
-  description       String?
-  lineOfBusiness    LineOfBusiness
-  marketType        MarketType
-  planType          PlanType
-  metalTier         MetalTier?
-  states            String[]      // Array of state codes
-  effectiveDate     DateTime
-  terminationDate   DateTime?
-  status            ProductStatus @default(DRAFT)
-  version           String        @default("1.0")
-  actuarialValue    Float?        // 0-1 (e.g., 0.80 for 80%)
-  isActive          Boolean       @default(true)
-  organizationId    String?
-  organization      Organization? @relation(fields: [organizationId], references: [id])
-  createdById       String
-  createdBy         User          @relation("ProductCreator", fields: [createdById], references: [id])
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-
-  // Relationships
-  plans             Plan[]
-  templates         ProductTemplate[]
-  ratingConfigs     RatingConfiguration[]
-  publications      Publication[]
-  auditLogRelations AuditLogRelation[]
-
-  @@index([productId])
-  @@index([status, isActive])
-  @@index([lineOfBusiness, marketType])
-  @@index([effectiveDate, terminationDate])
-  @@map("products")
 }
 
 enum LineOfBusiness {
@@ -293,58 +482,11 @@ enum ProductStatus {
   ARCHIVED
 }
 
-// Epic 6: Plan (Child of Product)
-model Plan {
-  id                String    @id @default(uuid())
-  planId            String    @unique  // Business ID
-  name              String
-  productId         String
-  product           Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  state             String    // Two-letter state code
-  counties          String[]  // Array of county names
-  networkType       NetworkType
-  requiresPCP       Boolean   @default(false)
-  requiresReferral  Boolean   @default(false)
-  isActive          Boolean   @default(true)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  // Relationships
-  benefitPackages   BenefitPackage[]
-  networkConfigs    NetworkConfiguration[]
-
-  @@index([productId])
-  @@index([state])
-  @@map("plans")
-}
-
 enum NetworkType {
   NARROW
   STANDARD
   BROAD
   NATIONAL
-}
-
-// Epic 7: Benefit Design Studio - Benefit Packages
-model BenefitPackage {
-  id                  String    @id @default(uuid())
-  name                String
-  planId              String
-  plan                Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
-  packageType         PackageType
-  deductibleIndividual Float    @default(0)
-  deductibleFamily    Float     @default(0)
-  oopMaxIndividual    Float
-  oopMaxFamily        Float
-  isActive            Boolean   @default(true)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
-  // Relationships
-  items               BenefitPackageItem[]
-
-  @@index([planId])
-  @@map("benefit_packages")
 }
 
 enum PackageType {
@@ -356,102 +498,12 @@ enum PackageType {
   WELLNESS
 }
 
-// Epic 7: Benefit Package Items (Maps BenefitSegments to Packages)
-model BenefitPackageItem {
-  id                String          @id @default(uuid())
-  benefitPackageId  String
-  benefitPackage    BenefitPackage  @relation(fields: [benefitPackageId], references: [id], onDelete: Cascade)
-  benefitSegmentId  String
-  benefitSegment    BenefitSegment  @relation(fields: [benefitSegmentId], references: [id])
-  copay             Float?
-  coinsurance       Float?
-  deductibleApplies Boolean         @default(true)
-  isActive          Boolean         @default(true)
-  displayOrder      Int             @default(0)
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-
-  @@unique([benefitPackageId, benefitSegmentId])
-  @@index([benefitPackageId])
-  @@map("benefit_package_items")
-}
-
-// Epic 8: Product Templates
-model ProductTemplate {
-  id              String    @id @default(uuid())
-  name            String
-  description     String?
-  templateType    TemplateType
-  productId       String?   // Base product for template
-  product         Product?  @relation(fields: [productId], references: [id])
-  isPublic        Boolean   @default(true)
-  usageCount      Int       @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([templateType])
-  @@map("product_templates")
-}
-
 enum TemplateType {
   QUICK_BRONZE
   STANDARD_SILVER_HMO
   FAMILY_GOLD_PPO
   MEDICARE_ADVANTAGE
   SMALL_EMPLOYER_GROUP
-}
-
-// ============================================================================
-// PHASE 3: RATING ENGINE (Epic 9)
-// ============================================================================
-
-model RatingConfiguration {
-  id              String    @id @default(uuid())
-  productId       String
-  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  state           String
-  rateVersion     String
-  baseRate        Float     // PMPM (Per Member Per Month)
-  ageBands        Json      // Age rating factors
-  geoFactors      Json      // Geographic adjustment factors
-  tobaccoRate     Float     @default(1.5)  // Tobacco user multiplier
-  sicFactors      Json?     // Industry-based factors
-  participationRate Float   @default(0.75)
-  contributionStrategy String?
-  effectiveDate   DateTime
-  expirationDate  DateTime?
-  isActive        Boolean   @default(true)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([productId, state])
-  @@index([effectiveDate, expirationDate])
-  @@map("rating_configurations")
-}
-
-// ============================================================================
-// PHASE 4: COMPLIANCE ENGINE (Epic 10)
-// ============================================================================
-
-model ComplianceRule {
-  id              String          @id @default(uuid())
-  ruleName        String
-  ruleType        ComplianceType
-  jurisdiction    String          // Federal, State code, or ALL
-  description     String
-  validationLogic Json            // Stored validation rules
-  severity        Severity
-  isActive        Boolean         @default(true)
-  effectiveDate   DateTime
-  expirationDate  DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  validations     ComplianceValidation[]
-
-  @@index([ruleType, jurisdiction])
-  @@index([isActive])
-  @@map("compliance_rules")
 }
 
 enum ComplianceType {
@@ -470,50 +522,11 @@ enum Severity {
   INFO
 }
 
-model ComplianceValidation {
-  id              String          @id @default(uuid())
-  productId       String
-  complianceRuleId String
-  complianceRule  ComplianceRule  @relation(fields: [complianceRuleId], references: [id])
-  status          ValidationStatus
-  message         String?
-  validatedAt     DateTime        @default(now())
-  createdAt       DateTime        @default(now())
-
-  @@index([productId])
-  @@index([status])
-  @@map("compliance_validations")
-}
-
 enum ValidationStatus {
   PASSED
   FAILED
   WARNING
   PENDING
-}
-
-// ============================================================================
-// PHASE 5: PUBLISHING & ANALYTICS (Epics 11-12)
-// ============================================================================
-
-// Epic 11: Product Publishing
-model Publication {
-  id              String            @id @default(uuid())
-  productId       String
-  product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
-  channel         PublicationChannel
-  publishedAt     DateTime?
-  status          PublicationStatus @default(PENDING)
-  sbcUrl          String?           // Summary of Benefits & Coverage
-  eocUrl          String?           // Evidence of Coverage
-  formId          String?           // SERFF filing ID
-  metadata        Json?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-
-  @@index([productId])
-  @@index([channel, status])
-  @@map("publications")
 }
 
 enum PublicationChannel {
@@ -534,79 +547,6 @@ enum PublicationStatus {
   WITHDRAWN
 }
 
-// Epic 12: Performance Analytics
-model ProductMetrics {
-  id              String    @id @default(uuid())
-  productId       String
-  metricDate      DateTime
-  enrollment      Int       @default(0)
-  claimsPMPM      Float     @default(0)
-  medicalLossRatio Float    @default(0)
-  memberSatisfaction Float?
-  churnRate       Float?
-  metadata        Json?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@unique([productId, metricDate])
-  @@index([productId])
-  @@index([metricDate])
-  @@map("product_metrics")
-}
-
-// ============================================================================
-// NETWORK CONFIGURATION
-// ============================================================================
-
-model NetworkConfiguration {
-  id              String    @id @default(uuid())
-  planId          String
-  plan            Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
-  networkName     String
-  networkId       String
-  tierLevel       Int       @default(1)
-  providerCount   Int?
-  isActive        Boolean   @default(true)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@index([planId])
-  @@map("network_configurations")
-}
-
-// ============================================================================
-// AUDIT & LOGGING
-// ============================================================================
-
-model AuditLog {
-  id              String    @id @default(uuid())
-  userId          String
-  user            User      @relation(fields: [userId], references: [id])
-  entityType      String    // Product, Plan, CodeMapping, etc.
-  entityId        String
-  action          AuditAction
-  changes         Json?     // Before/after state
-  ipAddress       String?
-  userAgent       String?
-  createdAt       DateTime  @default(now())
-
-  @@index([userId])
-  @@index([entityType, entityId])
-  @@index([createdAt])
-  @@map("audit_logs")
-}
-
-model AuditLogRelation {
-  id              String    @id @default(uuid())
-  productId       String
-  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  logId           String
-  createdAt       DateTime  @default(now())
-
-  @@index([productId])
-  @@map("audit_log_relations")
-}
-
 enum AuditAction {
   CREATED
   UPDATED
@@ -616,4 +556,3 @@ enum AuditAction {
   REJECTED
   ARCHIVED
 }
-

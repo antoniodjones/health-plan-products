@@ -8,6 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { CodeTypeBadge } from '@/components/codes/code-type-badge';
 import { CodeImportWizard } from '@/components/codes/code-import-wizard';
 import { CodeFilters } from '@/components/codes/code-filters';
@@ -27,6 +34,9 @@ import {
   Edit,
   Copy,
   Trash2,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -36,10 +46,13 @@ export default function CodesPage() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<CodeFiltersType>({});
   const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState<'code' | 'codeType' | 'category' | 'effectiveDate'>('code');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [importOpen, setImportOpen] = useState(false);
+  const [selectedCode, setSelectedCode] = useState<MedicalCode | null>(null);
 
   // Debounced search effect
   useEffect(() => {
@@ -54,11 +67,11 @@ export default function CodesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
-  // Fetch codes when filters or page changes
+  // Fetch codes when filters, sorting, or page changes
   useEffect(() => {
     fetchCodes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, page]);
+  }, [filters, page, sortBy, sortOrder]);
 
   // Fetch statistics on mount
   useEffect(() => {
@@ -89,6 +102,10 @@ export default function CodesPage() {
       }
       if (filters.category) params.append('category', filters.category);
       
+      // Add sorting params
+      params.append('sortBy', sortBy);
+      params.append('sortOrder', sortOrder);
+      
       params.append('page', String(page));
       params.append('pageSize', '20');
 
@@ -102,6 +119,17 @@ export default function CodesPage() {
       console.error('Error fetching codes:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSort = (column: 'code' | 'codeType' | 'category' | 'effectiveDate') => {
+    if (sortBy === column) {
+      // Toggle sort order if clicking the same column
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new column and default to ascending
+      setSortBy(column);
+      setSortOrder('asc');
     }
   };
 
@@ -262,6 +290,56 @@ export default function CodesPage() {
         </Card>
       ) : (
         <div className="space-y-4">
+          {/* Sortable Column Headers */}
+          <div className="flex items-center gap-4 rounded-lg border bg-gray-50 px-6 py-3">
+            <button
+              onClick={() => handleSort('code')}
+              className="flex items-center gap-1 font-medium text-gray-700 hover:text-primary transition-colors"
+            >
+              Code
+              {sortBy === 'code' ? (
+                sortOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="h-4 w-4 text-gray-400" />
+              )}
+            </button>
+            <button
+              onClick={() => handleSort('codeType')}
+              className="flex items-center gap-1 font-medium text-gray-700 hover:text-primary transition-colors"
+            >
+              Type
+              {sortBy === 'codeType' ? (
+                sortOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="h-4 w-4 text-gray-400" />
+              )}
+            </button>
+            <button
+              onClick={() => handleSort('category')}
+              className="flex items-center gap-1 font-medium text-gray-700 hover:text-primary transition-colors"
+            >
+              Category
+              {sortBy === 'category' ? (
+                sortOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="h-4 w-4 text-gray-400" />
+              )}
+            </button>
+            <button
+              onClick={() => handleSort('effectiveDate')}
+              className="flex items-center gap-1 font-medium text-gray-700 hover:text-primary transition-colors"
+            >
+              Effective Date
+              {sortBy === 'effectiveDate' ? (
+                sortOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="h-4 w-4 text-gray-400" />
+              )}
+            </button>
+            <div className="ml-auto text-sm text-gray-500">Actions</div>
+          </div>
+
+          {/* Code Cards */}
           {codes.map((code) => (
             <Card key={code.id} className="transition-shadow hover:shadow-md">
               <CardContent className="p-6">
@@ -287,7 +365,7 @@ export default function CodesPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedCode(code)}>
                       <Eye className="mr-2 h-4 w-4" />
                       View
                     </Button>
@@ -340,6 +418,128 @@ export default function CodesPage() {
           </div>
         </div>
       )}
+
+      {/* View Code Details Modal */}
+      <Dialog open={!!selectedCode} onOpenChange={() => setSelectedCode(null)}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
+                <FileCode className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <div className="font-mono text-xl">{selectedCode?.code}</div>
+                <div className="text-sm font-normal text-gray-500">Medical Code Details</div>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedCode && (
+            <div className="space-y-6">
+              {/* Status Badges */}
+              <div className="flex items-center gap-2">
+                <CodeTypeBadge codeType={selectedCode.codeType} />
+                <Badge variant="outline" className={selectedCode.isActive ? 'bg-success/20 text-success' : 'bg-muted text-muted-foreground'}>
+                  {selectedCode.isActive ? '✓ Active' : '✗ Inactive'}
+                </Badge>
+                {selectedCode.isCustom && (
+                  <Badge variant="outline">
+                    <Tag className="mr-1 h-3 w-3" />
+                    Custom
+                  </Badge>
+                )}
+              </div>
+
+              {/* Description */}
+              <div>
+                <h3 className="mb-2 text-sm font-semibold text-gray-700">Description</h3>
+                <p className="text-gray-900">{selectedCode.description}</p>
+                {selectedCode.longDescription && selectedCode.longDescription !== selectedCode.description && (
+                  <p className="mt-2 text-sm text-gray-600">{selectedCode.longDescription}</p>
+                )}
+              </div>
+
+              {/* Details Grid */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold text-gray-700">Code Type</h3>
+                  <p className="text-gray-900">{selectedCode.codeType}</p>
+                </div>
+
+                {selectedCode.category && (
+                  <div>
+                    <h3 className="mb-1 text-sm font-semibold text-gray-700">Category</h3>
+                    <p className="text-gray-900">{selectedCode.category}</p>
+                  </div>
+                )}
+
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold text-gray-700">Effective Date</h3>
+                  <p className="text-gray-900">{format(new Date(selectedCode.effectiveDate), 'MMMM d, yyyy')}</p>
+                </div>
+
+                {selectedCode.terminationDate && (
+                  <div>
+                    <h3 className="mb-1 text-sm font-semibold text-gray-700">Termination Date</h3>
+                    <p className="text-gray-900">{format(new Date(selectedCode.terminationDate), 'MMMM d, yyyy')}</p>
+                  </div>
+                )}
+
+                {selectedCode.version && (
+                  <div>
+                    <h3 className="mb-1 text-sm font-semibold text-gray-700">Version</h3>
+                    <p className="text-gray-900">{selectedCode.version}</p>
+                  </div>
+                )}
+
+                {selectedCode.sourceSystem && (
+                  <div>
+                    <h3 className="mb-1 text-sm font-semibold text-gray-700">Source System</h3>
+                    <p className="text-gray-900">{selectedCode.sourceSystem}</p>
+                  </div>
+                )}
+
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold text-gray-700">Created</h3>
+                  <p className="text-gray-900">{format(new Date(selectedCode.createdAt), 'MMM d, yyyy h:mm a')}</p>
+                </div>
+
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold text-gray-700">Last Updated</h3>
+                  <p className="text-gray-900">{format(new Date(selectedCode.updatedAt), 'MMM d, yyyy h:mm a')}</p>
+                </div>
+              </div>
+
+              {/* Metadata */}
+              {selectedCode.metadata && Object.keys(selectedCode.metadata).length > 0 && (
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold text-gray-700">Additional Metadata</h3>
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <pre className="text-xs text-gray-700 overflow-x-auto">
+                      {JSON.stringify(selectedCode.metadata, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2 border-t pt-4">
+                <Button variant="outline" onClick={() => setSelectedCode(null)}>
+                  Close
+                </Button>
+                <Button variant="outline">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Code
+                </Button>
+                <Button>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Duplicate
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Import Wizard */}
       <CodeImportWizard

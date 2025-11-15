@@ -26,7 +26,7 @@ export async function searchCodes(params: CodeSearchParams) {
   } = params;
 
   // Build where clause
-  const where: Prisma.MedicalCodeWhereInput = {};
+  const where: Prisma.CodeSetWhereInput = {};
 
   if (codeType && codeType.length > 0) {
     where.codeType = { in: codeType };
@@ -68,13 +68,13 @@ export async function searchCodes(params: CodeSearchParams) {
 
   // Execute query with pagination
   const [codes, total] = await Promise.all([
-    prisma.medicalCode.findMany({
+    prisma.codeSet.findMany({
       where,
       orderBy: { [sortBy]: sortOrder },
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.medicalCode.count({ where }),
+    prisma.codeSet.count({ where }),
   ]);
 
   return {
@@ -90,7 +90,7 @@ export async function searchCodes(params: CodeSearchParams) {
  * Get a single medical code by ID
  */
 export async function getCodeById(id: string) {
-  return prisma.medicalCode.findUnique({
+  return prisma.codeSet.findUnique({
     where: { id },
     include: {
       customCodePrefix: true,
@@ -102,7 +102,7 @@ export async function getCodeById(id: string) {
  * Get a medical code by code value and type
  */
 export async function getCodeByValue(code: string, codeType: string) {
-  return prisma.medicalCode.findFirst({
+  return prisma.codeSet.findFirst({
     where: {
       code,
       codeType: codeType as any,
@@ -114,7 +114,7 @@ export async function getCodeByValue(code: string, codeType: string) {
  * Create a new medical code
  */
 export async function createCode(data: Prisma.MedicalCodeCreateInput) {
-  return prisma.medicalCode.create({
+  return prisma.codeSet.create({
     data,
   });
 }
@@ -123,7 +123,7 @@ export async function createCode(data: Prisma.MedicalCodeCreateInput) {
  * Update a medical code
  */
 export async function updateCode(id: string, data: Prisma.MedicalCodeUpdateInput) {
-  return prisma.medicalCode.update({
+  return prisma.codeSet.update({
     where: { id },
     data,
   });
@@ -133,7 +133,7 @@ export async function updateCode(id: string, data: Prisma.MedicalCodeUpdateInput
  * Delete a medical code
  */
 export async function deleteCode(id: string) {
-  return prisma.medicalCode.delete({
+  return prisma.codeSet.delete({
     where: { id },
   });
 }
@@ -152,26 +152,26 @@ export async function getCodeStatistics() {
     recentlyAdded,
     recentlyUpdated,
   ] = await Promise.all([
-    prisma.medicalCode.count(),
-    prisma.medicalCode.count({ where: { status: 'ACTIVE' } }),
-    prisma.medicalCode.count({ where: { status: 'INACTIVE' } }),
-    prisma.medicalCode.count({ where: { isCustom: true } }),
-    prisma.medicalCode.groupBy({
+    prisma.codeSet.count(),
+    prisma.codeSet.count({ where: { status: 'ACTIVE' } }),
+    prisma.codeSet.count({ where: { status: 'INACTIVE' } }),
+    prisma.codeSet.count({ where: { isCustom: true } }),
+    prisma.codeSet.groupBy({
       by: ['codeType'],
       _count: { codeType: true },
     }),
-    prisma.medicalCode.groupBy({
+    prisma.codeSet.groupBy({
       by: ['source'],
       _count: { source: true },
     }),
-    prisma.medicalCode.count({
+    prisma.codeSet.count({
       where: {
         createdAt: {
           gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
         },
       },
     }),
-    prisma.medicalCode.count({
+    prisma.codeSet.count({
       where: {
         updatedAt: {
           gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
@@ -198,7 +198,7 @@ export async function getCodeStatistics() {
 export async function getCodeCategories(codeType?: string) {
   const where = codeType ? { codeType: codeType as any } : {};
 
-  const categories = await prisma.medicalCode.groupBy({
+  const categories = await prisma.codeSet.groupBy({
     by: ['category'],
     where: {
       ...where,
@@ -220,7 +220,7 @@ export async function getCodeCategories(codeType?: string) {
  */
 export async function batchCreateCodes(codes: Prisma.MedicalCodeCreateInput[]) {
   return prisma.$transaction(
-    codes.map((code) => prisma.medicalCode.create({ data: code }))
+    codes.map((code) => prisma.codeSet.create({ data: code }))
   );
 }
 
@@ -228,7 +228,7 @@ export async function batchCreateCodes(codes: Prisma.MedicalCodeCreateInput[]) {
  * Check if code exists
  */
 export async function codeExists(code: string, codeType: string): Promise<boolean> {
-  const count = await prisma.medicalCode.count({
+  const count = await prisma.codeSet.count({
     where: {
       code,
       codeType: codeType as any,

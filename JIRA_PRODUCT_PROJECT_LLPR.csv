@@ -1,0 +1,1509 @@
+Summary,Issue Type,Description,Priority,Labels,Component,Epic Link
+"As a Benefits Manager, I can search for medical codes by code value or description","Story","Feature: Medical Code Search
+  As a Benefits Manager
+  I want to search for medical codes by code value or description
+  So that I can quickly find relevant codes for benefit mapping
+
+Background:
+  Given the system has 58 medical codes loaded
+  And I am authenticated as a Benefits Manager
+  And I am on the Code Library page
+
+Scenario: Search by exact code value
+  Given I am on the Code Library page
+  When I enter ""83036"" in the search field
+  Then I should see only codes matching ""83036""
+  And the code ""83036"" should be displayed with type ""CPT""
+  And the description should contain ""Hemoglobin A1c""
+  And the results should appear within 500ms
+
+Scenario: Search by partial description
+  Given I am on the Code Library page
+  When I enter ""hemoglobin"" in the search field
+  Then I should see codes with ""hemoglobin"" in the description
+  And the results should be case-insensitive
+  And the results should appear within 500ms
+
+Scenario: Clear search returns all codes
+  Given I have entered ""83036"" in the search field
+  And I see filtered results
+  When I clear the search input
+  Then I should see all 58 codes
+  And the pagination should show ""Page 1 of 3""
+
+Scenario: No results found
+  Given I am on the Code Library page
+  When I enter ""ZZZZZ"" in the search field
+  Then I should see a ""No Codes Found"" message
+  And I should see a suggestion to adjust search or import codes
+
+Scenario: Search debounce prevents excessive API calls
+  Given I am on the Code Library page
+  When I type ""hemo"" quickly
+  Then the search should wait 300ms before executing
+  And only one API call should be made after typing stops
+
+Acceptance Criteria:
+- Search filters by exact or partial code match
+- Search filters by description text
+- Search is case-insensitive
+- Search has 300ms debounce
+- Results appear within 500ms
+- Empty search shows all codes (58 total)
+- Invalid search shows 'No results' message
+- Search works across all code types (CPT, HCPCS, ICD-10)
+- Pagination updates based on filtered results
+
+Business Value: Reduces time to find codes by 80%, improving Benefits Manager productivity from 5 minutes to 1 minute per code lookup. Enables faster benefit mapping and reduces errors from manual code searches.
+
+KPIs:
+- Search response time < 500ms (95th percentile)
+- 95% search accuracy (relevant results)
+- 100% of codes searchable
+- 50% reduction in time-to-map codes to benefits
+- Zero search-related support tickets","High","LLPR,Story,Search","Code Management","Code Library & Search"
+"As a Benefits Manager, I can navigate through paginated code results","Story","Feature: Code Pagination
+  As a Benefits Manager
+  I want to navigate through paginated code results
+  So that I can browse large code sets efficiently
+
+Background:
+  Given the system has 58 medical codes loaded
+  And codes are displayed 20 per page
+  And I am on the Code Library page
+
+Scenario: Navigate to next page
+  Given I am on page 1 of the code list
+  And I see 20 codes displayed
+  When I click the ""Next"" button
+  Then I should be on page 2
+  And I should see the next 20 codes
+  And the pagination should show ""Page 2 of 3""
+
+Scenario: Navigate to previous page
+  Given I am on page 2 of the code list
+  When I click the ""Previous"" button
+  Then I should be on page 1
+  And I should see the first 20 codes
+  And the pagination should show ""Page 1 of 3""
+
+Scenario: Previous button disabled on first page
+  Given I am on page 1 of the code list
+  Then the ""Previous"" button should be disabled
+  And clicking it should have no effect
+
+Scenario: Next button disabled on last page
+  Given I am on page 3 of the code list (last page)
+  Then the ""Next"" button should be disabled
+  And clicking it should have no effect
+
+Scenario: Pagination info displays correctly
+  Given I am on any page of the code list
+  Then I should see ""Page X of Y"" text
+  And X should be the current page number
+  And Y should be the total number of pages
+
+Acceptance Criteria:
+- Pagination displays 20 codes per page
+- Next button advances to next page
+- Previous button goes to previous page
+- Previous button disabled on first page
+- Next button disabled on last page
+- Pagination info shows current page and total pages
+- Page state persists during search
+- URL updates with page parameter
+
+Business Value: Enables efficient browsing of large code sets (50,000+ codes) without performance degradation. Improves user experience and reduces page load times by 90%.
+
+KPIs:
+- Page load time < 1 second
+- Supports up to 100,000 codes
+- Zero pagination errors
+- 100% button state accuracy","High","LLPR,Story,Pagination","Code Management","Code Library & Search"
+"As a Benefits Manager, I can view code statistics at a glance","Story","Feature: Code Statistics Dashboard
+  As a Benefits Manager
+  I want to view code statistics at a glance
+  So that I can understand code coverage and system status
+
+Background:
+  Given the system has 58 medical codes loaded
+  And I am on the Code Library page
+
+Scenario: View total codes statistic
+  Given I am on the Code Library page
+  When I view the statistics cards
+  Then I should see a ""Total Codes"" card
+  And it should display ""58""
+  And it should have an icon indicator
+
+Scenario: View active codes statistic
+  Given I am on the Code Library page
+  When I view the statistics cards
+  Then I should see an ""Active Codes"" card
+  And it should display the count of active codes
+  And it should be color-coded green
+
+Scenario: View inactive codes statistic
+  Given I am on the Code Library page
+  When I view the statistics cards
+  Then I should see an ""Inactive Codes"" card
+  And it should display the count of inactive codes
+  And it should be color-coded red
+
+Scenario: View code types statistic
+  Given I am on the Code Library page
+  When I view the statistics cards
+  Then I should see a ""Code Types"" card
+  And it should display the count of distinct code types
+  And it should list the types (CPT, HCPCS, ICD-10)
+
+Scenario: Statistics update after search
+  Given I have searched for ""CPT"" codes
+  When the results are filtered
+  Then the statistics should update to reflect filtered results
+  And I should see the filtered counts
+
+Acceptance Criteria:
+- Total Codes statistic displays correct count
+- Active Codes statistic displays correct count
+- Inactive Codes statistic displays correct count
+- Code Types statistic displays distinct types
+- Statistics cards are visually distinct
+- Statistics update in real-time
+- Statistics match database counts
+- Color coding indicates status (green=good, red=attention)
+
+Business Value: Provides instant visibility into code coverage and system health. Reduces time to assess code completeness from 30 minutes to 5 seconds. Enables proactive code management.
+
+KPIs:
+- Statistics accuracy: 100%
+- Update latency < 100ms
+- Zero calculation errors
+- 95% user satisfaction with visibility","Medium","LLPR,Story,Statistics","Code Management","Code Library & Search"
+"As a Benefits Manager, I can view detailed information for each code","Story","Feature: Code Details Display
+  As a Benefits Manager
+  I want to view detailed information for each code
+  So that I can understand code properties and usage
+
+Background:
+  Given the system has medical codes loaded
+  And I am on the Code Library page
+
+Scenario: View code in table
+  Given I am viewing the code list table
+  When I look at a code row
+  Then I should see the code value in monospace font
+  And I should see the code type as a badge
+  And I should see the description
+  And I should see the category
+  And I should see the status badge (Active/Inactive)
+
+Scenario: Code type badge displays correctly
+  Given I am viewing a CPT code
+  When I look at the Type column
+  Then I should see a ""CPT"" badge
+  And it should be visually distinct from other types
+
+Scenario: Status badge color coding
+  Given I am viewing an active code
+  When I look at the Status column
+  Then I should see a green ""Active"" badge
+  
+  Given I am viewing an inactive code
+  When I look at the Status column
+  Then I should see a red ""Inactive"" badge
+
+Scenario: Table row hover effect
+  Given I am viewing the code list table
+  When I hover my mouse over a row
+  Then the row background should change
+  And it should provide visual feedback
+
+Scenario: Code values are readable
+  Given I am viewing the code list table
+  When I look at code values
+  Then they should be in monospace font
+  And they should be easily distinguishable
+  And they should align vertically
+
+Acceptance Criteria:
+- Code values display in monospace font
+- Code type displays as badge
+- Status displays as color-coded badge (green/red)
+- Description displays in full
+- Category displays or shows 'N/A'
+- Table headers are clearly labeled
+- Row hover effect provides feedback
+- All columns are properly aligned
+- Data truncation handled gracefully
+
+Business Value: Improves code readability and reduces errors in code identification by 75%. Enables faster visual scanning of code lists and reduces time to find specific codes.
+
+KPIs:
+- Code identification accuracy: 99%
+- Visual scan time < 10 seconds per page
+- Zero display errors
+- 90% user satisfaction with readability","Medium","LLPR,Story,Display","Code Management","Code Library & Search"
+"As a Benefits Manager, I can import medical codes from CSV files","Story","Feature: Bulk Code Import
+  As a Benefits Manager
+  I want to import medical codes from CSV files
+  So that I can efficiently load large code sets
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I have a CSV file with medical codes
+
+Scenario: Open import wizard
+  Given I am on the Code Library page
+  When I click the ""Import Codes"" button
+  Then the import wizard should open
+  And I should see step 1: File Upload
+
+Scenario: Upload valid CSV file
+  Given I am in the import wizard
+  When I upload a valid CSV file with 100 codes
+  Then the file should be validated
+  And I should see ""100 codes found""
+  And I should proceed to step 2: Preview
+
+Scenario: Preview imported codes
+  Given I have uploaded a valid CSV file
+  When I am on the preview step
+  Then I should see a preview of the first 10 codes
+  And I should see validation results
+  And I should see any warnings or errors
+
+Scenario: Execute import
+  Given I have reviewed the preview
+  When I click ""Import"" button
+  Then the codes should be imported to the database
+  And I should see a progress indicator
+  And I should see ""100 codes imported successfully""
+  And the code list should refresh
+
+Scenario: Handle duplicate codes
+  Given I am importing codes
+  And some codes already exist in the system
+  When I execute the import
+  Then I should see a warning about duplicates
+  And I should have options to skip or update duplicates
+
+Scenario: Handle invalid CSV format
+  Given I am in the import wizard
+  When I upload an invalid CSV file
+  Then I should see an error message
+  And I should see specific validation errors
+  And I should not proceed to preview
+
+Acceptance Criteria:
+- Import wizard opens on button click
+- CSV file upload works
+- File validation occurs before import
+- Preview shows first 10 codes
+- Validation errors are clearly displayed
+- Import executes successfully
+- Progress indicator shows during import
+- Success message displays after import
+- Duplicate detection works
+- Skip/update options for duplicates
+- Invalid files are rejected with clear errors
+- Code list refreshes after import
+
+Business Value: Reduces time to load code sets from days to minutes. Enables rapid system setup and code updates. Supports CMS annual code updates and custom code management.
+
+KPIs:
+- Import success rate > 95%
+- Import speed: 1000 codes per minute
+- Validation accuracy: 100%
+- Zero data corruption
+- 90% reduction in manual code entry time","High","LLPR,Story,Import","Code Management","Code Import & Export"
+"As a Benefits Manager, I can create custom codes for my organization","Story","Feature: Custom Code Creation
+  As a Benefits Manager
+  I want to create custom codes for my organization
+  So that I can define proprietary codes for internal use
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I have permission to create custom codes
+
+Scenario: Open custom code creation form
+  Given I am on the Code Library page
+  When I click ""Add New Code"" button
+  Then a creation form should open
+  And I should see fields for code properties
+
+Scenario: Create a valid custom code
+  Given I am in the custom code creation form
+  When I enter code ""CUSTOM-001""
+  And I select type ""CUSTOM""
+  And I enter description ""Custom preventive care code""
+  And I enter category ""Preventive""
+  And I set status to ""Active""
+  And I set effective date to today
+  And I click ""Save""
+  Then the code should be created
+  And I should see a success message
+  And the code should appear in the code list
+
+Scenario: Validate required fields
+  Given I am in the custom code creation form
+  When I try to save without entering required fields
+  Then I should see validation errors
+  And the form should not submit
+  And required fields should be highlighted
+
+Scenario: Prevent duplicate codes
+  Given I am in the custom code creation form
+  And a code ""CUSTOM-001"" already exists
+  When I try to create another code ""CUSTOM-001""
+  Then I should see an error ""Code already exists""
+  And the form should not submit
+
+Scenario: Cancel code creation
+  Given I am in the custom code creation form
+  And I have entered some data
+  When I click ""Cancel""
+  Then the form should close
+  And no data should be saved
+  And I should return to the code list
+
+Acceptance Criteria:
+- Creation form opens on button click
+- All required fields are present
+- Code value field accepts alphanumeric
+- Type dropdown includes CUSTOM option
+- Description field accepts 500 characters
+- Category field is optional
+- Status defaults to Active
+- Effective date defaults to today
+- Validation prevents empty required fields
+- Duplicate code detection works
+- Success message displays after save
+- Cancel button discards changes
+- New code appears in list immediately
+
+Business Value: Enables organizations to define proprietary codes for internal benefit structures. Supports unique business requirements and reduces dependency on standard code sets.
+
+KPIs:
+- Custom code creation time < 2 minutes
+- Zero duplicate code errors
+- 100% validation accuracy
+- 95% user satisfaction with creation flow","Medium","LLPR,Story,CustomCodes","Code Management","Custom Code Management"
+"As a Benefits Manager, I can browse and search quality measures","Story","Feature: Quality Measure Library
+  As a Benefits Manager
+  I want to browse and search quality measures
+  So that I can understand measure requirements and link them to products
+
+Background:
+  Given the system has 5 HEDIS measures loaded
+  And I am authenticated as a Benefits Manager
+  And I am on the Quality Measures page
+
+Scenario: View quality measure statistics
+  Given I am on the Quality Measures page
+  When I view the statistics cards
+  Then I should see ""Total Measures"" card showing ""5""
+  And I should see ""Active Measures"" card
+  And I should see ""HEDIS Measures"" card
+  And I should see ""Avg Target Rate"" card
+
+Scenario: Browse quality measures list
+  Given I am on the Quality Measures page
+  When I view the measures list
+  Then I should see 5 quality measures displayed
+  And each measure should show measure ID
+  And each measure should show measure name
+  And each measure should show program badge (HEDIS/MIPS)
+  And each measure should show domain badge
+
+Scenario: Search measures by name
+  Given I am on the Quality Measures page
+  When I enter ""diabetes"" in the search field
+  Then I should see only measures with ""diabetes"" in the name
+  And the results should appear within 500ms
+
+Scenario: Filter measures by program
+  Given I am on the Quality Measures page
+  When I click ""Advanced Filters""
+  And I select ""HEDIS"" program
+  And I apply filters
+  Then I should see only HEDIS measures
+  And the count should update
+
+Scenario: Refresh measures list
+  Given I am on the Quality Measures page
+  When I click the ""Refresh"" button
+  Then the measures list should reload
+  And I should see a loading indicator
+  And the data should be current
+
+Acceptance Criteria:
+- Statistics cards display correct counts
+- Measures list displays all measures
+- Each measure shows ID, name, program, domain
+- Program badge is color-coded
+- Domain badge is clearly visible
+- Search filters by measure name
+- Search is case-insensitive
+- Advanced filters work correctly
+- Filter by program works
+- Refresh button reloads data
+- Loading states display during fetch
+- Empty state shows when no results
+
+Business Value: Provides visibility into quality measure requirements for Star Ratings and HEDIS reporting. Enables Benefits Managers to understand measure applicability and link measures to products.
+
+KPIs:
+- Measure search accuracy: 95%
+- Search response time < 500ms
+- 100% of measures searchable
+- Zero display errors
+- 90% user satisfaction with measure library","High","LLPR,Story,QualityMeasures","Quality Measures","HEDIS Measure Library"
+"As a Benefits Manager, I can view detailed measure specifications","Story","Feature: Quality Measure Details
+  As a Benefits Manager
+  I want to view detailed measure specifications
+  So that I can understand measure logic and requirements
+
+Background:
+  Given the system has quality measures loaded
+  And I am on the Quality Measures page
+
+Scenario: Open measure details modal
+  Given I am viewing the measures list
+  When I click on a measure
+  Then a details modal should open
+  And I should see the measure overview
+
+Scenario: View measure overview tab
+  Given I have opened a measure details modal
+  When I view the Overview tab
+  Then I should see measure ID
+  And I should see measure name
+  And I should see program (HEDIS/MIPS)
+  And I should see domain
+  And I should see steward
+  And I should see effective year
+  And I should see target rate
+
+Scenario: View measure logic tab
+  Given I have opened a measure details modal
+  When I click the ""Measure Logic"" tab
+  Then I should see denominator criteria
+  And I should see numerator criteria
+  And I should see exclusion criteria
+  And I should see logic in structured format
+
+Scenario: View products tab
+  Given I have opened a measure details modal
+  When I click the ""Products"" tab
+  Then I should see products linked to this measure
+  And I should see product names and IDs
+
+Scenario: View billing codes tab
+  Given I have opened a measure details modal
+  When I click the ""Billing Codes"" tab
+  Then I should see codes associated with this measure
+  And codes should be grouped by logic type (denominator/numerator/exclusion)
+  And I should see code type badges
+
+Scenario: Edit measure logic
+  Given I have opened a measure details modal
+  When I click the ""Edit Logic"" button
+  Then I should navigate to the logic editor
+  Or I should see an edit form
+
+Scenario: Close measure details modal
+  Given I have opened a measure details modal
+  When I click the X button or click outside the modal
+  Then the modal should close
+  And I should return to the measures list
+
+Acceptance Criteria:
+- Modal opens on measure click
+- Overview tab displays all measure properties
+- Measure Logic tab displays structured logic
+- Products tab displays linked products
+- Billing Codes tab displays associated codes
+- Codes are grouped by logic type
+- Code type badges display correctly
+- Edit Logic button works
+- Close button closes modal
+- Click outside closes modal
+- Tab switching works smoothly
+- All data loads correctly
+
+Business Value: Enables Benefits Managers to understand complex measure requirements and verify measure configuration. Reduces time to understand measure logic from hours to minutes.
+
+KPIs:
+- Modal open time < 300ms
+- 100% data accuracy in modal
+- Zero display errors
+- Tab switching < 100ms
+- 95% user satisfaction with details view","High","LLPR,Story,MeasureDetails","Quality Measures","HEDIS Measure Library"
+"As a Benefits Manager, I can configure measure logic","Story","Feature: Measure Logic Configuration
+  As a Benefits Manager
+  I want to configure measure logic
+  So that I can customize measures for my organization
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I have permission to edit measures
+  And I am viewing a measure details modal
+
+Scenario: Open logic editor
+  Given I am viewing a measure details modal
+  When I click ""Edit Logic"" button
+  Then the logic editor should open
+  And I should see current logic configuration
+
+Scenario: Edit denominator criteria
+  Given I am in the logic editor
+  When I modify the denominator criteria
+  And I add a new code to the denominator value set
+  And I save changes
+  Then the denominator should be updated
+  And I should see a success message
+
+Scenario: Edit numerator criteria
+  Given I am in the logic editor
+  When I modify the numerator criteria
+  And I change the logic operator
+  And I save changes
+  Then the numerator should be updated
+  And I should see a success message
+
+Scenario: Add exclusion criteria
+  Given I am in the logic editor
+  When I add a new exclusion criterion
+  And I define the exclusion logic
+  And I save changes
+  Then the exclusion should be added
+  And it should appear in the measure logic
+
+Scenario: Validate logic before save
+  Given I am in the logic editor
+  When I enter invalid logic
+  And I try to save
+  Then I should see validation errors
+  And the logic should not be saved
+  And errors should be clearly indicated
+
+Scenario: Cancel logic editing
+  Given I am in the logic editor
+  And I have made changes
+  When I click ""Cancel""
+  Then I should see a confirmation dialog
+  And if I confirm, changes should be discarded
+  And I should return to the measure details
+
+Acceptance Criteria:
+- Logic editor opens on button click
+- Current logic displays correctly
+- Denominator editing works
+- Numerator editing works
+- Exclusion editing works
+- Logic validation prevents invalid saves
+- Validation errors are clear
+- Success message displays after save
+- Cancel button shows confirmation
+- Confirmation dialog prevents accidental loss
+- Changes persist after save
+- Logic updates reflect in measure details
+
+Business Value: Enables customization of quality measures for organization-specific requirements. Supports custom measure creation and measure logic adjustments.
+
+KPIs:
+- Logic save success rate > 95%
+- Validation accuracy: 100%
+- Logic editor load time < 1 second
+- Zero logic corruption
+- 90% user satisfaction with editor","High","LLPR,Story,MeasureLogic","Quality Measures","Measure Logic Configuration"
+"As a Benefits Manager, I can create benefit mappings","Story","Feature: Benefit Mapping Creation
+  As a Benefits Manager
+  I want to create mappings between codes and benefit segments
+  So that I can define coverage rules and cost-sharing
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I am on the Code Mappings page
+  And I am on the Benefit Mappings tab
+
+Scenario: View benefit mapping statistics
+  Given I am on the Benefit Mappings tab
+  When I view the statistics cards
+  Then I should see ""Total Mappings"" card
+  And I should see ""Active Mappings"" card
+  And I should see ""Draft Mappings"" card
+  And I should see ""Unmapped Codes"" card
+
+Scenario: Open mapping creation dialog
+  Given I am on the Benefit Mappings tab
+  When I click ""Create Mapping"" button
+  Then a creation dialog should open
+  And I should see fields for mapping properties
+
+Scenario: Create a valid benefit mapping
+  Given I am in the mapping creation dialog
+  When I select a code from the dropdown
+  And I select a benefit segment
+  And I enter copay amount ""25.00""
+  And I enter coinsurance ""20%""
+  And I set deductible applies to ""Yes""
+  And I set priority to ""1""
+  And I click ""Create""
+  Then the mapping should be created
+  And I should see a success message
+  And the mapping should appear in the list
+
+Scenario: Validate required fields
+  Given I am in the mapping creation dialog
+  When I try to create without selecting code
+  Then I should see ""Code is required"" error
+  And the dialog should not close
+
+Scenario: Detect mapping conflicts
+  Given I am in the mapping creation dialog
+  And a mapping already exists for code ""83036"" to ""Primary Care""
+  When I try to create another mapping for the same code-benefit pair
+  Then I should see a conflict warning
+  And I should have options to update or cancel
+
+Scenario: Cancel mapping creation
+  Given I am in the mapping creation dialog
+  And I have entered some data
+  When I click ""Cancel""
+  Then the dialog should close
+  And no mapping should be created
+
+Acceptance Criteria:
+- Statistics cards display correct counts
+- Creation dialog opens on button click
+- Code dropdown displays all codes
+- Benefit segment dropdown displays segments
+- Copay field accepts currency format
+- Coinsurance field accepts percentage
+- Deductible toggle works
+- Priority field accepts integers
+- Validation prevents empty required fields
+- Conflict detection works
+- Success message displays after creation
+- Cancel button discards changes
+- New mapping appears in list immediately
+
+Business Value: Enables definition of coverage rules and cost-sharing for medical codes. Critical for benefit design and claims processing. Reduces time to map codes from hours to minutes.
+
+KPIs:
+- Mapping creation time < 3 minutes
+- Conflict detection accuracy: 100%
+- Zero duplicate mappings
+- 95% user satisfaction with creation flow","High","LLPR,Story,BenefitMapping","Mappings","Benefit Mappings"
+"As a Benefits Manager, I can perform bulk code mappings","Story","Feature: Bulk Code Mapping
+  As a Benefits Manager
+  I want to map multiple codes to benefits at once
+  So that I can efficiently configure large code sets
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I am on the Code Mappings page
+  And I am on the Benefit Mappings tab
+
+Scenario: Open bulk mapping interface
+  Given I am on the Benefit Mappings tab
+  When I click ""Bulk Map Codes"" button
+  Then the bulk mapping interface should open
+  And I should see code selection options
+
+Scenario: Select multiple codes for mapping
+  Given I am in the bulk mapping interface
+  When I select 10 CPT codes from the list
+  And I select a benefit segment ""Primary Care""
+  And I set copay to ""25.00"" for all
+  And I click ""Map Selected Codes""
+  Then all 10 codes should be mapped
+  And I should see ""10 mappings created successfully""
+
+Scenario: Preview bulk mappings before creation
+  Given I am in the bulk mapping interface
+  And I have selected codes and benefit segment
+  When I click ""Preview""
+  Then I should see a preview of all mappings to be created
+  And I should see any conflicts or warnings
+  And I should have option to proceed or cancel
+
+Scenario: Handle conflicts in bulk mapping
+  Given I am in the bulk mapping interface
+  And some selected codes already have mappings
+  When I try to create bulk mappings
+  Then I should see a conflict report
+  And I should have options to skip, update, or cancel
+  And I should see which codes have conflicts
+
+Scenario: Cancel bulk mapping
+  Given I am in the bulk mapping interface
+  And I have selected codes
+  When I click ""Cancel""
+  Then the interface should close
+  And no mappings should be created
+
+Acceptance Criteria:
+- Bulk mapping interface opens on button click
+- Code selection supports multi-select
+- Benefit segment dropdown works
+- Copay applies to all selected codes
+- Preview shows all mappings to be created
+- Conflict detection works for bulk operations
+- Conflict report is clear and actionable
+- Skip/update/cancel options work
+- Success message shows count of created mappings
+- Cancel button discards all changes
+- Bulk creation is transactional (all or nothing)
+
+Business Value: Reduces time to map large code sets from days to hours. Enables efficient benefit configuration for new products. Critical for annual code updates.
+
+KPIs:
+- Bulk mapping speed: 100 codes per minute
+- Conflict detection accuracy: 100%
+- Zero partial failures
+- 90% reduction in mapping time
+- 95% user satisfaction","Medium","LLPR,Story,BulkMapping","Mappings","Bulk Mapping Operations"
+"As a Benefits Manager, I can create code equivalencies","Story","Feature: Code Equivalency Creation
+  As a Benefits Manager
+  I want to create equivalency relationships between codes
+  So that I can support cross-system integration and deduplication
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I am on the Code Mappings page
+  And I am on the Equivalency Mappings tab
+
+Scenario: View equivalency statistics
+  Given I am on the Equivalency Mappings tab
+  When I view the statistics cards
+  Then I should see ""Total Equivalencies"" card showing ""3""
+  And I should see ""Coverage Rate"" card
+  And I should see ""Avg Confidence"" card
+  And I should see ""Top Category"" card
+
+Scenario: Open equivalency creation dialog
+  Given I am on the Equivalency Mappings tab
+  When I click ""Create Equivalency"" button
+  Then the creation dialog should open
+  And I should see all required fields
+
+Scenario: Create a valid equivalency
+  Given I am in the equivalency creation dialog
+  When I enter name ""HbA1c Test Equivalency""
+  And I enter description ""Hemoglobin A1c measurement equivalency""
+  And I select category ""Laboratory""
+  And I select source ""Manual""
+  And I set confidence to ""100%""
+  And I search for source code ""83036"" (CPT)
+  And I select source code from results
+  And I search for target code ""4548-4"" (LOINC)
+  And I select target code from results
+  And I select relationship ""Exact Match""
+  And I set bidirectional to ""Yes""
+  And I click ""Create""
+  Then the equivalency should be created
+  And I should see a success message
+  And the equivalency should appear in the table
+
+Scenario: Search for codes in dialog
+  Given I am in the equivalency creation dialog
+  When I type ""83036"" in the source code field
+  Then I should see code suggestions dropdown
+  And I should see ""83036 - Hemoglobin A1c (CPT)""
+  And I can select it from the dropdown
+
+Scenario: Adjust confidence slider
+  Given I am in the equivalency creation dialog
+  When I drag the confidence slider
+  Then the value should change from 0-100%
+  And I should see the percentage badge update
+
+Scenario: Validate required fields
+  Given I am in the equivalency creation dialog
+  When I try to create without entering name
+  Then I should see ""Name is required"" error
+  And the dialog should not close
+
+Scenario: Cancel equivalency creation
+  Given I am in the equivalency creation dialog
+  And I have entered some data
+  When I click ""Cancel""
+  Then the dialog should close
+  And no equivalency should be created
+
+Acceptance Criteria:
+- Statistics cards display correct data
+- Creation dialog opens on button click
+- Name field accepts text input
+- Description field accepts text input
+- Category dropdown displays options
+- Source dropdown displays options
+- Confidence slider works (0-100%)
+- Source code search displays suggestions
+- Target code search displays suggestions
+- Code selection from dropdown works
+- Relationship dropdown displays options
+- Bidirectional checkbox toggles
+- Validation prevents empty required fields
+- Success message displays after creation
+- Cancel button discards changes
+- New equivalency appears in table
+
+Business Value: Enables cross-system code integration and deduplication. Critical for EMR data integration and preventing duplicate measure recommendations. Supports FHIR/X12 interoperability.
+
+KPIs:
+- Equivalency creation time < 5 minutes
+- Code search accuracy: 95%
+- Zero duplicate equivalencies
+- 100% bidirectional relationship accuracy
+- 90% user satisfaction","High","LLPR,Story,Equivalency","Mappings","Code Equivalency Management"
+"As a Benefits Manager, I can view equivalency details","Story","Feature: Equivalency Details View
+  As a Benefits Manager
+  I want to view detailed equivalency information
+  So that I can understand code relationships and confidence levels
+
+Background:
+  Given the system has 3 equivalencies loaded
+  And I am on the Equivalency Mappings tab
+
+Scenario: View equivalency in table
+  Given I am on the Equivalency Mappings tab
+  When I view the equivalencies table
+  Then I should see 3 rows
+  And each row should show name
+  And each row should show category badge
+  And each row should show source
+  And each row should show confidence percentage
+  And each row should show mapping count
+
+Scenario: Open equivalency details modal
+  Given I am viewing the equivalencies table
+  When I click the eye icon on an equivalency
+  Then the details modal should open
+  And I should see the equivalency name as title
+
+Scenario: View equivalency details
+  Given I have opened an equivalency details modal
+  When I view the content
+  Then I should see description
+  And I should see category badge
+  And I should see source
+  And I should see confidence percentage
+  And I should see all code mappings
+
+Scenario: View code mappings in details
+  Given I have opened an equivalency details modal
+  When I view the mappings section
+  Then I should see source code → target code pairs
+  And I should see code type badges (CPT, LOINC)
+  And I should see relationship badge (Exact, Broader, etc.)
+  And mappings should be clearly formatted
+
+Scenario: Close equivalency details modal
+  Given I have opened an equivalency details modal
+  When I click ""Close"" button or X
+  Then the modal should close
+  And I should return to the equivalencies table
+
+Acceptance Criteria:
+- Table displays all equivalencies
+- Name, category, source, confidence display correctly
+- Category badge is color-coded
+- Confidence displays as percentage
+- Mapping count is accurate
+- Eye icon opens details modal
+- Modal displays all equivalency properties
+- Code mappings display as source → target
+- Code type badges display correctly
+- Relationship badge displays correctly
+- Close button closes modal
+- Click outside closes modal
+
+Business Value: Provides visibility into code equivalency relationships and confidence levels. Enables verification of equivalency accuracy and troubleshooting of deduplication issues.
+
+KPIs:
+- Modal open time < 300ms
+- 100% data accuracy in modal
+- Zero display errors
+- 95% user satisfaction with details view","Medium","LLPR,Story,EquivalencyDetails","Mappings","Code Equivalency Management"
+"As a Benefits Manager, I can manage value sets","Story","Feature: Value Set Management
+  As a Benefits Manager
+  I want to create and manage value sets
+  So that I can group codes for quality measures and benefit definitions
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I am on the Value Sets page
+
+Scenario: View value set statistics
+  Given I am on the Value Sets page
+  When I view the statistics cards
+  Then I should see ""Total Value Sets"" card
+  And I should see ""Total Codes"" card
+  And I should see ""Avg Codes per Set"" card
+
+Scenario: Browse value sets list
+  Given I am on the Value Sets page
+  When I view the value sets list
+  Then I should see all value sets displayed
+  And each value set should show name
+  And each value set should show code count
+  And each value set should show purpose
+
+Scenario: Search value sets
+  Given I am on the Value Sets page
+  When I enter ""diabetes"" in the search field
+  Then I should see only value sets with ""diabetes"" in the name
+  And the results should appear within 500ms
+
+Scenario: Create new value set
+  Given I am on the Value Sets page
+  When I click ""Create Value Set"" button
+  Then a creation form should open
+  And I should see fields for value set properties
+
+Scenario: Refresh value sets list
+  Given I am on the Value Sets page
+  When I click the ""Refresh"" button
+  Then the value sets list should reload
+  And I should see a loading indicator
+
+Acceptance Criteria:
+- Statistics cards display correct counts
+- Value sets list displays all sets
+- Name, code count, purpose display correctly
+- Search filters by value set name
+- Search is case-insensitive
+- Create button opens creation form
+- Refresh button reloads data
+- Loading states display during fetch
+- Empty state shows when no results
+
+Business Value: Enables grouping of codes for quality measures and benefit definitions. Critical for HEDIS measure configuration and clinical protocol management.
+
+KPIs:
+- Value set search accuracy: 95%
+- Search response time < 500ms
+- 100% of value sets searchable
+- Zero display errors
+- 90% user satisfaction","High","LLPR,Story,ValueSets","Value Sets","Value Set CRUD Operations"
+"As a Benefits Manager, I can manage codes within value sets","Story","Feature: Value Set Code Management
+  As a Benefits Manager
+  I want to add and remove codes from value sets
+  So that I can maintain accurate code groupings
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I am on the Value Sets page
+  And I have opened a value set details modal
+
+Scenario: View codes in value set
+  Given I have opened a value set details modal
+  When I view the modal content
+  Then I should see the value set name
+  And I should see a list of associated codes
+  And each code should show code value, type, and description
+
+Scenario: Add code to value set
+  Given I have opened a value set details modal
+  When I click ""Add Code"" button
+  Then a code search interface should appear
+  And I can search for codes
+  And I can select a code from results
+  And the code should be added to the value set
+  And I should see a success message
+
+Scenario: Search for codes to add
+  Given I am adding a code to a value set
+  When I type ""83036"" in the code search field
+  Then I should see matching codes
+  And I can select ""83036 - Hemoglobin A1c (CPT)""
+  And it should be added to the value set
+
+Scenario: Remove code from value set
+  Given I have opened a value set details modal
+  And the value set has codes
+  When I click the remove icon on a code
+  Then the code should be removed from the value set
+  And I should see a confirmation
+  And the code list should update
+
+Scenario: Close value set modal
+  Given I have opened a value set details modal
+  When I click ""Close"" or X
+  Then the modal should close
+  And changes should be saved
+
+Acceptance Criteria:
+- Modal displays value set name
+- Code list displays all associated codes
+- Code value, type, description display correctly
+- Add Code button opens search interface
+- Code search works correctly
+- Code selection adds to value set
+- Remove icon removes code
+- Confirmation displays after add/remove
+- Close button closes modal
+- Changes persist after modal close
+- Code list updates in real-time
+
+Business Value: Enables maintenance of accurate code groupings for quality measures. Critical for measure logic accuracy and clinical protocol updates.
+
+KPIs:
+- Code add/remove time < 2 seconds
+- Search accuracy: 95%
+- Zero code association errors
+- 100% change persistence
+- 90% user satisfaction","High","LLPR,Story,ValueSetCodes","Value Sets","Value Set Code Associations"
+"As a Benefits Manager, I can manage health plan products","Story","Feature: Product Management
+  As a Benefits Manager
+  I want to create and manage health plan products
+  So that I can configure product offerings
+
+Background:
+  Given I am authenticated as a Benefits Manager
+  And I am on the Products page
+
+Scenario: View product statistics
+  Given I am on the Products page
+  When I view the statistics cards
+  Then I should see ""Total Products"" card
+  And I should see ""Active Products"" card
+  And I should see ""Draft Products"" card
+  And I should see ""Published Products"" card
+
+Scenario: View empty products list
+  Given I am on the Products page
+  And no products have been created
+  When I view the page content
+  Then I should see an empty state message
+  And I should see a ""Create Product"" call-to-action
+
+Scenario: Create new product
+  Given I am on the Products page
+  When I click ""Create Product"" button
+  Then a product creation form should open
+  And I should see fields for product properties
+
+Scenario: Import products
+  Given I am on the Products page
+  When I click ""Import"" button
+  Then an import wizard should open
+  And I should see file upload options
+
+Scenario: Export products
+  Given I am on the Products page
+  When I click ""Export"" button
+  Then a file download should start
+  Or I should see export options
+
+Scenario: Refresh products list
+  Given I am on the Products page
+  When I click ""Refresh"" button
+  Then the products list should reload
+
+Acceptance Criteria:
+- Statistics cards display correct counts
+- Empty state displays when no products
+- Create button opens creation form
+- Import button opens import wizard
+- Export button downloads or shows options
+- Refresh button reloads data
+- Loading states display during operations
+
+Business Value: Enables configuration of health plan product offerings. Critical for product catalog management and benefit design.
+
+KPIs:
+- Product creation time < 10 minutes
+- Import success rate > 95%
+- Export accuracy: 100%
+- Zero data loss
+- 90% user satisfaction","High","LLPR,Story,Products","Products","Health Plan Product CRUD"
+"As an Executive, I can view analytics dashboards","Story","Feature: Analytics Dashboard
+  As an Executive
+  I want to view analytics dashboards
+  So that I can understand system usage and coverage metrics
+
+Background:
+  Given I am authenticated as an Executive
+  And I am on the Analytics page
+
+Scenario: View analytics page
+  Given I am on the Analytics page
+  When the page loads
+  Then I should see charts and visualizations
+  And I should see key metrics
+  And all charts should render within 3 seconds
+
+Scenario: Interact with charts
+  Given I am on the Analytics page
+  When I hover over a chart data point
+  Then I should see a tooltip with details
+  And the tooltip should display relevant information
+
+Scenario: Toggle chart legend
+  Given I am on the Analytics page
+  When I click a legend item
+  Then the corresponding data series should hide/show
+  And the chart should update smoothly
+
+Scenario: Apply date range filter
+  Given I am on the Analytics page
+  When I click the date range picker
+  And I select a custom date range
+  And I apply the filter
+  Then the charts should update with filtered data
+
+Scenario: Refresh analytics data
+  Given I am on the Analytics page
+  When I click ""Refresh"" button
+  Then all charts should reload
+  And I should see a loading indicator
+
+Scenario: Export analytics report
+  Given I am on the Analytics page
+  When I click ""Export"" button
+  Then a report should download
+  Or I should see export format options
+
+Acceptance Criteria:
+- Page loads without errors
+- All charts render within 3 seconds
+- Charts display data correctly
+- Hover tooltips work on all charts
+- Legend toggle works
+- Date range filter works
+- Charts update after filter
+- Refresh button reloads data
+- Export button downloads report
+- Loading states display during operations
+
+Business Value: Provides visibility into system usage, code coverage, and mapping completeness. Enables data-driven decision making and operational insights.
+
+KPIs:
+- Page load time < 3 seconds
+- Chart render time < 1 second
+- Tooltip response < 100ms
+- Zero chart errors
+- 90% user satisfaction","Medium","LLPR,Story,Analytics","Analytics","Dashboard Analytics"
+"As a User, I can navigate the application efficiently","Story","Feature: Application Navigation
+  As a User
+  I want to navigate the application efficiently
+  So that I can access features quickly
+
+Background:
+  Given I am authenticated
+  And I am on any page of the application
+
+Scenario: View sidebar navigation
+  Given I am on any page
+  When I look at the left sidebar
+  Then I should see all navigation menu items
+  And I should see Dashboard, Products, Code Library, Quality Measures, Value Sets, Code Mappings, Analytics, Settings, Support, Users
+
+Scenario: Navigate to different pages
+  Given I am on the Dashboard
+  When I click ""Code Library"" in the sidebar
+  Then I should navigate to the Code Library page
+  And the ""Code Library"" menu item should be highlighted
+  And the page title should show ""Code Library""
+
+Scenario: Active menu item highlighted
+  Given I am on the Code Library page
+  When I look at the sidebar
+  Then the ""Code Library"" menu item should be highlighted
+  And other menu items should not be highlighted
+
+Scenario: Collapse sidebar
+  Given the sidebar is expanded
+  When I click the collapse button (chevron left)
+  Then the sidebar should collapse to icons only
+  And the page content should expand
+
+Scenario: Expand sidebar
+  Given the sidebar is collapsed
+  When I click the expand button (chevron right)
+  Then the sidebar should expand to full width
+  And menu item labels should be visible
+
+Scenario: Page title updates
+  Given I am on any page
+  When I navigate to a different page
+  Then the top bar page title should update
+  And it should match the current page name
+
+Acceptance Criteria:
+- Sidebar displays all menu items
+- All navigation links work
+- Active menu item is highlighted
+- Page title updates on navigation
+- Collapse button works
+- Expand button works
+- Sidebar state persists
+- Notifications icon works
+- Notification badge displays count
+- User profile icon works
+- Profile dropdown displays options
+
+Business Value: Enables efficient navigation and improves user experience. Reduces time to find features and improves overall productivity.
+
+KPIs:
+- Navigation response time < 100ms
+- 100% link accuracy
+- Zero navigation errors
+- 95% user satisfaction with navigation","High","LLPR,Story,Navigation","Navigation","Application Navigation"
+"As a User, I can use the application on mobile devices","Story","Feature: Responsive Design
+  As a User
+  I want to use the application on mobile and tablet devices
+  So that I can work from any device
+
+Background:
+  Given I am authenticated
+  And I am using a mobile or tablet device
+
+Scenario: Sidebar on mobile
+  Given I am on a mobile device (< 768px width)
+  When I view the application
+  Then the sidebar should collapse or become a hamburger menu
+  And I can open/close the sidebar
+
+Scenario: Tables on mobile
+  Given I am on a mobile device
+  When I view a page with a table (e.g., Code Library)
+  Then the table should be horizontally scrollable
+  Or the table should stack vertically
+  And all data should be accessible
+
+Scenario: Statistics cards on mobile
+  Given I am on a mobile device
+  When I view statistics cards
+  Then the cards should stack vertically
+  And each card should be full width
+  And all data should be readable
+
+Scenario: Forms on mobile
+  Given I am on a mobile device
+  When I open a form or modal
+  Then the form should be responsive
+  And all fields should be accessible
+  And buttons should be touch-friendly
+
+Scenario: Layout on tablet
+  Given I am on a tablet device (768-1024px width)
+  When I view the application
+  Then the layout should adjust appropriately
+  And the sidebar should be visible or collapsible
+  And statistics cards should display in 2-3 columns
+
+Acceptance Criteria:
+- Sidebar collapses on mobile (< 768px)
+- Hamburger menu works on mobile
+- Tables are scrollable on mobile
+- Statistics cards stack on mobile
+- Forms are responsive on mobile
+- Buttons are touch-friendly (min 44px)
+- Layout adjusts on tablet (768-1024px)
+- All features accessible on all devices
+- No horizontal scrolling on mobile
+- Text is readable on all devices
+
+Business Value: Enables mobile and tablet usage, expanding accessibility. Critical for field workers and executives who need mobile access.
+
+KPIs:
+- Mobile usability score > 90%
+- Touch target size ≥ 44px
+- Zero horizontal scroll on mobile
+- 100% feature accessibility on mobile
+- 85% user satisfaction on mobile","Medium","LLPR,Story,Responsive","Navigation","Responsive Design"
+"As a User, I experience fast page loads","Story","Feature: Performance Optimization
+  As a User
+  I want pages to load quickly
+  So that I can work efficiently
+
+Background:
+  Given I am authenticated
+  And I am using the application
+
+Scenario: Code Library page loads quickly
+  Given I navigate to the Code Library page
+  When the page loads
+  Then the page should load in less than 3 seconds
+  And I should see the code list
+  And statistics should display
+
+Scenario: Search results appear quickly
+  Given I am on the Code Library page
+  When I type in the search field
+  Then results should appear within 500ms
+  And the search should feel responsive
+
+Scenario: Modal opens quickly
+  Given I am on any page with modals
+  When I click to open a modal
+  Then the modal should appear within 300ms
+  And the content should load smoothly
+
+Scenario: API responses are fast
+  Given I perform any action that calls an API
+  When the API is called
+  Then the response should return within 500ms
+  And I should see a loading indicator if it takes longer
+
+Scenario: Large data sets load efficiently
+  Given I am viewing a page with 1000+ items
+  When I scroll through the list
+  Then scrolling should be smooth
+  And new items should load progressively
+  And performance should not degrade
+
+Acceptance Criteria:
+- Code Library page loads in < 3 seconds
+- Search response time < 500ms
+- Modal open time < 300ms
+- API response time < 500ms (95th percentile)
+- Loading indicators display for slow operations
+- Pagination prevents loading all data at once
+- Images are optimized
+- Code splitting is implemented
+- Lazy loading is used where appropriate
+- No performance degradation with large data sets
+
+Business Value: Ensures fast, responsive user experience. Critical for user satisfaction and productivity. Reduces frustration and improves adoption.
+
+KPIs:
+- Page load time < 3 seconds (95th percentile)
+- API response time < 500ms (95th percentile)
+- Search response < 500ms (95th percentile)
+- Modal open time < 300ms
+- Zero performance-related complaints","High","LLPR,Story,Performance","Quality","Performance Optimization"
+"As a User, I see helpful error messages","Story","Feature: Error Handling
+  As a User
+  I want to see helpful error messages when something goes wrong
+  So that I can understand and resolve issues
+
+Background:
+  Given I am authenticated
+  And I am using the application
+
+Scenario: Network error handling
+  Given I am on any page
+  When the network connection is lost
+  And I try to perform an action
+  Then I should see a ""Network error"" message
+  And I should see suggestions to check my connection
+  And I should have an option to retry
+
+Scenario: Server error handling
+  Given I am on any page
+  When a server error occurs (500)
+  Then I should see a ""Server error"" message
+  And I should see a user-friendly explanation
+  And I should have an option to refresh or contact support
+
+Scenario: 404 page not found
+  Given I navigate to a non-existent page
+  When the page loads
+  Then I should see a 404 error page
+  And I should see a message that the page was not found
+  And I should have a link to return to the dashboard
+
+Scenario: Form validation errors
+  Given I am filling out a form
+  When I submit with invalid data
+  Then I should see validation error messages
+  And errors should be displayed next to the relevant fields
+  And the form should not submit
+
+Scenario: No console errors
+  Given I am using the application
+  When I navigate through all pages
+  Then I should see no red console errors
+  And the browser console should be clean
+
+Acceptance Criteria:
+- Network errors display user-friendly messages
+- Server errors display user-friendly messages
+- 404 page exists and is helpful
+- Form validation errors are clear
+- Error messages are actionable
+- Retry options are provided
+- No red console errors on any page
+- Error boundaries prevent app crashes
+- Errors are logged for debugging
+- Users are never left confused
+
+Business Value: Prevents user frustration and reduces support tickets. Enables users to self-recover from errors. Critical for user satisfaction.
+
+KPIs:
+- Error recovery rate > 80%
+- Support tickets related to errors < 5%
+- Zero unhandled errors
+- 100% error message clarity
+- 90% user satisfaction with error handling","High","LLPR,Story,ErrorHandling","Quality","Error Handling & Resilience"
+"As a User, I can access the application with assistive technologies","Story","Feature: Accessibility Compliance
+  As a User with disabilities
+  I want to use the application with assistive technologies
+  So that I can access all features
+
+Background:
+  Given I am using assistive technology (screen reader, keyboard only, etc.)
+  And I am on the application
+
+Scenario: Keyboard navigation works
+  Given I am using only a keyboard
+  When I press Tab to navigate
+  Then I should be able to reach all interactive elements
+  And I should see focus indicators
+  And I should be able to activate elements with Enter/Space
+
+Scenario: Screen reader support
+  Given I am using a screen reader
+  When I navigate the application
+  Then all elements should have proper labels
+  And images should have alt text
+  And form fields should have associated labels
+  And I should hear meaningful descriptions
+
+Scenario: Color contrast meets standards
+  Given I am viewing the application
+  When I check color contrast
+  Then all text should meet WCAG 2.1 AA standards
+  And contrast ratio should be at least 4.5:1 for normal text
+  And contrast ratio should be at least 3:1 for large text
+
+Scenario: Focus indicators are visible
+  Given I am navigating with keyboard
+  When I tab to an element
+  Then I should see a clear focus indicator
+  And the indicator should be visible on all elements
+  And the indicator should not be removed by CSS
+
+Scenario: Skip navigation link
+  Given I am on any page
+  When I press Tab as the first action
+  Then I should see a ""Skip to main content"" link
+  And clicking it should jump to the main content
+
+Acceptance Criteria:
+- All interactive elements are keyboard accessible
+- Focus indicators are visible on all elements
+- Screen reader labels are present and meaningful
+- Alt text is provided for all images
+- Form fields have associated labels
+- Color contrast meets WCAG 2.1 AA
+- Skip navigation link is present
+- Heading hierarchy is logical
+- ARIA attributes are used correctly
+- No keyboard traps exist
+
+Business Value: Ensures accessibility for users with disabilities. Required for government contracts and compliance. Expands user base and demonstrates social responsibility.
+
+KPIs:
+- WCAG 2.1 AA compliance: 100%
+- Keyboard accessibility: 100%
+- Screen reader compatibility: 100%
+- Zero accessibility violations
+- 95% satisfaction from users with disabilities","Medium","LLPR,Story,Accessibility","Quality","Accessibility Compliance"

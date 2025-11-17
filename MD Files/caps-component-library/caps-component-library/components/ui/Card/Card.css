@@ -1,0 +1,310 @@
+/**
+ * CAPS Design System - Card Styles
+ * 
+ * Implements card styling with support for:
+ * - Multiple variants (default, elevated, outlined, metric)
+ * - Header, body, footer layout
+ * - Interactive states (hoverable, clickable)
+ * - Padding variations
+ */
+
+@import '../../styles/tokens.css';
+
+/* ============================================
+   BASE CARD STYLES
+   ============================================ */
+
+.caps-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface-base);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+/* Reset button styles for clickable cards */
+.caps-card--clickable {
+  border: none;
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ============================================
+   CARD VARIANTS
+   ============================================ */
+
+/* Default - Border and optional shadow */
+.caps-card--default {
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--elevation-0);
+}
+
+/* Elevated - Shadow only, no border */
+.caps-card--elevated {
+  border: none;
+  box-shadow: var(--elevation-2);
+}
+
+/* Outlined - Border only, no shadow */
+.caps-card--outlined {
+  border: 1px solid var(--color-border-default);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Metric - Specialized for metrics display */
+.caps-card--metric {
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--elevation-1);
+}
+
+/* Apply elevation to default variant */
+.caps-card--default.caps-card--elevated {
+  box-shadow: var(--elevation-2);
+}
+
+/* ============================================
+   PADDING VARIANTS
+   ============================================ */
+
+.caps-card--padding-compact .caps-card__header,
+.caps-card--padding-compact .caps-card__body,
+.caps-card--padding-compact .caps-card__footer {
+  padding: var(--space-2);
+}
+
+.caps-card--padding-normal .caps-card__header,
+.caps-card--padding-normal .caps-card__body,
+.caps-card--padding-normal .caps-card__footer {
+  padding: var(--space-3);
+}
+
+.caps-card--padding-spacious .caps-card__header,
+.caps-card--padding-spacious .caps-card__body,
+.caps-card--padding-spacious .caps-card__footer {
+  padding: var(--space-4);
+}
+
+/* ============================================
+   INTERACTIVE STATES
+   ============================================ */
+
+/* Hoverable */
+.caps-card--hoverable:hover {
+  box-shadow: var(--elevation-3);
+  transform: translateY(-2px);
+}
+
+.caps-card--outlined.caps-card--hoverable:hover {
+  border-color: var(--color-border-hover);
+  background-color: var(--color-gray-50);
+}
+
+/* Clickable */
+.caps-card--clickable:active {
+  transform: translateY(0);
+  box-shadow: var(--elevation-1);
+}
+
+.caps-card--clickable:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ============================================
+   CARD SECTIONS
+   ============================================ */
+
+/* Header */
+.caps-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border-default);
+  background-color: var(--color-gray-50);
+}
+
+.caps-card__title {
+  font-size: var(--font-size-subhead);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-subhead);
+  margin: 0;
+}
+
+/* Body */
+.caps-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Remove top padding from body if header exists */
+.caps-card__header + .caps-card__body {
+  padding-top: var(--space-3);
+}
+
+/* Footer */
+.caps-card__footer {
+  border-top: 1px solid var(--color-border-default);
+  background-color: var(--color-gray-50);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+/* Adjust padding for sections */
+.caps-card--padding-compact .caps-card__header + .caps-card__body {
+  padding-top: var(--space-2);
+}
+
+.caps-card--padding-spacious .caps-card__header + .caps-card__body {
+  padding-top: var(--space-4);
+}
+
+/* ============================================
+   METRIC CARD STYLES
+   ============================================ */
+
+.caps-card-metric {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.caps-card-metric__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.caps-card-metric__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.caps-card-metric__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.caps-card-metric__value {
+  font-size: var(--font-size-headline);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: var(--color-text-primary);
+}
+
+.caps-card-metric__label-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.caps-card-metric__label {
+  font-size: var(--font-size-body-2);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.caps-card-metric__trend {
+  font-size: var(--font-size-body-2);
+  font-weight: var(--font-weight-semibold);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.caps-card-metric__trend--up {
+  color: var(--color-success-dark);
+  background-color: var(--color-success-light);
+}
+
+.caps-card-metric__trend--down {
+  color: var(--color-error-dark);
+  background-color: var(--color-error-light);
+}
+
+.caps-card-metric__trend--neutral {
+  color: var(--color-text-secondary);
+  background-color: var(--color-gray-200);
+}
+
+.caps-card-metric__helper {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-disabled);
+  line-height: var(--line-height-caption);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Stack metric cards vertically on mobile */
+  .caps-card-metric {
+    flex-direction: column;
+  }
+  
+  .caps-card-metric__icon {
+    align-self: flex-start;
+  }
+  
+  /* Reduce metric value size on mobile */
+  .caps-card-metric__value {
+    font-size: var(--font-size-title);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .caps-card {
+    transition: none;
+  }
+  
+  .caps-card--hoverable:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .caps-card {
+    border-width: 2px;
+  }
+  
+  .caps-card__header,
+  .caps-card__footer {
+    border-width: 2px;
+  }
+}
+
+/* Dark mode support (future) */
+@media (prefers-color-scheme: dark) {
+  .caps-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .caps-card__header,
+  .caps-card__footer {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}

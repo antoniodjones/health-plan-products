@@ -1,76 +1,44 @@
 /**
  * API Route: /api/codes
- * GET: Search and list medical codes
- * POST: Create a new medical code
+ * SIMPLIFIED - Basic CRUD only
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { searchCodes, createCode, getCodeStatistics } from '@/lib/db/codes';
-import { codeSearchSchema, medicalCodeSchema } from '@/lib/validations/code';
-import { CodeType, CodeStatus, CodeSource } from '@/types/codes';
+import { searchCodes } from '@/lib/db/codes';
+import { codeSearchSchema } from '@/lib/validations/code';
+import { CodeType } from '@/types/codes';
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
 
-    // Parse query parameters
+    // Parse params - SIMPLE
     const params = {
-      codeType: searchParams.getAll('codeType') as CodeType[],
-      status: searchParams.getAll('status') as CodeStatus[],
-      source: searchParams.getAll('source') as CodeSource[],
-      category: searchParams.get('category') || undefined,
       search: searchParams.get('search') || undefined,
-      effectiveDateFrom: searchParams.get('effectiveDateFrom')
-        ? new Date(searchParams.get('effectiveDateFrom')!)
-        : undefined,
-      effectiveDateTo: searchParams.get('effectiveDateTo')
-        ? new Date(searchParams.get('effectiveDateTo')!)
-        : undefined,
-      isCustom: searchParams.get('isCustom')
-        ? searchParams.get('isCustom') === 'true'
+      codeType: searchParams.getAll('codeType') as CodeType[],
+      category: searchParams.getAll('category'),
+      isActive: searchParams.get('isActive')
+        ? searchParams.get('isActive') === 'true'
         : undefined,
       page: Number(searchParams.get('page')) || 1,
-      pageSize: Number(searchParams.get('pageSize')) || 25,
-      sortBy: (searchParams.get('sortBy') || 'code') as any,
-      sortOrder: (searchParams.get('sortOrder') || 'asc') as any,
+      pageSize: Number(searchParams.get('pageSize')) || 20,
     };
 
-    // Validate params
-    const validatedParams = codeSearchSchema.parse(params);
+    console.log('📥 /api/codes - Params:', params);
 
-    // Execute search
-    const result = await searchCodes(validatedParams);
+    // Validate
+    const validated = codeSearchSchema.parse(params);
+
+    // Query
+    const result = await searchCodes(validated);
+
+    console.log('✅ /api/codes - Found:', result.total, 'codes');
 
     return NextResponse.json(result);
   } catch (error: any) {
-    console.error('Error searching codes:', error);
+    console.error('❌ /api/codes - Error:', error.message);
     return NextResponse.json(
-      { error: 'Failed to search codes', details: error.message },
-      { status: 400 }
+      { error: 'Failed to fetch codes', details: error.message },
+      { status: 500 }
     );
   }
 }
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-
-    // Validate input
-    const validatedData = medicalCodeSchema.parse(body);
-
-    // Create code
-    const code = await createCode({
-      ...validatedData,
-      additionalData: validatedData.additionalData || {},
-      metadata: validatedData.metadata || {},
-    });
-
-    return NextResponse.json(code, { status: 201 });
-  } catch (error: any) {
-    console.error('Error creating code:', error);
-    return NextResponse.json(
-      { error: 'Failed to create code', details: error.message },
-      { status: 400 }
-    );
-  }
-}
-

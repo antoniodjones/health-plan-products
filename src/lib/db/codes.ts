@@ -1,10 +1,12 @@
 /**
  * Database operations for Medical Codes
+ * SIMPLIFIED - Direct Prisma queries only
  */
-import { PrismaClient, Prisma } from '@prisma/client';
-import type { CodeSearchParams, MedicalCode } from '@/types/codes';
+import { PrismaClient } from '@prisma/client';
+import type { CodeSearchInput } from '@/lib/validations/code';
+import type { CodeType } from '@/types/codes';
 
-// Singleton pattern to prevent connection pool exhaustion
+// Singleton Prisma client
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
@@ -14,73 +16,45 @@ const prisma = globalForPrisma.prisma ?? new PrismaClient();
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 /**
- * Search and filter medical codes
+ * Search codes - SIMPLIFIED
  */
-export async function searchCodes(params: CodeSearchParams) {
+export async function searchCodes(params: CodeSearchInput) {
   const {
-    codeType,
-    status,
-    source,
-    category,
     search,
-    effectiveDateFrom,
-    effectiveDateTo,
-    isCustom,
+    codeType,
+    category,
+    isActive,
     page = 1,
-    pageSize = 25,
-    sortBy = 'code',
-    sortOrder = 'asc',
+    pageSize = 20,
   } = params;
 
   // Build where clause
-  const where: Prisma.CodeSetWhereInput = {};
-
-  if (codeType && codeType.length > 0) {
-    where.codeType = { in: codeType };
-  }
-
-  // Note: Database uses isActive instead of status
-  // if (status && status.length > 0) {
-  //   where.status = { in: status };
-  // }
-
-  // Note: Database uses sourceSystem instead of source
-  // if (source && source.length > 0) {
-  //   where.source = { in: source };
-  // }
-
-  if (category) {
-    where.category = category;
-  }
+  const where: any = {};
 
   if (search) {
     where.OR = [
       { code: { contains: search, mode: 'insensitive' } },
       { description: { contains: search, mode: 'insensitive' } },
-      { longDescription: { contains: search, mode: 'insensitive' } },
     ];
   }
 
-  if (effectiveDateFrom || effectiveDateTo) {
-    where.effectiveDate = {};
-    if (effectiveDateFrom) {
-      where.effectiveDate.gte = effectiveDateFrom;
-    }
-    if (effectiveDateTo) {
-      where.effectiveDate.lte = effectiveDateTo;
-    }
+  if (codeType && codeType.length > 0) {
+    where.codeType = { in: codeType };
   }
 
-  // Note: Database doesn't have isCustom field - it has CustomCode table
-  // if (typeof isCustom === 'boolean') {
-  //   where.isCustom = isCustom;
-  // }
+  if (category && category.length > 0) {
+    where.category = { in: category };
+  }
 
-  // Execute query with pagination
+  if (typeof isActive === 'boolean') {
+    where.isActive = isActive;
+  }
+
+  // Execute query
   const [codes, total] = await Promise.all([
     prisma.codeSet.findMany({
       where,
-      orderBy: { [sortBy]: sortOrder },
+      orderBy: { code: 'asc' },
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
@@ -97,70 +71,10 @@ export async function searchCodes(params: CodeSearchParams) {
 }
 
 /**
- * Get a single medical code by ID
- */
-export async function getCodeById(id: string) {
-  return prisma.codeSet.findUnique({
-    where: { id },
-    include: {
-      customCodePrefix: true,
-    },
-  });
-}
-
-/**
- * Get a medical code by code value and type
- */
-export async function getCodeByValue(code: string, codeType: string) {
-  return prisma.codeSet.findFirst({
-    where: {
-      code,
-      codeType: codeType as any,
-    },
-  });
-}
-
-/**
- * Create a new medical code
- */
-export async function createCode(data: Prisma.MedicalCodeCreateInput) {
-  return prisma.codeSet.create({
-    data,
-  });
-}
-
-/**
- * Update a medical code
- */
-export async function updateCode(id: string, data: Prisma.MedicalCodeUpdateInput) {
-  return prisma.codeSet.update({
-    where: { id },
-    data,
-  });
-}
-
-/**
- * Delete a medical code
- */
-export async function deleteCode(id: string) {
-  return prisma.codeSet.delete({
-    where: { id },
-  });
-}
-
-/**
- * Get code statistics
+ * Get code statistics - SIMPLIFIED
  */
 export async function getCodeStatistics() {
-  const [
-    totalCodes,
-    activeCount,
-    inactiveCount,
-    byType,
-    bySource,
-    recentlyAdded,
-    recentlyUpdated,
-  ] = await Promise.all([
+  const [totalCodes, activeCodes, inactiveCodes, byType] = await Promise.all([
     prisma.codeSet.count(),
     prisma.codeSet.count({ where: { isActive: true } }),
     prisma.codeSet.count({ where: { isActive: false } }),
@@ -168,80 +82,42 @@ export async function getCodeStatistics() {
       by: ['codeType'],
       _count: { codeType: true },
     }),
-    prisma.codeSet.groupBy({
-      by: ['sourceSystem'],
-      _count: { sourceSystem: true },
-    }),
-    prisma.codeSet.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
-        },
-      },
-    }),
-    prisma.codeSet.count({
-      where: {
-        updatedAt: {
-          gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
-        },
-      },
-    }),
   ]);
 
   return {
     totalCodes,
-    activeCount,
-    inactiveCount,
-    customCount: 0, // Custom codes are in separate CustomCode table
-    byType: Object.fromEntries(byType.map((t) => [t.codeType, t._count.codeType])),
-    bySource: Object.fromEntries(bySource.map((s) => [s.sourceSystem || 'Unknown', s._count.sourceSystem])),
-    recentlyAdded,
-    recentlyUpdated,
+    activeCodes,
+    inactiveCodes,
+    codeTypeCount: byType.length,
+    byType: Object.fromEntries(
+      byType.map((t) => [t.codeType, t._count.codeType])
+    ),
   };
 }
 
 /**
- * Get all categories for a code type
+ * Get single code by ID
  */
-export async function getCodeCategories(codeType?: string) {
-  const where = codeType ? { codeType: codeType as any } : {};
+export async function getCodeById(id: string) {
+  return prisma.codeSet.findUnique({
+    where: { id },
+  });
+}
 
-  const categories = await prisma.codeSet.groupBy({
+/**
+ * Get distinct categories
+ */
+export async function getCategories() {
+  const result = await prisma.codeSet.groupBy({
     by: ['category'],
-    where: {
-      ...where,
-      category: { not: null },
-    },
+    where: { category: { not: null } },
     _count: { category: true },
   });
 
-  return categories
-    .filter((c) => c.category !== null)
-    .map((c) => ({
-      category: c.category!,
-      count: c._count.category,
+  return result
+    .filter((r) => r.category !== null)
+    .map((r) => ({
+      category: r.category!,
+      count: r._count.category,
     }));
 }
-
-/**
- * Batch create medical codes
- */
-export async function batchCreateCodes(codes: Prisma.MedicalCodeCreateInput[]) {
-  return prisma.$transaction(
-    codes.map((code) => prisma.codeSet.create({ data: code }))
-  );
-}
-
-/**
- * Check if code exists
- */
-export async function codeExists(code: string, codeType: string): Promise<boolean> {
-  const count = await prisma.codeSet.count({
-    where: {
-      code,
-      codeType: codeType as any,
-    },
-  });
-  return count > 0;
-}
-

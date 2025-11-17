@@ -68,11 +68,11 @@ export function MappingsTable({
                 <TableCell>
                   <div className="flex flex-col">
                     <span className="font-mono font-medium">
-                      {mapping.medicalCode?.code}
+                      {mapping.codeSet?.code}
                     </span>
-                    {mapping.medicalCode && (
+                    {mapping.codeSet && (
                       <div className="mt-1">
-                        <CodeTypeBadge codeType={mapping.medicalCode.codeType as any} />
+                        <CodeTypeBadge codeType={mapping.codeSet.codeType as any} />
                       </div>
                     )}
                   </div>
@@ -82,10 +82,10 @@ export function MappingsTable({
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="font-medium">{mapping.benefit?.name}</span>
-                    {mapping.benefit?.category && (
+                    <span className="font-medium">{mapping.benefitSegment?.name}</span>
+                    {mapping.benefitSegment?.category && (
                       <span className="text-xs text-muted-foreground">
-                        {mapping.benefit.category}
+                        {mapping.benefitSegment.category}
                       </span>
                     )}
                   </div>
@@ -96,7 +96,9 @@ export function MappingsTable({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <MappingStatusBadge status={mapping.status} />
+                  <Badge variant={mapping.isActive ? 'default' : 'secondary'}>
+                    {mapping.isActive ? 'Active' : 'Inactive'}
+                  </Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">

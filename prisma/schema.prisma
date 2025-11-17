@@ -59,6 +59,10 @@ model CodeSet {
   mappings        CodeMapping[]
   customCodes     CustomCode[]
   valueSetCodes   ValueSetCode[] // Quality Measures: Link to value sets
+  
+  // Code Equivalency (Epic 8)
+  sourceEquivalencies EquivalencyMapping[] @relation("SourceCodeEquivalency")
+  targetEquivalencies EquivalencyMapping[] @relation("TargetCodeEquivalency")
 
   @@unique([code, codeType, version])
   @@index([code, codeType])
@@ -601,6 +605,36 @@ enum LogicType {
 }
 
 // ============================================================================
+// CODE EQUIVALENCY ENUMS (Epic 8)
+// ============================================================================
+
+enum EquivalencyCategory {
+  LABORATORY
+  PROCEDURE
+  DIAGNOSIS
+  MEDICATION
+  OBSERVATION
+  SERVICE
+  SUPPLY
+  DME
+}
+
+enum EquivalencySource {
+  MANUAL
+  CMS_CROSSWALK
+  NLM_UMLS
+  AI_SUGGESTED
+  IMPORTED
+}
+
+enum EquivalencyRelationship {
+  EXACT // Same clinical concept
+  BROADER // Target is more general
+  NARROWER // Target is more specific
+  RELATED // Clinically related but not identical
+}
+
+// ============================================================================
 // QUALITY MEASURES MODELS
 // ============================================================================
 
@@ -739,4 +773,97 @@ model ProductMeasure {
   @@index([productId])
   @@index([measureId])
   @@map("product_measures")
+}
+
+// ============================================================================
+// CODE EQUIVALENCY & INTEROPERABILITY (Epic 8)
+// ============================================================================
+
+model CodeEquivalency {
+  id          String   @id @default(uuid())
+  name        String   // "HbA1c Test"
+  description String   // "Hemoglobin A1c measurement"
+  category    EquivalencyCategory
+
+  // Source & Confidence
+  source     EquivalencySource @default(MANUAL)
+  confidence Float             @default(1.0) // 0.0-1.0
+
+  // Metadata
+  metadata Json?
+
+  // Relationships
+  mappings EquivalencyMapping[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String? // User ID
+
+  @@index([category])
+  @@index([source, confidence])
+  @@map("code_equivalencies")
+}
+
+model EquivalencyMapping {
+  id             String @id @default(uuid())
+  equivalencyId  String
+  sourceCodeId   String // FK to CodeSet
+  targetCodeId   String // FK to CodeSet
+  relationship   EquivalencyRelationship
+  bidirectional  Boolean                 @default(true)
+  confidence     Float                   @default(1.0)
+  validFrom      DateTime                @default(now())
+  validTo        DateTime?
+
+  // Relationships
+  equivalency CodeEquivalency @relation(fields: [equivalencyId], references: [id], onDelete: Cascade)
+  sourceCode  CodeSet         @relation("SourceCodeEquivalency", fields: [sourceCodeId], references: [id], onDelete: Cascade)
+  targetCode  CodeSet         @relation("TargetCodeEquivalency", fields: [targetCodeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sourceCodeId, targetCodeId, relationship])
+  @@index([equivalencyId])
+  @@index([sourceCodeId])
+  @@index([targetCodeId])
+  @@map("equivalency_mappings")
+}
+
+model DeduplicationEvent {
+  id       String @id @default(uuid())
+  memberId String
+
+  // Primary Event (first occurrence)
+  primaryEventSource String // "claim", "emr", "lab", "rx"
+  primaryEventId     String
+  primaryEventDate   DateTime
+  primaryCodeType    String
+  primaryCode        String
+  primaryDescription String?
+
+  // Deduplication Analysis
+  duplicateCount    Int      @default(0)
+  duplicateSources  String[] // ["emr", "claim"]
+  duplicateEventIds String[] // ["event-002", "event-003"]
+
+  // Matching Criteria
+  matchingCriteria String // "exact_code", "equivalent_code", "temporal_proximity"
+  temporalWindow   Int? // hours
+  confidence       Float   @default(1.0)
+
+  // Impact
+  alertsAvoided           Int @default(0)
+  incorrectClosuresAvoided Int @default(0)
+  timeSavedMinutes        Int @default(0)
+
+  // Metadata
+  metadata Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId, primaryEventDate])
+  @@index([primaryCodeType, primaryCode])
+  @@map("deduplication_events")
 }

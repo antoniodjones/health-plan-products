@@ -38,6 +38,7 @@ import {
   ArrowDown,
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { ValueSetCodeEditor } from '@/components/quality-measures/value-set-code-editor';
 
 export default function ValueSetsPage() {
   const [valueSets, setValueSets] = useState<ValueSet[]>([]);
@@ -422,87 +423,16 @@ export default function ValueSetsPage() {
                 )}
               </div>
 
-              {/* Codes List */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-sm font-semibold text-gray-700">
-                    Codes ({valueSetCodes.length})
-                  </h4>
-                  <Button size="sm" variant="outline">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Codes
-                  </Button>
-                </div>
-
-                {loadingCodes ? (
-                  <div className="flex h-32 items-center justify-center">
-                    <div className="text-center">
-                      <div className="mb-2 inline-block h-6 w-6 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                      <p className="text-sm text-gray-500">Loading codes...</p>
-                    </div>
-                  </div>
-                ) : valueSetCodes.length === 0 ? (
-                  <div className="flex h-32 items-center justify-center rounded-lg border border-dashed">
-                    <div className="text-center">
-                      <Code2 className="mx-auto mb-2 h-8 w-8 text-gray-400" />
-                      <p className="text-sm text-gray-500">No codes in this value set</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {valueSetCodes.map((vsCode) => (
-                      <div
-                        key={vsCode.id}
-                        className="flex items-center justify-between rounded-lg border p-4 hover:bg-gray-50"
-                      >
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-1">
-                            <span className="font-mono font-semibold text-gray-900">
-                              {vsCode.codeSet?.code}
-                            </span>
-                            <Badge variant="outline">
-                              {vsCode.codeSet?.codeType}
-                            </Badge>
-                            {vsCode.included ? (
-                              <Badge className="bg-green-100 text-green-700">
-                                ✓ Included
-                              </Badge>
-                            ) : (
-                              <Badge variant="outline" className="bg-red-100 text-red-700">
-                                ✗ Excluded
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {vsCode.codeSet?.description}
-                          </p>
-                          {vsCode.notes && (
-                            <p className="mt-1 text-xs text-gray-500">Note: {vsCode.notes}</p>
-                          )}
-                        </div>
-                        <Button variant="ghost" size="sm" className="text-red-600">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-2 border-t pt-4">
-                <Button variant="outline" onClick={() => setSelectedValueSet(null)}>
-                  Close
-                </Button>
-                <Button variant="outline">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export Codes
-                </Button>
-                <Button>
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit Value Set
-                </Button>
-              </div>
+              {/* Value Set Code Editor */}
+              <ValueSetCodeEditor
+                valueSetId={selectedValueSet.id}
+                valueSetName={selectedValueSet.name}
+                codes={valueSetCodes}
+                onCodesUpdated={() => {
+                  fetchValueSetCodes(selectedValueSet.id);
+                  fetchStatistics();
+                }}
+              />
             </div>
           )}
         </DialogContent>

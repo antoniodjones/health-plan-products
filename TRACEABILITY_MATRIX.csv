@@ -1,0 +1,29 @@
+Feature ID,Feature Name,Epic ID,Epic Name,LLPR Story ID,LLPR Story Name,Test Cases,Implementation Story ID,Implementation Story Name,Test Coverage,Implementation Coverage,Status
+FEATURE-1,Code Management System,EPIC-1,Code Library & Search,STORY-1,Medical Code Search,TEST-C-005|TEST-C-006|TEST-C-007|TEST-C-008|TEST-C-009,IMPL-1,Implement Code Search API endpoint,100%,100%,Complete
+FEATURE-1,Code Management System,EPIC-1,Code Library & Search,STORY-2,Code Pagination,TEST-C-011|TEST-C-012|TEST-C-013|TEST-C-014|TEST-C-020,IMPL-2,Implement Code Pagination Component,100%,100%,Complete
+FEATURE-1,Code Management System,EPIC-1,Code Library & Search,STORY-3,Code Statistics,TEST-C-001|TEST-C-002|TEST-C-003|TEST-C-004,IMPL-3,Implement Code Statistics Aggregation,100%,100%,Complete
+FEATURE-1,Code Management System,EPIC-1,Code Library & Search,STORY-4,Code Details Display,TEST-C-021|TEST-C-022|TEST-C-023|TEST-C-024|TEST-C-025,IMPL-4,Implement Code Details Display Component,100%,100%,Complete
+FEATURE-1,Code Management System,EPIC-2,Code Import & Export,STORY-5,Bulk Code Import,None,IMPL-5,Implement Code Import Wizard,0%,100%,Implementation Complete - Tests Pending
+FEATURE-1,Code Management System,EPIC-3,Custom Code Management,STORY-6,Custom Code Creation,None,IMPL-6,Implement Custom Code Creation Form,0%,100%,Implementation Complete - Tests Pending
+FEATURE-2,Quality Measures Management,EPIC-4,HEDIS Measure Library,STORY-7,Browse Quality Measures,TEST-Q-001|TEST-Q-002|TEST-Q-003|TEST-Q-004|TEST-Q-005|TEST-Q-006|TEST-Q-007|TEST-Q-008,IMPL-7,Implement Quality Measure Search and Filters,100%,100%,Complete
+FEATURE-2,Quality Measures Management,EPIC-4,HEDIS Measure Library,STORY-8,Measure Details Modal,TEST-Q-009|TEST-Q-010|TEST-Q-011|TEST-Q-012|TEST-Q-013|TEST-Q-014|TEST-Q-015,IMPL-8,Implement Quality Measure Details Modal,100%,100%,Complete
+FEATURE-2,Quality Measures Management,EPIC-5,Measure Logic Configuration,STORY-9,Configure Measure Logic,None,IMPL-9,Implement Measure Logic Editor,0%,100%,Implementation Complete - Tests Pending
+FEATURE-3,Code Mapping & Equivalency,EPIC-7,Benefit Mappings,STORY-10,Create Benefit Mappings,TEST-M-005|TEST-M-006|TEST-M-007|TEST-M-008|TEST-M-009|TEST-M-010,IMPL-10,Implement Benefit Mapping Creation,100%,100%,Complete
+FEATURE-3,Code Mapping & Equivalency,EPIC-8,Code Equivalency Management,STORY-11,Bulk Code Mapping,TEST-M-011|TEST-M-012|TEST-M-013|TEST-M-014,IMPL-11,Implement Bulk Code Mapping,100%,100%,Complete
+FEATURE-3,Code Mapping & Equivalency,EPIC-8,Code Equivalency Management,STORY-12,Create Code Equivalencies,TEST-M-018|TEST-M-019|TEST-M-020|TEST-M-021|TEST-M-022|TEST-M-023|TEST-M-024,IMPL-12,Implement Code Equivalency Creation,100%,100%,Complete
+FEATURE-3,Code Mapping & Equivalency,EPIC-8,Code Equivalency Management,STORY-13,View Equivalency Details,TEST-M-025|TEST-M-026|TEST-M-027|TEST-M-028,IMPL-13,Implement Equivalency Details Modal,100%,100%,Complete
+FEATURE-4,Value Set Management,EPIC-9,Value Set CRUD Operations,STORY-14,Browse Value Sets,TEST-V-001|TEST-V-002|TEST-V-003|TEST-V-004|TEST-V-005|TEST-V-006,IMPL-14,Implement Value Set CRUD Operations,100%,100%,Complete
+FEATURE-4,Value Set Management,EPIC-10,Value Set Code Associations,STORY-15,Manage Value Set Codes,TEST-V-007|TEST-V-008|TEST-V-009|TEST-V-010|TEST-V-011|TEST-V-012,IMPL-15,Implement Value Set Code Management,100%,100%,Complete
+FEATURE-5,Product Catalog Management,EPIC-11,Health Plan Product CRUD,STORY-16,Manage Health Plan Products,TEST-P-001|TEST-P-002|TEST-P-003|TEST-P-004|TEST-P-005|TEST-P-006,IMPL-16,Implement Product Management CRUD,100%,100%,Complete
+FEATURE-6,Analytics & Reporting,EPIC-14,Dashboard Analytics,STORY-17,View Analytics Dashboards,TEST-A-001|TEST-A-002|TEST-A-003|TEST-A-004|TEST-A-005|TEST-A-006|TEST-A-007|TEST-A-008|TEST-A-009,IMPL-17,Implement Analytics Dashboard Charts,100%,100%,Complete
+FEATURE-7,Navigation & User Experience,EPIC-16,Application Navigation,STORY-19,Application Navigation,TEST-N-001|TEST-N-002|TEST-N-003|TEST-N-004|TEST-N-005|TEST-N-006|TEST-N-007|TEST-N-008|TEST-N-009|TEST-N-010|TEST-N-011|TEST-N-012|TEST-N-013|TEST-N-014,IMPL-19,Implement Responsive Sidebar Navigation,100%,100%,Complete
+FEATURE-7,Navigation & User Experience,EPIC-17,Responsive Design,STORY-20,Responsive Design,TEST-R-001|TEST-R-002|TEST-R-003|TEST-R-004|TEST-R-005,IMPL-20,Implement Responsive Table Component,100%,100%,Complete
+FEATURE-8,System Quality & Performance,EPIC-18,Performance Optimization,STORY-21,Performance Optimization,TEST-PERF-001|TEST-PERF-002|TEST-PERF-003,IMPL-21,Implement Performance Monitoring,100%,100%,Complete
+FEATURE-8,System Quality & Performance,EPIC-19,Error Handling & Resilience,STORY-22,Error Handling,TEST-E-001|TEST-E-002|TEST-E-003|TEST-E-004|TEST-E-005,IMPL-22,Implement Error Boundaries and Error Handling,100%,100%,Complete
+FEATURE-8,System Quality & Performance,EPIC-20,Accessibility Compliance,STORY-23,Accessibility Compliance,None,IMPL-23,Implement Accessibility Features,0%,100%,Implementation Complete - Tests Pending
+N/A,Infrastructure,N/A,Database,N/A,Database Setup,None,IMPL-24,Implement Database Migrations and Seeding,0%,100%,Infrastructure
+N/A,Infrastructure,N/A,Documentation,N/A,API Documentation,None,IMPL-25,Implement API Documentation,0%,100%,Infrastructure
+N/A,Infrastructure,N/A,Testing,N/A,Testing Infrastructure,None,IMPL-26,Implement Unit and Integration Tests,0%,100%,Infrastructure
+N/A,Infrastructure,N/A,DevOps,N/A,CI/CD Pipeline,None,IMPL-27,Implement CI/CD Pipeline,0%,100%,Infrastructure
+N/A,Infrastructure,N/A,Monitoring,N/A,Logging and Monitoring,None,IMPL-28,Implement Logging and Monitoring,0%,100%,Infrastructure
+

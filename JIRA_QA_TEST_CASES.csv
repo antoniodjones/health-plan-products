@@ -1,0 +1,307 @@
+Summary,Issue Type,Priority,Component,Description,Labels,Test Steps,Expected Result,Acceptance Criteria
+"Dashboard - Left sidebar visible",Test,Medium,Dashboard,"Verify left sidebar is visible and displays all menu items",navigation;ui,"1. Navigate to /dashboard
+2. Check left sidebar","Sidebar shows all menu items (Dashboard, Products, Code Library, Quality Measures, Value Sets, Code Mappings, Analytics, Settings, Support, Users)","Sidebar is visible and contains all navigation items"
+"Dashboard - Active menu item highlighted",Test,Low,Dashboard,"Verify Dashboard menu item is highlighted when on dashboard page",navigation;ui,"1. Navigate to /dashboard
+2. Check sidebar active state","'Dashboard' menu item is highlighted/active","Active state clearly indicates current page"
+"Dashboard - Export Report button",Test,Medium,Dashboard,"Verify Export Report button functionality",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'Export Report' button","Action occurs or shows 'not implemented' message","Button responds to click event"
+"Dashboard - Quick Action button",Test,Medium,Dashboard,"Verify Quick Action button functionality",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'Quick Action' button","Action occurs or shows 'not implemented' message","Button responds to click event"
+"Dashboard - View All Alerts button",Test,Low,Dashboard,"Verify View All button in Alerts section",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'View All' in Alerts section","Navigates to alerts page or shows modal","Button navigates or displays content"
+"Dashboard - View All Activity button",Test,Low,Dashboard,"Verify View All button in Activity section",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'View All' in Activity section","Navigates to activity page or shows modal","Button navigates or displays content"
+"Dashboard - Review Codes alert button",Test,Medium,Dashboard,"Verify Review Codes button in alert card",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'Review Codes' button in alert","Navigates to codes page","Button navigates to /codes page"
+"Dashboard - Create Product quick action",Test,Medium,Dashboard,"Verify Create Product quick action card",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'Create Product' card","Navigates to product creation or opens modal","Card is clickable and triggers action"
+"Dashboard - Import Codes quick action",Test,Medium,Dashboard,"Verify Import Codes quick action card",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'Import Codes' card","Navigates to import page or opens modal","Card is clickable and triggers action"
+"Dashboard - Create Mapping quick action",Test,Medium,Dashboard,"Verify Create Mapping quick action card",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'Create Mapping' card","Navigates to mapping creation or opens modal","Card is clickable and triggers action"
+"Dashboard - View Analytics quick action",Test,Medium,Dashboard,"Verify View Analytics quick action card",buttons;dashboard,"1. Navigate to /dashboard
+2. Click 'View Analytics' card","Navigates to /analytics page","Card navigates to analytics page"
+"Code Library - Total Codes statistic displays",Test,High,Code Library,"Verify Total Codes statistic card shows correct count",statistics;codes,"1. Navigate to /codes
+2. Check Total Codes card","Shows '58' total codes","Statistic matches database count"
+"Code Library - Active Codes statistic displays",Test,High,Code Library,"Verify Active Codes statistic card shows correct count",statistics;codes,"1. Navigate to /codes
+2. Check Active Codes card","Shows '58' active codes","Statistic matches database count"
+"Code Library - Inactive Codes statistic displays",Test,High,Code Library,"Verify Inactive Codes statistic card shows correct count",statistics;codes,"1. Navigate to /codes
+2. Check Inactive Codes card","Shows '0' inactive codes","Statistic matches database count"
+"Code Library - Code Types statistic displays",Test,High,Code Library,"Verify Code Types statistic card shows correct count",statistics;codes,"1. Navigate to /codes
+2. Check Code Types card","Shows '3' code types","Statistic shows distinct code types"
+"Code Library - Search by code",Test,High,Code Library,"Verify search functionality filters by code value",search;codes,"1. Navigate to /codes
+2. Type '83036' in search field
+3. Wait for results","Filters to show only codes matching '83036'","Search filters results correctly"
+"Code Library - Search by description",Test,High,Code Library,"Verify search functionality filters by description",search;codes,"1. Navigate to /codes
+2. Type 'hemoglobin' in search field
+3. Wait for results","Filters to show codes with 'hemoglobin' in description","Search filters results correctly"
+"Code Library - Clear search",Test,Medium,Code Library,"Verify clearing search shows all codes again",search;codes,"1. Navigate to /codes
+2. Type search term
+3. Clear search input","Shows all codes again (58 total)","Search reset works correctly"
+"Code Library - Search debounce",Test,Low,Code Library,"Verify search waits before executing query",search;performance,"1. Navigate to /codes
+2. Type quickly in search field
+3. Observe timing","Waits 300ms before executing search","Search has debounce delay"
+"Code Library - Refresh button",Test,Medium,Code Library,"Verify Refresh button reloads code list",buttons;codes,"1. Navigate to /codes
+2. Click 'Refresh' button","Reloads code list from API","Button triggers data refresh"
+"Code Library - Next page button",Test,High,Code Library,"Verify Next button navigates to next page",pagination;codes,"1. Navigate to /codes
+2. Click 'Next' button","Goes to page 2, shows next 20 codes","Pagination advances correctly"
+"Code Library - Previous page button",Test,High,Code Library,"Verify Previous button navigates to previous page",pagination;codes,"1. Navigate to /codes page 2
+2. Click 'Previous' button","Goes to page 1, shows first 20 codes","Pagination goes back correctly"
+"Code Library - Previous button disabled on page 1",Test,Medium,Code Library,"Verify Previous button is disabled on first page",pagination;codes,"1. Navigate to /codes page 1
+2. Check 'Previous' button state","Button is disabled/grayed out","Disabled state prevents invalid action"
+"Code Library - Next button disabled on last page",Test,Medium,Code Library,"Verify Next button is disabled on last page",pagination;codes,"1. Navigate to /codes last page
+2. Check 'Next' button state","Button is disabled/grayed out","Disabled state prevents invalid action"
+"Code Library - Table headers visible",Test,Medium,Code Library,"Verify table displays all column headers",table;codes,"1. Navigate to /codes
+2. Check table headers","Shows: Code, Type, Description, Category, Status","All columns are labeled"
+"Code Library - Code values display",Test,Medium,Code Library,"Verify code values display in monospace font",table;codes,"1. Navigate to /codes
+2. Check first row code column","Code displays in monospace font (e.g., '83036')","Codes are readable and formatted"
+"Code Library - Type badge displays",Test,Medium,Code Library,"Verify code type displays as badge",table;codes,"1. Navigate to /codes
+2. Check Type column","Shows badge with code type (CPT, HCPCS, ICD_10_CM)","Type is clearly indicated"
+"Code Library - Status badge displays",Test,Medium,Code Library,"Verify status displays as colored badge",table;codes,"1. Navigate to /codes
+2. Check Status column","Shows green 'Active' or red 'Inactive' badge","Status is color-coded"
+"Code Library - Row hover effect",Test,Low,Code Library,"Verify table row has hover effect",table;ui,"1. Navigate to /codes
+2. Hover mouse over table row","Row background changes on hover","Hover state provides visual feedback"
+"Code Library - Pagination info displays",Test,Low,Code Library,"Verify pagination info is visible",pagination;codes,"1. Navigate to /codes
+2. Check bottom of table","Shows 'Page X of Y' text","Pagination info is clear"
+"Code Library - Loading state on initial load",Test,Medium,Code Library,"Verify loading spinner appears on page load",loading;codes,"1. Navigate to /codes (or refresh)
+2. Observe loading state","Shows spinner with 'Loading codes...' message","Loading state is visible"
+"Code Library - No results found message",Test,Medium,Code Library,"Verify empty state message when no results",empty-state;codes,"1. Navigate to /codes
+2. Search for 'ZZZZZ' (non-existent)","Shows 'No Codes Found' message","Empty state is user-friendly"
+"Products - Total Products statistic",Test,High,Products,"Verify Total Products statistic displays",statistics;products,"1. Navigate to /products
+2. Check Total Products card","Shows '0' (no seed data)","Statistic matches database"
+"Products - Active Products statistic",Test,High,Products,"Verify Active Products statistic displays",statistics;products,"1. Navigate to /products
+2. Check Active card","Shows '0'","Statistic matches database"
+"Products - Draft Products statistic",Test,High,Products,"Verify Draft Products statistic displays",statistics;products,"1. Navigate to /products
+2. Check Draft card","Shows '0'","Statistic matches database"
+"Products - Refresh button",Test,Medium,Products,"Verify Refresh button reloads product list",buttons;products,"1. Navigate to /products
+2. Click 'Refresh' button","Reloads product list from API","Button triggers refresh"
+"Products - Export button",Test,Medium,Products,"Verify Export button functionality",buttons;products,"1. Navigate to /products
+2. Click 'Export' button","Downloads data or shows modal","Button responds to click"
+"Products - Import button",Test,Medium,Products,"Verify Import button functionality",buttons;products,"1. Navigate to /products
+2. Click 'Import' button","Opens import modal/wizard","Button opens import interface"
+"Products - Create Product button",Test,High,Products,"Verify Create Product button functionality",buttons;products,"1. Navigate to /products
+2. Click 'Create Product' button","Opens product creation form/modal","Button opens creation interface"
+"Products - Empty state message",Test,Medium,Products,"Verify empty state displays when no products",empty-state;products,"1. Navigate to /products
+2. Check page content","Shows 'No products found' or similar message","Empty state is clear"
+"Quality Measures - Total Measures statistic",Test,High,Quality Measures,"Verify Total Measures statistic displays",statistics;quality-measures,"1. Navigate to /quality-measures
+2. Check Total Measures card","Shows '5' or actual count","Statistic matches database"
+"Quality Measures - Active Measures statistic",Test,High,Quality Measures,"Verify Active Measures statistic displays",statistics;quality-measures,"1. Navigate to /quality-measures
+2. Check Active card","Shows count of active measures","Statistic is accurate"
+"Quality Measures - HEDIS Measures statistic",Test,High,Quality Measures,"Verify HEDIS Measures statistic displays",statistics;quality-measures,"1. Navigate to /quality-measures
+2. Check HEDIS card","Shows count of HEDIS measures","Statistic is accurate"
+"Quality Measures - Search functionality",Test,High,Quality Measures,"Verify search filters measures",search;quality-measures,"1. Navigate to /quality-measures
+2. Type measure name in search
+3. Wait for results","Filters measures based on search term","Search works correctly"
+"Quality Measures - Advanced Filters button",Test,Medium,Quality Measures,"Verify Advanced Filters button opens filter panel",buttons;quality-measures,"1. Navigate to /quality-measures
+2. Click 'Advanced Filters' button","Opens filter panel or modal","Button opens filters"
+"Quality Measures - Refresh button",Test,Medium,Quality Measures,"Verify Refresh button reloads measures",buttons;quality-measures,"1. Navigate to /quality-measures
+2. Click 'Refresh' button","Reloads measures from API","Button triggers refresh"
+"Quality Measures - Export button",Test,Medium,Quality Measures,"Verify Export button downloads data",buttons;quality-measures,"1. Navigate to /quality-measures
+2. Click 'Export' button","Downloads measures data","Button exports data"
+"Quality Measures - Create Custom Measure button",Test,High,Quality Measures,"Verify Create Custom Measure button",buttons;quality-measures,"1. Navigate to /quality-measures
+2. Click 'Create Custom Measure' button","Opens measure creation form","Button opens creation interface"
+"Quality Measures - Measure displays in list",Test,High,Quality Measures,"Verify measures display in list/cards",display;quality-measures,"1. Navigate to /quality-measures
+2. Check page content","Shows measure cards or table rows","Measures are visible"
+"Quality Measures - View Details button",Test,High,Quality Measures,"Verify View Details opens modal",modal;quality-measures,"1. Navigate to /quality-measures
+2. Click 'View Details' on a measure","Opens measure details modal","Modal appears with details"
+"Quality Measures - Program badge displays",Test,Medium,Quality Measures,"Verify program badge displays on measures",display;quality-measures,"1. Navigate to /quality-measures
+2. Check measure display","Shows HEDIS/MIPS badge","Program is clearly indicated"
+"Quality Measures - Domain badge displays",Test,Medium,Quality Measures,"Verify domain badge displays on measures",display;quality-measures,"1. Navigate to /quality-measures
+2. Check measure display","Shows domain badge (e.g., Effectiveness of Care)","Domain is clearly indicated"
+"Quality Measures - Modal opens on click",Test,High,Quality Measures,"Verify clicking measure opens details modal",modal;quality-measures,"1. Navigate to /quality-measures
+2. Click any measure","Modal appears with measure details","Modal opens correctly"
+"Quality Measures - Overview tab active by default",Test,Medium,Quality Measures,"Verify Overview tab is active when modal opens",modal;quality-measures,"1. Open measure details modal
+2. Check active tab","'Overview' tab is active/highlighted","Default tab is correct"
+"Quality Measures - Measure Logic tab",Test,High,Quality Measures,"Verify Measure Logic tab displays logic",modal;quality-measures,"1. Open measure details modal
+2. Click 'Measure Logic' tab","Shows measure logic (denominator, numerator, exclusions)","Logic tab displays correctly"
+"Quality Measures - Products tab",Test,Medium,Quality Measures,"Verify Products tab displays linked products",modal;quality-measures,"1. Open measure details modal
+2. Click 'Products' tab","Shows products linked to this measure","Products tab displays correctly"
+"Quality Measures - Billing Codes tab",Test,High,Quality Measures,"Verify Billing Codes tab displays associated codes",modal;quality-measures,"1. Open measure details modal
+2. Click 'Billing Codes' tab","Shows billing codes associated with measure","Codes tab displays correctly"
+"Quality Measures - Edit Logic button",Test,Medium,Quality Measures,"Verify Edit Logic button functionality",modal;quality-measures,"1. Open measure details modal
+2. Click 'Edit Logic' button","Opens logic editor or navigates to edit page","Button triggers edit action"
+"Quality Measures - Close modal",Test,High,Quality Measures,"Verify modal closes correctly",modal;quality-measures,"1. Open measure details modal
+2. Click X or click outside modal","Modal closes","Modal dismisses correctly"
+"Value Sets - Total Value Sets statistic",Test,High,Value Sets,"Verify Total Value Sets statistic displays",statistics;value-sets,"1. Navigate to /value-sets
+2. Check Total Value Sets card","Shows count of value sets","Statistic is accurate"
+"Value Sets - Total Codes statistic",Test,High,Value Sets,"Verify Total Codes statistic displays",statistics;value-sets,"1. Navigate to /value-sets
+2. Check Total Codes card","Shows count of codes across all sets","Statistic is accurate"
+"Value Sets - Refresh button",Test,Medium,Value Sets,"Verify Refresh button reloads value sets",buttons;value-sets,"1. Navigate to /value-sets
+2. Click 'Refresh' button","Reloads value sets from API","Button triggers refresh"
+"Value Sets - Export button",Test,Medium,Value Sets,"Verify Export button downloads data",buttons;value-sets,"1. Navigate to /value-sets
+2. Click 'Export' button","Downloads value sets data","Button exports data"
+"Value Sets - Create Value Set button",Test,High,Value Sets,"Verify Create Value Set button",buttons;value-sets,"1. Navigate to /value-sets
+2. Click 'Create Value Set' button","Opens value set creation form","Button opens creation interface"
+"Value Sets - Modal opens on click",Test,High,Value Sets,"Verify clicking value set opens details modal",modal;value-sets,"1. Navigate to /value-sets
+2. Click any value set","Modal appears with value set details","Modal opens correctly"
+"Value Sets - Code list displays in modal",Test,High,Value Sets,"Verify modal shows associated codes",modal;value-sets,"1. Open value set details modal
+2. Check modal content","Shows list of codes in the value set","Codes are visible"
+"Value Sets - Add Code button",Test,High,Value Sets,"Verify Add Code button in modal",modal;value-sets,"1. Open value set details modal
+2. Click 'Add Code' button","Opens code selector/search","Button opens code selection"
+"Value Sets - Remove Code button",Test,High,Value Sets,"Verify Remove Code button removes code",modal;value-sets,"1. Open value set details modal
+2. Click remove icon on a code","Removes code from value set","Code is removed"
+"Value Sets - Search codes in modal",Test,Medium,Value Sets,"Verify code search in modal",modal;value-sets,"1. Open value set details modal
+2. Type in code search field","Filters available codes","Search works in modal"
+"Value Sets - Close modal",Test,High,Value Sets,"Verify modal closes correctly",modal;value-sets,"1. Open value set details modal
+2. Click X or outside modal","Modal closes","Modal dismisses correctly"
+"Code Mappings - Tabs visible",Test,High,Code Mappings,"Verify both tabs are visible",tabs;mappings,"1. Navigate to /mappings
+2. Check tab bar","Shows 'Benefit Mappings' and 'Equivalency Mappings' tabs","Both tabs are visible"
+"Code Mappings - Default tab is Benefit Mappings",Test,Medium,Code Mappings,"Verify Benefit Mappings tab is active by default",tabs;mappings,"1. Navigate to /mappings
+2. Check active tab","'Benefit Mappings' tab is active/highlighted","Default tab is correct"
+"Code Mappings - Switch to Equivalency tab",Test,High,Code Mappings,"Verify switching to Equivalency Mappings tab",tabs;mappings,"1. Navigate to /mappings
+2. Click 'Equivalency Mappings' tab","Tab switches, content changes to equivalencies","Tab switching works"
+"Code Mappings - Switch back to Benefit tab",Test,High,Code Mappings,"Verify switching back to Benefit Mappings tab",tabs;mappings,"1. On Equivalency tab
+2. Click 'Benefit Mappings' tab","Tab switches back, content changes","Tab switching works both ways"
+"Code Mappings - Benefit statistics display",Test,High,Code Mappings,"Verify statistics display on Benefit tab",statistics;mappings,"1. Navigate to /mappings (Benefit tab)
+2. Check statistics cards","Shows mapping statistics (0 mappings)","Statistics are visible"
+"Code Mappings - Benefit search input",Test,Medium,Code Mappings,"Verify search filters benefit mappings",search;mappings,"1. On Benefit Mappings tab
+2. Type in search field","Filters mappings based on search","Search works"
+"Code Mappings - Benefit Refresh button",Test,Medium,Code Mappings,"Verify Refresh button on Benefit tab",buttons;mappings,"1. On Benefit Mappings tab
+2. Click 'Refresh' button","Reloads mappings from API","Button triggers refresh"
+"Code Mappings - Bulk Map Codes button",Test,Medium,Code Mappings,"Verify Bulk Map Codes button",buttons;mappings,"1. On Benefit Mappings tab
+2. Click 'Bulk Map Codes' button","Opens bulk mapping interface","Button opens bulk interface"
+"Code Mappings - Create Mapping button",Test,High,Code Mappings,"Verify Create Mapping button on Benefit tab",buttons;mappings,"1. On Benefit Mappings tab
+2. Click 'Create Mapping' button","Opens mapping creation dialog","Button opens dialog"
+"Code Mappings - Benefit empty state",Test,Medium,Code Mappings,"Verify empty state on Benefit tab",empty-state;mappings,"1. On Benefit Mappings tab
+2. Check content (no data)","Shows 'No mappings found' message","Empty state is clear"
+"Code Mappings - Equivalency statistics display",Test,High,Code Mappings,"Verify statistics display on Equivalency tab",statistics;mappings,"1. Navigate to /mappings
+2. Click Equivalency Mappings tab
+3. Check statistics","Shows 3 equivalencies statistics","Statistics are accurate"
+"Code Mappings - Equivalency search input",Test,Medium,Code Mappings,"Verify search filters equivalencies",search;mappings,"1. On Equivalency Mappings tab
+2. Type in search field","Filters equivalencies based on search","Search works"
+"Code Mappings - Equivalency Refresh button",Test,Medium,Code Mappings,"Verify Refresh button on Equivalency tab",buttons;mappings,"1. On Equivalency Mappings tab
+2. Click 'Refresh' button","Reloads equivalencies from API","Button triggers refresh"
+"Code Mappings - Create Equivalency button",Test,High,Code Mappings,"Verify Create Equivalency button",buttons;mappings,"1. On Equivalency Mappings tab
+2. Click 'Create Equivalency' button","Opens equivalency creation dialog","Button opens dialog"
+"Code Mappings - Equivalency table displays",Test,High,Code Mappings,"Verify equivalencies display in table",table;mappings,"1. On Equivalency Mappings tab
+2. Check table","Shows 3 equivalencies in table","Table displays data"
+"Code Mappings - View Details button",Test,High,Code Mappings,"Verify View Details opens modal",modal;mappings,"1. On Equivalency Mappings tab
+2. Click eye icon on equivalency","Opens equivalency details modal","Modal opens"
+"Code Mappings - Delete button",Test,Medium,Code Mappings,"Verify Delete button shows confirmation",buttons;mappings,"1. On Equivalency Mappings tab
+2. Click trash icon on equivalency","Shows confirmation dialog","Confirmation appears"
+"Code Mappings - Create dialog opens",Test,High,Code Mappings,"Verify Create Equivalency dialog opens",modal;mappings,"1. Click 'Create Equivalency' button","Dialog appears with form fields","Dialog opens correctly"
+"Code Mappings - Name field in dialog",Test,High,Code Mappings,"Verify Name field accepts input",form;mappings,"1. Open Create Equivalency dialog
+2. Type in Name field","Text appears in field","Field accepts input"
+"Code Mappings - Description field in dialog",Test,Medium,Code Mappings,"Verify Description field accepts input",form;mappings,"1. Open Create Equivalency dialog
+2. Type in Description field","Text appears in field","Field accepts input"
+"Code Mappings - Category dropdown",Test,High,Code Mappings,"Verify Category dropdown displays options",form;mappings,"1. Open Create Equivalency dialog
+2. Click Category dropdown","Shows options: Laboratory, Procedure, Diagnosis, Pharmacy, Administrative, Other","Dropdown works"
+"Code Mappings - Source dropdown",Test,Medium,Code Mappings,"Verify Source dropdown displays options",form;mappings,"1. Open Create Equivalency dialog
+2. Click Source dropdown","Shows: Manual, AI Suggested, System Generated","Dropdown works"
+"Code Mappings - Confidence slider",Test,Medium,Code Mappings,"Verify Confidence slider adjusts value",form;mappings,"1. Open Create Equivalency dialog
+2. Drag Confidence slider","Value changes from 0-100%, badge updates","Slider works"
+"Code Mappings - Source Code search",Test,High,Code Mappings,"Verify Source Code search displays suggestions",form;mappings,"1. Open Create Equivalency dialog
+2. Type in Source Code field (e.g., '83036')","Shows code suggestions dropdown","Search works"
+"Code Mappings - Select source code",Test,High,Code Mappings,"Verify selecting source code from dropdown",form;mappings,"1. Search for source code
+2. Click a code from results","Code is selected and displayed","Selection works"
+"Code Mappings - Target Code search",Test,High,Code Mappings,"Verify Target Code search displays suggestions",form;mappings,"1. Open Create Equivalency dialog
+2. Type in Target Code field","Shows code suggestions dropdown","Search works"
+"Code Mappings - Select target code",Test,High,Code Mappings,"Verify selecting target code from dropdown",form;mappings,"1. Search for target code
+2. Click a code from results","Code is selected and displayed","Selection works"
+"Code Mappings - Relationship dropdown",Test,High,Code Mappings,"Verify Relationship dropdown displays options",form;mappings,"1. Open Create Equivalency dialog
+2. Click Relationship dropdown","Shows: Exact Match, Broader, Narrower, Related","Dropdown works"
+"Code Mappings - Bidirectional checkbox",Test,Medium,Code Mappings,"Verify Bidirectional checkbox toggles",form;mappings,"1. Open Create Equivalency dialog
+2. Click Bidirectional checkbox","Checkbox toggles on/off","Checkbox works"
+"Code Mappings - Cancel button in dialog",Test,High,Code Mappings,"Verify Cancel button closes dialog without saving",form;mappings,"1. Open Create Equivalency dialog
+2. Fill some fields
+3. Click 'Cancel'","Dialog closes, no data saved","Cancel works correctly"
+"Code Mappings - Create button validation",Test,High,Code Mappings,"Verify Create button shows validation error when empty",form;mappings,"1. Open Create Equivalency dialog
+2. Click 'Create' with empty fields","Shows validation error message","Validation works"
+"Code Mappings - Create button success",Test,High,Code Mappings,"Verify Create button creates equivalency",form;mappings,"1. Open Create Equivalency dialog
+2. Fill all required fields
+3. Click 'Create'","Creates equivalency, closes dialog, refreshes list","Creation works"
+"Code Mappings - Details modal opens",Test,High,Code Mappings,"Verify equivalency details modal opens",modal;mappings,"1. Click eye icon on equivalency","Modal appears with details","Modal opens"
+"Code Mappings - Details display in modal",Test,High,Code Mappings,"Verify all details display in modal",modal;mappings,"1. Open equivalency details modal
+2. Check content","Shows name, description, category, source, confidence","All details visible"
+"Code Mappings - Mappings list in modal",Test,High,Code Mappings,"Verify mappings list displays in modal",modal;mappings,"1. Open equivalency details modal
+2. Check mappings section","Shows source → target code mappings","Mappings are visible"
+"Code Mappings - Code badges in modal",Test,Medium,Code Mappings,"Verify code type badges display",modal;mappings,"1. Open equivalency details modal
+2. Check mapping items","Shows code type badges (CPT, LOINC, etc.)","Badges display correctly"
+"Code Mappings - Relationship badge in modal",Test,Medium,Code Mappings,"Verify relationship badge displays",modal;mappings,"1. Open equivalency details modal
+2. Check mapping items","Shows relationship badge (Exact, etc.)","Badge displays correctly"
+"Code Mappings - Close details modal",Test,High,Code Mappings,"Verify Close button closes details modal",modal;mappings,"1. Open equivalency details modal
+2. Click 'Close' button","Modal closes","Close button works"
+"Analytics - Page loads without errors",Test,High,Analytics,"Verify Analytics page loads successfully",page-load;analytics,"1. Navigate to /analytics
+2. Check page loads","Page displays without errors","Page loads correctly"
+"Analytics - Charts render",Test,High,Analytics,"Verify charts and graphs render",display;analytics,"1. Navigate to /analytics
+2. Check page content","Charts/graphs are visible and rendered","Charts display"
+"Analytics - Date range picker",Test,Medium,Analytics,"Verify date range picker opens",buttons;analytics,"1. Navigate to /analytics
+2. Click date range control","Opens date picker","Date picker works"
+"Analytics - Filter dropdown",Test,Medium,Analytics,"Verify filter dropdown displays options",buttons;analytics,"1. Navigate to /analytics
+2. Click filter dropdown","Shows filter options","Dropdown works"
+"Analytics - Refresh button",Test,Medium,Analytics,"Verify Refresh button reloads data",buttons;analytics,"1. Navigate to /analytics
+2. Click 'Refresh' button","Reloads analytics data","Button triggers refresh"
+"Analytics - Export button",Test,Medium,Analytics,"Verify Export button downloads report",buttons;analytics,"1. Navigate to /analytics
+2. Click 'Export' button","Downloads analytics report","Button exports data"
+"Analytics - Chart tooltips",Test,Medium,Analytics,"Verify hovering over chart shows tooltip",charts;analytics,"1. Navigate to /analytics
+2. Hover over chart data point","Shows tooltip with details","Tooltip appears"
+"Analytics - Chart legend",Test,Low,Analytics,"Verify chart legend is visible",charts;analytics,"1. Navigate to /analytics
+2. Check chart","Legend is visible and clickable","Legend displays"
+"Analytics - Toggle legend item",Test,Low,Analytics,"Verify clicking legend item toggles data series",charts;analytics,"1. Navigate to /analytics
+2. Click legend item","Hides/shows corresponding data series","Legend toggle works"
+"Navigation - Sidebar visible on all pages",Test,High,Navigation,"Verify left sidebar is visible on all pages",navigation;ui,"1. Navigate to each page
+2. Check sidebar visibility","Sidebar is visible on all pages","Sidebar persists"
+"Navigation - Dashboard link",Test,High,Navigation,"Verify Dashboard navigation link works",navigation,"1. From any page
+2. Click 'Dashboard' in sidebar","Navigates to /dashboard","Link works"
+"Navigation - Products link",Test,High,Navigation,"Verify Products navigation link works",navigation,"1. From any page
+2. Click 'Products' in sidebar","Navigates to /products","Link works"
+"Navigation - Code Library link",Test,High,Navigation,"Verify Code Library navigation link works",navigation,"1. From any page
+2. Click 'Code Library' in sidebar","Navigates to /codes","Link works"
+"Navigation - Quality Measures link",Test,High,Navigation,"Verify Quality Measures navigation link works",navigation,"1. From any page
+2. Click 'Quality Measures' in sidebar","Navigates to /quality-measures","Link works"
+"Navigation - Value Sets link",Test,High,Navigation,"Verify Value Sets navigation link works",navigation,"1. From any page
+2. Click 'Value Sets' in sidebar","Navigates to /value-sets","Link works"
+"Navigation - Code Mappings link",Test,High,Navigation,"Verify Code Mappings navigation link works",navigation,"1. From any page
+2. Click 'Code Mappings' in sidebar","Navigates to /mappings","Link works"
+"Navigation - Analytics link",Test,High,Navigation,"Verify Analytics navigation link works",navigation,"1. From any page
+2. Click 'Analytics' in sidebar","Navigates to /analytics","Link works"
+"Navigation - Settings link",Test,Medium,Navigation,"Verify Settings navigation link works",navigation,"1. From any page
+2. Click 'Settings' in sidebar","Navigates to /settings","Link works"
+"Navigation - Support link",Test,Medium,Navigation,"Verify Support navigation link works",navigation,"1. From any page
+2. Click 'Support' in sidebar","Navigates to /support","Link works"
+"Navigation - Users link",Test,Medium,Navigation,"Verify Users navigation link works",navigation,"1. From any page
+2. Click 'Users' in sidebar","Navigates to /users","Link works"
+"Navigation - Active state highlights",Test,Medium,Navigation,"Verify active menu item is highlighted",navigation;ui,"1. Navigate to any page
+2. Check sidebar","Corresponding menu item is highlighted","Active state works"
+"Navigation - Collapse sidebar",Test,Medium,Navigation,"Verify sidebar collapse button works",navigation;ui,"1. From any page
+2. Click collapse button (chevron left)","Sidebar collapses to icons only","Collapse works"
+"Navigation - Expand sidebar",Test,Medium,Navigation,"Verify sidebar expand button works",navigation;ui,"1. With collapsed sidebar
+2. Click expand button (chevron right)","Sidebar expands to full width","Expand works"
+"Navigation - Page title displays",Test,Low,Navigation,"Verify page title displays in top bar",navigation;ui,"1. Navigate to any page
+2. Check top bar","Shows current page name","Title updates correctly"
+"Navigation - Notifications icon",Test,Medium,Navigation,"Verify notifications icon functionality",navigation;ui,"1. From any page
+2. Click bell icon in top bar","Shows notifications dropdown","Icon works"
+"Navigation - Notification badge",Test,Low,Navigation,"Verify notification badge displays count",navigation;ui,"1. Check bell icon in top bar","Shows '3' badge","Badge displays"
+"Navigation - User profile icon",Test,Medium,Navigation,"Verify user profile icon functionality",navigation;ui,"1. From any page
+2. Click user icon in top bar","Shows profile dropdown/menu","Icon works"
+"Forms - Required field validation",Test,High,Forms,"Verify required fields show error when empty",forms;validation,"1. Open any form with required fields
+2. Submit without filling
+3. Check validation","Shows error message for required fields","Validation works"
+"Forms - Field focus state",Test,Low,Forms,"Verify input fields show focus state",forms;ui,"1. Click in any input field","Field gets focus, shows border highlight","Focus state visible"
+"Forms - Cancel button",Test,High,Forms,"Verify Cancel button closes form without saving",forms,"1. Open any form
+2. Fill some fields
+3. Click 'Cancel'","Form closes, no data saved","Cancel works"
+"Forms - Form reset on reopen",Test,Medium,Forms,"Verify form fields are cleared when reopened",forms,"1. Open form, fill fields, close
+2. Reopen form","Form fields are empty/reset","Form resets correctly"
+"Error Handling - Network error",Test,High,Error Handling,"Verify error message when network is down",errors,"1. Disconnect internet
+2. Refresh page or trigger API call","Shows error message","Error handling works"
+"Error Handling - 500 server error",Test,High,Error Handling,"Verify error message on server error",errors,"1. Trigger 500 error (if possible)
+2. Check response","Shows error message","Error handling works"
+"Error Handling - 404 page",Test,Medium,Error Handling,"Verify 404 page displays for invalid routes",errors,"1. Navigate to /nonexistent
+2. Check page","Shows 404 error page","404 page exists"
+"Error Handling - Console errors check",Test,High,Error Handling,"Verify no console errors on any page",errors;console,"1. Open DevTools Console
+2. Navigate through all pages","No red console errors","Console is clean"
+"Responsive - Sidebar on mobile",Test,Medium,Responsive,"Verify sidebar behavior on mobile viewport",responsive;mobile,"1. Resize browser to < 768px
+2. Check sidebar","Sidebar collapses or becomes hamburger menu","Mobile layout works"
+"Responsive - Tables on mobile",Test,Medium,Responsive,"Verify tables are scrollable on mobile",responsive;mobile,"1. Resize browser to < 768px
+2. Check table on any page","Table is horizontally scrollable or stacks","Mobile tables work"
+"Responsive - Cards on mobile",Test,Medium,Responsive,"Verify stat cards stack on mobile",responsive;mobile,"1. Resize browser to < 768px
+2. Check stat cards","Cards stack vertically","Mobile cards work"
+"Responsive - Layout on tablet",Test,Low,Responsive,"Verify layout adjusts on tablet viewport",responsive;tablet,"1. Resize browser to 768-1024px
+2. Check layout","Layout adjusts appropriately","Tablet layout works"
+"Performance - Initial page load time",Test,Medium,Performance,"Verify /codes page loads quickly",performance,"1. Navigate to /codes
+2. Measure load time","Page loads in < 3 seconds","Load time acceptable"
+"Performance - Search response time",Test,Medium,Performance,"Verify search results appear quickly",performance,"1. Type in search field
+2. Measure response time","Results appear in < 500ms","Search is fast"
+"Performance - Modal open time",Test,Low,Performance,"Verify modals open quickly",performance,"1. Click to open any modal
+2. Measure time","Modal appears in < 300ms","Modal opens fast"

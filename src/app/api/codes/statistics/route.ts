@@ -1,21 +1,19 @@
 /**
  * API Route: /api/codes/statistics
- * GET: Get code statistics and analytics
+ * SIMPLIFIED
  */
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getCodeStatistics } from '@/lib/db/codes';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const statistics = await getCodeStatistics();
-
     return NextResponse.json(statistics);
   } catch (error: any) {
-    console.error('Error fetching code statistics:', error);
+    console.error('❌ /api/codes/statistics - Error:', error.message);
     return NextResponse.json(
       { error: 'Failed to fetch statistics', details: error.message },
       { status: 500 }
     );
   }
 }
-

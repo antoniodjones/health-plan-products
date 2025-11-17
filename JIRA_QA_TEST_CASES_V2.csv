@@ -1,0 +1,859 @@
+Summary,Issue Type,Priority,Component,Description,Labels,Test Type,Precondition,Test Steps,Expected Results,Link (Tests),Acceptance Criteria
+"Dashboard - Left sidebar visible",Test,Medium,Dashboard,"Verify left sidebar is visible and displays all menu items","navigation,ui,TestCase","Manual","1. User is authenticated
+2. Application is running
+3. Browser is open","1. Navigate to /dashboard
+2. Check left sidebar
+3. Verify all menu items are visible","1. Sidebar is visible on left side
+2. All menu items display: Dashboard, Products, Code Library, Quality Measures, Value Sets, Code Mappings, Analytics, Settings, Support, Users
+3. Icons are visible for each menu item","STORY-19","Sidebar is visible and contains all navigation items"
+"Dashboard - Active menu item highlighted",Test,Low,Dashboard,"Verify Dashboard menu item is highlighted when on dashboard page","navigation,ui,TestCase","Manual","1. User is authenticated
+2. Application is running","1. Navigate to /dashboard
+2. Check sidebar active state
+3. Verify Dashboard menu item styling","1. 'Dashboard' menu item is highlighted/active
+2. Other menu items are not highlighted
+3. Active state is visually distinct","STORY-19","Active state clearly indicates current page"
+"Dashboard - Export Report button",Test,Medium,Dashboard,"Verify Export Report button functionality","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate 'Export Report' button
+3. Click 'Export Report' button
+4. Observe result","1. Button is visible and clickable
+2. Action occurs (file download or modal) or shows 'not implemented' message
+3. No console errors","STORY-17","Button responds to click event"
+"Dashboard - Quick Action button",Test,Medium,Dashboard,"Verify Quick Action button functionality","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate Quick Action buttons
+3. Click each Quick Action button
+4. Observe result","1. Buttons are visible and clickable
+2. Actions occur or show 'not implemented' message
+3. No console errors","STORY-17","Button responds to click event"
+"Dashboard - View All Alerts button",Test,Low,Dashboard,"Verify View All button in Alerts section","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate 'View All' button in Alerts section
+3. Click 'View All' button
+4. Observe result","1. Button is visible and clickable
+2. Navigates to alerts page or shows modal
+3. No console errors","STORY-17","Button navigates or displays content"
+"Dashboard - View All Activity button",Test,Low,Dashboard,"Verify View All button in Activity section","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate 'View All' button in Activity section
+3. Click 'View All' button
+4. Observe result","1. Button is visible and clickable
+2. Navigates to activity page or shows modal
+3. No console errors","STORY-17","Button navigates or displays content"
+"Dashboard - Review Codes alert button",Test,Medium,Dashboard,"Verify Review Codes button in alert card","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded
+3. Alert card is visible","1. Navigate to /dashboard
+2. Locate 'Review Codes' button in alert
+3. Click 'Review Codes' button
+4. Verify navigation","1. Button is visible and clickable
+2. Navigates to /codes page
+3. Code Library page loads successfully","STORY-17","Button navigates to /codes page"
+"Dashboard - Create Product quick action",Test,Medium,Dashboard,"Verify Create Product quick action card","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate 'Create Product' card
+3. Click 'Create Product' card
+4. Observe result","1. Card is clickable
+2. Navigates to product creation or opens modal
+3. No console errors","STORY-17","Card is clickable and triggers action"
+"Dashboard - Import Codes quick action",Test,Medium,Dashboard,"Verify Import Codes quick action card","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate 'Import Codes' card
+3. Click 'Import Codes' card
+4. Observe result","1. Card is clickable
+2. Navigates to import page or opens modal
+3. No console errors","STORY-17","Card is clickable and triggers action"
+"Dashboard - Create Mapping quick action",Test,Medium,Dashboard,"Verify Create Mapping quick action card","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate 'Create Mapping' card
+3. Click 'Create Mapping' card
+4. Observe result","1. Card is clickable
+2. Navigates to mapping creation or opens modal
+3. No console errors","STORY-17","Card is clickable and triggers action"
+"Dashboard - View Analytics quick action",Test,Medium,Dashboard,"Verify View Analytics quick action card","buttons,dashboard,TestCase","Manual","1. User is authenticated
+2. Dashboard page is loaded","1. Navigate to /dashboard
+2. Locate 'View Analytics' card
+3. Click 'View Analytics' card
+4. Verify navigation","1. Card is clickable
+2. Navigates to /analytics page
+3. Analytics page loads successfully","STORY-17","Card navigates to analytics page"
+"Code Library - Total Codes statistic displays",Test,High,Code Library,"Verify Total Codes statistic card shows correct count","statistics,codes,TestCase","Manual","1. Database has 58 medical codes loaded
+2. User is authenticated","1. Navigate to /codes
+2. Locate Total Codes statistic card
+3. Verify displayed count","1. Total Codes card is visible
+2. Shows '58' total codes
+3. Count matches database","STORY-3","Statistic matches database count"
+"Code Library - Active Codes statistic displays",Test,High,Code Library,"Verify Active Codes statistic card shows correct count","statistics,codes,TestCase","Manual","1. Database has 58 active codes
+2. User is authenticated","1. Navigate to /codes
+2. Locate Active Codes statistic card
+3. Verify displayed count","1. Active Codes card is visible
+2. Shows '58' active codes
+3. Count matches database
+4. Card is color-coded green","STORY-3","Statistic matches database count"
+"Code Library - Inactive Codes statistic displays",Test,High,Code Library,"Verify Inactive Codes statistic card shows correct count","statistics,codes,TestCase","Manual","1. Database has 0 inactive codes
+2. User is authenticated","1. Navigate to /codes
+2. Locate Inactive Codes statistic card
+3. Verify displayed count","1. Inactive Codes card is visible
+2. Shows '0' inactive codes
+3. Count matches database
+4. Card is color-coded red","STORY-3","Statistic matches database count"
+"Code Library - Code Types statistic displays",Test,High,Code Library,"Verify Code Types statistic card shows correct count","statistics,codes,TestCase","Manual","1. Database has 3 distinct code types
+2. User is authenticated","1. Navigate to /codes
+2. Locate Code Types statistic card
+3. Verify displayed count","1. Code Types card is visible
+2. Shows '3' code types
+3. Lists types: CPT, HCPCS, ICD-10","STORY-3","Statistic shows distinct code types"
+"Code Library - Search by exact code value",Test,High,Code Library,"Verify search functionality filters by exact code value","search,codes,TestCase","Manual","1. Database has 58 codes loaded
+2. Code '83036' exists in database
+3. User is on /codes page","1. Navigate to /codes
+2. Type '83036' in search field
+3. Wait 500ms for results
+4. Verify filtered results","1. Results filter to show only codes matching '83036'
+2. Code '83036' is displayed with type 'CPT'
+3. Description contains 'Hemoglobin A1c'
+4. Results appear within 500ms","STORY-1","Search filters by exact code match"
+"Code Library - Search by partial description",Test,High,Code Library,"Verify search functionality filters by description text","search,codes,TestCase","Manual","1. Database has codes with 'hemoglobin' in description
+2. User is on /codes page","1. Navigate to /codes
+2. Type 'hemoglobin' in search field
+3. Wait 500ms for results
+4. Verify filtered results","1. Results show codes with 'hemoglobin' in description
+2. Search is case-insensitive
+3. Results appear within 500ms","STORY-1","Search filters by description text"
+"Code Library - Clear search returns all codes",Test,Medium,Code Library,"Verify clearing search shows all codes again","search,codes,TestCase","Manual","1. Database has 58 codes
+2. User has entered search term
+3. Results are filtered","1. Navigate to /codes
+2. Type '83036' in search field
+3. Wait for filtered results
+4. Clear search input
+5. Verify all codes return","1. All 58 codes are displayed
+2. Pagination shows 'Page 1 of 3'
+3. Statistics update to full counts","STORY-1","Empty search shows all codes"
+"Code Library - Search is case-insensitive",Test,Medium,Code Library,"Verify search works regardless of case","search,codes,TestCase","Manual","1. Database has codes
+2. User is on /codes page","1. Navigate to /codes
+2. Type 'HEMOGLOBIN' (uppercase) in search field
+3. Wait for results
+4. Clear search
+5. Type 'hemoglobin' (lowercase) in search field
+6. Wait for results
+7. Compare results","1. Uppercase search returns results
+2. Lowercase search returns results
+3. Both searches return the same results","STORY-1","Search is case-insensitive"
+"Code Library - Search debounce prevents excessive API calls",Test,Low,Code Library,"Verify search waits 300ms before executing query","search,performance,TestCase","Manual","1. User is on /codes page
+2. Browser DevTools Network tab is open","1. Navigate to /codes
+2. Open DevTools Network tab
+3. Type 'hemo' quickly in search field
+4. Observe network requests
+5. Verify timing","1. Search waits 300ms after typing stops
+2. Only one API call is made after typing stops
+3. No API calls during typing","STORY-1","Search has 300ms debounce"
+"Code Library - No results found message",Test,Medium,Code Library,"Verify 'No Codes Found' message displays for invalid search","search,codes,TestCase","Manual","1. Database has 58 codes
+2. User is on /codes page","1. Navigate to /codes
+2. Type 'ZZZZZ' in search field
+3. Wait for results
+4. Verify message","1. 'No Codes Found' message is displayed
+2. Suggestion to adjust search is shown
+3. No codes are displayed in table","STORY-1","Invalid search shows 'No results' message"
+"Code Library - Refresh button reloads data",Test,Medium,Code Library,"Verify Refresh button reloads code list","buttons,codes,TestCase","Manual","1. User is on /codes page
+2. Code list is displayed","1. Navigate to /codes
+2. Click 'Refresh' button
+3. Observe loading indicator
+4. Verify data reloads","1. Loading indicator displays
+2. Code list reloads from API
+3. Statistics update
+4. No console errors","STORY-2","Button triggers data refresh"
+"Code Library - Next page button navigates forward",Test,High,Code Library,"Verify Next button navigates to next page","pagination,codes,TestCase","Manual","1. Database has 58 codes (3 pages)
+2. User is on page 1","1. Navigate to /codes
+2. Verify on page 1 (shows 'Page 1 of 3')
+3. Click 'Next' button
+4. Verify navigation","1. Navigates to page 2
+2. Shows next 20 codes
+3. Pagination shows 'Page 2 of 3'
+4. Previous button becomes enabled","STORY-2","Pagination advances to next page"
+"Code Library - Previous page button navigates backward",Test,High,Code Library,"Verify Previous button navigates to previous page","pagination,codes,TestCase","Manual","1. Database has 58 codes (3 pages)
+2. User is on page 2","1. Navigate to /codes page 2
+2. Verify on page 2 (shows 'Page 2 of 3')
+3. Click 'Previous' button
+4. Verify navigation","1. Navigates to page 1
+2. Shows first 20 codes
+3. Pagination shows 'Page 1 of 3'
+4. Previous button becomes disabled","STORY-2","Pagination goes to previous page"
+"Code Library - Previous button disabled on first page",Test,Medium,Code Library,"Verify Previous button is disabled on first page","pagination,codes,TestCase","Manual","1. User is on /codes page 1","1. Navigate to /codes page 1
+2. Locate Previous button
+3. Verify button state","1. Previous button is disabled
+2. Button is visually grayed out
+3. Clicking has no effect","STORY-2","Previous button disabled on first page"
+"Code Library - Next button disabled on last page",Test,Medium,Code Library,"Verify Next button is disabled on last page","pagination,codes,TestCase","Manual","1. Database has 58 codes (3 pages)
+2. User is on page 3","1. Navigate to /codes page 3
+2. Locate Next button
+3. Verify button state","1. Next button is disabled
+2. Button is visually grayed out
+3. Clicking has no effect","STORY-2","Next button disabled on last page"
+"Code Library - Pagination info displays correctly",Test,Medium,Code Library,"Verify pagination info shows current page and total pages","pagination,codes,TestCase","Manual","1. Database has 58 codes (3 pages)
+2. User is on /codes page","1. Navigate to /codes page 1
+2. Verify pagination text
+3. Navigate to page 2
+4. Verify pagination text updates","1. Page 1 shows 'Page 1 of 3'
+2. Page 2 shows 'Page 2 of 3'
+3. Current page number is accurate
+4. Total pages is accurate","STORY-2","Pagination info shows current and total pages"
+"Code Library - Pagination persists during search",Test,Medium,Code Library,"Verify pagination state persists when searching","pagination,search,TestCase","Manual","1. Database has codes
+2. User is on /codes page","1. Navigate to /codes
+2. Enter search term with multiple results
+3. Navigate to page 2 of search results
+4. Verify pagination state","1. Pagination works with filtered results
+2. Page state persists during search
+3. Pagination info updates based on filtered count","STORY-2","Page state persists during search"
+"Code Library - Code value displays in monospace font",Test,Low,Code Library,"Verify code values are displayed in monospace font","display,codes,TestCase","Manual","1. Database has codes loaded
+2. User is on /codes page","1. Navigate to /codes
+2. Inspect code value column
+3. Verify font styling","1. Code values display in monospace font
+2. Codes are easily distinguishable
+3. Codes align vertically","STORY-4","Code values display in monospace font"
+"Code Library - Code type badge displays correctly",Test,Medium,Code Library,"Verify code type displays as badge with correct styling","display,codes,TestCase","Manual","1. Database has codes of different types
+2. User is on /codes page","1. Navigate to /codes
+2. View Type column
+3. Verify badge styling for CPT, HCPCS, ICD-10","1. Code type displays as badge
+2. CPT, HCPCS, ICD-10 badges are visually distinct
+3. Badges have proper styling","STORY-4","Code type displays as badge"
+"Code Library - Status badge color coding",Test,Medium,Code Library,"Verify status badge is color-coded (green=active, red=inactive)","display,codes,TestCase","Manual","1. Database has active and inactive codes
+2. User is on /codes page","1. Navigate to /codes
+2. View Status column
+3. Verify badge colors","1. Active codes show green badge
+2. Inactive codes show red badge
+3. Badge text is readable","STORY-4","Status displays as color-coded badge"
+"Code Library - Table row hover effect",Test,Low,Code Library,"Verify table row changes background on hover","display,codes,TestCase","Manual","1. User is on /codes page
+2. Code list is displayed","1. Navigate to /codes
+2. Hover mouse over a code row
+3. Observe visual feedback","1. Row background changes on hover
+2. Visual feedback is clear
+3. Hover effect is smooth","STORY-4","Row hover effect provides feedback"
+"Code Library - Description displays in full",Test,Medium,Code Library,"Verify code description displays completely","display,codes,TestCase","Manual","1. Database has codes with descriptions
+2. User is on /codes page","1. Navigate to /codes
+2. View Description column
+3. Verify text display","1. Description displays in full
+2. Long descriptions are handled gracefully
+3. Text is readable","STORY-4","Description displays in full"
+"Code Library - Category displays or shows N/A",Test,Low,Code Library,"Verify category displays or shows 'N/A' when null","display,codes,TestCase","Manual","1. Database has codes with and without categories
+2. User is on /codes page","1. Navigate to /codes
+2. View Category column
+3. Verify display for codes with and without categories","1. Codes with category show category name
+2. Codes without category show 'N/A'
+3. Display is consistent","STORY-4","Category displays or shows 'N/A'"
+"Quality Measures - Total Measures statistic displays",Test,High,Quality Measures,"Verify Total Measures statistic card shows correct count","statistics,quality,TestCase","Manual","1. Database has 5 HEDIS measures
+2. User is authenticated","1. Navigate to /quality-measures
+2. Locate Total Measures statistic card
+3. Verify displayed count","1. Total Measures card is visible
+2. Shows '5' total measures
+3. Count matches database","STORY-7","Statistics cards display correct counts"
+"Quality Measures - Active Measures statistic displays",Test,High,Quality Measures,"Verify Active Measures statistic card shows correct count","statistics,quality,TestCase","Manual","1. Database has active measures
+2. User is authenticated","1. Navigate to /quality-measures
+2. Locate Active Measures statistic card
+3. Verify displayed count","1. Active Measures card is visible
+2. Shows correct count of active measures
+3. Count matches database","STORY-7","Statistics cards display correct counts"
+"Quality Measures - HEDIS Measures statistic displays",Test,High,Quality Measures,"Verify HEDIS Measures statistic card shows correct count","statistics,quality,TestCase","Manual","1. Database has HEDIS measures
+2. User is authenticated","1. Navigate to /quality-measures
+2. Locate HEDIS Measures statistic card
+3. Verify displayed count","1. HEDIS Measures card is visible
+2. Shows correct count of HEDIS measures
+3. Count matches database","STORY-7","Statistics cards display correct counts"
+"Quality Measures - Avg Target Rate statistic displays",Test,Medium,Quality Measures,"Verify Avg Target Rate statistic card shows correct value","statistics,quality,TestCase","Manual","1. Database has measures with target rates
+2. User is authenticated","1. Navigate to /quality-measures
+2. Locate Avg Target Rate statistic card
+3. Verify displayed value","1. Avg Target Rate card is visible
+2. Shows correct average percentage
+3. Value is calculated correctly","STORY-7","Statistics cards display correct counts"
+"Quality Measures - Browse measures list",Test,High,Quality Measures,"Verify quality measures list displays all measures","display,quality,TestCase","Manual","1. Database has 5 measures
+2. User is authenticated","1. Navigate to /quality-measures
+2. View measures list
+3. Verify all measures display","1. All 5 measures are displayed
+2. Each measure shows ID, name, program, domain
+3. Program badge is color-coded
+4. Domain badge is visible","STORY-7","Measures list displays all measures"
+"Quality Measures - Search by measure name",Test,High,Quality Measures,"Verify search filters measures by name","search,quality,TestCase","Manual","1. Database has measures
+2. User is on /quality-measures page","1. Navigate to /quality-measures
+2. Type 'diabetes' in search field
+3. Wait 500ms for results
+4. Verify filtered results","1. Results show only measures with 'diabetes' in name
+2. Search is case-insensitive
+3. Results appear within 500ms","STORY-7","Search filters by measure name"
+"Quality Measures - Filter by program",Test,Medium,Quality Measures,"Verify filter by program (HEDIS/MIPS) works","filter,quality,TestCase","Manual","1. Database has HEDIS and MIPS measures
+2. User is on /quality-measures page","1. Navigate to /quality-measures
+2. Click 'Advanced Filters'
+3. Select 'HEDIS' program
+4. Apply filters
+5. Verify results","1. Only HEDIS measures are displayed
+2. Count updates correctly
+3. Filter is applied successfully","STORY-7","Filter by program works"
+"Quality Measures - Refresh button reloads data",Test,Medium,Quality Measures,"Verify Refresh button reloads measures list","buttons,quality,TestCase","Manual","1. User is on /quality-measures page","1. Navigate to /quality-measures
+2. Click 'Refresh' button
+3. Observe loading indicator
+4. Verify data reloads","1. Loading indicator displays
+2. Measures list reloads from API
+3. Statistics update
+4. No console errors","STORY-7","Refresh button reloads data"
+"Quality Measures - Empty state displays when no results",Test,Low,Quality Measures,"Verify empty state shows when no measures match filters","display,quality,TestCase","Manual","1. User is on /quality-measures page","1. Navigate to /quality-measures
+2. Enter search term with no matches
+3. Verify empty state","1. Empty state message is displayed
+2. Message is helpful
+3. No measures are shown","STORY-7","Empty state shows when no results"
+"Quality Measures - Open measure details modal",Test,High,Quality Measures,"Verify clicking a measure opens details modal","modal,quality,TestCase","Manual","1. Database has measures
+2. User is on /quality-measures page","1. Navigate to /quality-measures
+2. Click on a measure in the list
+3. Verify modal opens","1. Details modal opens
+2. Modal displays measure overview
+3. Modal opens within 300ms","STORY-8","Modal opens on measure click"
+"Quality Measures - View measure overview tab",Test,High,Quality Measures,"Verify Overview tab displays all measure properties","modal,quality,TestCase","Manual","1. Measure details modal is open","1. Open a measure details modal
+2. View Overview tab
+3. Verify all properties display","1. Measure ID is displayed
+2. Measure name is displayed
+3. Program (HEDIS/MIPS) is displayed
+4. Domain is displayed
+5. Steward is displayed
+6. Effective year is displayed
+7. Target rate is displayed","STORY-8","Overview tab displays all properties"
+"Quality Measures - View measure logic tab",Test,High,Quality Measures,"Verify Measure Logic tab displays structured logic","modal,quality,TestCase","Manual","1. Measure details modal is open","1. Open a measure details modal
+2. Click 'Measure Logic' tab
+3. Verify logic displays","1. Denominator criteria is displayed
+2. Numerator criteria is displayed
+3. Exclusion criteria is displayed
+4. Logic is in structured format","STORY-8","Measure Logic tab displays structured logic"
+"Quality Measures - View products tab",Test,Medium,Quality Measures,"Verify Products tab displays linked products","modal,quality,TestCase","Manual","1. Measure details modal is open
+2. Measure has linked products","1. Open a measure details modal
+2. Click 'Products' tab
+3. Verify products display","1. Products linked to measure are displayed
+2. Product names and IDs are shown
+3. Display is clear","STORY-8","Products tab displays linked products"
+"Quality Measures - View billing codes tab",Test,High,Quality Measures,"Verify Billing Codes tab displays associated codes","modal,quality,TestCase","Manual","1. Measure details modal is open
+2. Measure has associated codes","1. Open a measure details modal
+2. Click 'Billing Codes' tab
+3. Verify codes display","1. Codes associated with measure are displayed
+2. Codes are grouped by logic type (denominator/numerator/exclusion)
+3. Code type badges display correctly","STORY-8","Billing Codes tab displays associated codes"
+"Quality Measures - Edit Logic button works",Test,Medium,Quality Measures,"Verify Edit Logic button navigates to logic editor","buttons,quality,TestCase","Manual","1. Measure details modal is open
+2. User has edit permissions","1. Open a measure details modal
+2. Click 'Edit Logic' button
+3. Verify navigation or form opens","1. Navigates to logic editor or opens edit form
+2. No console errors","STORY-8","Edit Logic button works"
+"Quality Measures - Close measure details modal",Test,Low,Quality Measures,"Verify modal closes on X button or click outside","modal,quality,TestCase","Manual","1. Measure details modal is open","1. Open a measure details modal
+2. Click X button
+3. Verify modal closes
+4. Open modal again
+5. Click outside modal
+6. Verify modal closes","1. X button closes modal
+2. Click outside closes modal
+3. Returns to measures list","STORY-8","Close button closes modal"
+"Quality Measures - Tab switching works smoothly",Test,Medium,Quality Measures,"Verify switching between tabs in measure details modal","modal,quality,TestCase","Manual","1. Measure details modal is open","1. Open a measure details modal
+2. Click 'Measure Logic' tab
+3. Click 'Products' tab
+4. Click 'Billing Codes' tab
+5. Click 'Overview' tab
+6. Verify smooth transitions","1. Tab switching works smoothly
+2. Tab switching < 100ms
+3. Content loads correctly for each tab
+4. No console errors","STORY-8","Tab switching works smoothly"
+"Code Mappings - View Benefit Mappings tab",Test,High,Code Mappings,"Verify Benefit Mappings tab displays correctly","mappings,display,TestCase","Manual","1. User is authenticated
+2. Database has benefit mappings","1. Navigate to /mappings
+2. Verify Benefit Mappings tab is active by default
+3. View content","1. Benefit Mappings tab is active
+2. Statistics cards display
+3. Mappings table displays","STORY-9","Statistics cards display correct counts"
+"Code Mappings - Benefit Mappings statistics display",Test,High,Code Mappings,"Verify Benefit Mappings statistics cards show correct counts","mappings,statistics,TestCase","Manual","1. Database has benefit mappings
+2. User is on Benefit Mappings tab","1. Navigate to /mappings
+2. View Benefit Mappings tab
+3. Verify statistics cards","1. Total Mappings card displays correct count
+2. Active Mappings card displays correct count
+3. Draft Mappings card displays correct count
+4. Unmapped Codes card displays correct count","STORY-9","Statistics cards display correct counts"
+"Code Mappings - Create Benefit Mapping button opens dialog",Test,High,Code Mappings,"Verify Create Mapping button opens creation dialog","mappings,buttons,TestCase","Manual","1. User is on Benefit Mappings tab
+2. User has create permissions","1. Navigate to /mappings (Benefit Mappings tab)
+2. Click 'Create Mapping' button
+3. Verify dialog opens","1. Creation dialog opens
+2. Dialog displays all required fields
+3. Dialog opens within 300ms","STORY-9","Creation dialog opens on button click"
+"Code Mappings - Create valid benefit mapping",Test,High,Code Mappings,"Verify creating a valid benefit mapping succeeds","mappings,create,TestCase","Manual","1. User is in mapping creation dialog
+2. Database has codes and benefit segments","1. Open mapping creation dialog
+2. Select code from dropdown
+3. Select benefit segment
+4. Enter copay '25.00'
+5. Enter coinsurance '20%'
+6. Set deductible applies to 'Yes'
+7. Set priority to '1'
+8. Click 'Create'
+9. Verify result","1. Mapping is created successfully
+2. Success message displays
+3. Mapping appears in list
+4. Dialog closes","STORY-9","Mapping is created and appears in list"
+"Code Mappings - Validate required fields in mapping creation",Test,High,Code Mappings,"Verify validation prevents empty required fields","mappings,validation,TestCase","Manual","1. User is in mapping creation dialog","1. Open mapping creation dialog
+2. Leave code field empty
+3. Try to click 'Create'
+4. Verify validation","1. 'Code is required' error displays
+2. Dialog does not close
+3. Form does not submit","STORY-9","Validation prevents empty required fields"
+"Code Mappings - Detect mapping conflicts",Test,Medium,Code Mappings,"Verify conflict detection for duplicate code-benefit pairs","mappings,validation,TestCase","Manual","1. Mapping exists for code '83036' to 'Primary Care'
+2. User is in mapping creation dialog","1. Open mapping creation dialog
+2. Select code '83036'
+3. Select benefit 'Primary Care'
+4. Try to create
+5. Verify conflict warning","1. Conflict warning displays
+2. Options to update or cancel are shown
+3. Duplicate mapping is not created","STORY-9","Conflict detection works"
+"Code Mappings - Cancel mapping creation",Test,Low,Code Mappings,"Verify Cancel button discards changes","mappings,buttons,TestCase","Manual","1. User is in mapping creation dialog
+2. User has entered some data","1. Open mapping creation dialog
+2. Enter some data in fields
+3. Click 'Cancel'
+4. Verify result","1. Dialog closes
+2. No mapping is created
+3. Data is discarded","STORY-9","Cancel button discards changes"
+"Code Mappings - Bulk Map Codes button opens interface",Test,Medium,Code Mappings,"Verify Bulk Map Codes button opens bulk mapping interface","mappings,bulk,TestCase","Manual","1. User is on Benefit Mappings tab","1. Navigate to /mappings (Benefit Mappings tab)
+2. Click 'Bulk Map Codes' button
+3. Verify interface opens","1. Bulk mapping interface opens
+2. Code selection options are visible
+3. Interface opens within 300ms","STORY-10","Bulk mapping interface opens"
+"Code Mappings - Select multiple codes for bulk mapping",Test,High,Code Mappings,"Verify selecting multiple codes and creating bulk mappings","mappings,bulk,TestCase","Manual","1. User is in bulk mapping interface
+2. Database has codes","1. Open bulk mapping interface
+2. Select 10 CPT codes from list
+3. Select benefit segment 'Primary Care'
+4. Set copay to '25.00' for all
+5. Click 'Map Selected Codes'
+6. Verify result","1. All 10 codes are mapped
+2. Success message shows '10 mappings created successfully'
+3. Mappings appear in list","STORY-10","Bulk mappings are created"
+"Code Mappings - Preview bulk mappings before creation",Test,Medium,Code Mappings,"Verify preview shows all mappings to be created","mappings,bulk,TestCase","Manual","1. User is in bulk mapping interface
+2. User has selected codes and benefit segment","1. Open bulk mapping interface
+2. Select codes and benefit segment
+3. Click 'Preview'
+4. Verify preview","1. Preview displays all mappings to be created
+2. Conflicts or warnings are shown
+3. Option to proceed or cancel is available","STORY-10","Preview shows all mappings"
+"Code Mappings - Handle conflicts in bulk mapping",Test,High,Code Mappings,"Verify conflict handling in bulk operations","mappings,bulk,TestCase","Manual","1. User is in bulk mapping interface
+2. Some selected codes already have mappings","1. Open bulk mapping interface
+2. Select codes (some with existing mappings)
+3. Try to create bulk mappings
+4. Verify conflict report","1. Conflict report displays
+2. Shows which codes have conflicts
+3. Options to skip, update, or cancel are shown","STORY-10","Conflict detection works for bulk"
+"Code Mappings - Cancel bulk mapping",Test,Low,Code Mappings,"Verify Cancel button discards bulk mapping","mappings,bulk,TestCase","Manual","1. User is in bulk mapping interface
+2. User has selected codes","1. Open bulk mapping interface
+2. Select codes
+3. Click 'Cancel'
+4. Verify result","1. Interface closes
+2. No mappings are created
+3. Changes are discarded","STORY-10","Cancel discards all changes"
+"Code Mappings - View Equivalency Mappings tab",Test,High,Code Mappings,"Verify Equivalency Mappings tab displays correctly","mappings,equivalency,TestCase","Manual","1. User is authenticated
+2. Database has 3 equivalencies","1. Navigate to /mappings
+2. Click 'Equivalency Mappings' tab
+3. View content","1. Equivalency Mappings tab is active
+2. Statistics cards display
+3. Equivalencies table displays","STORY-11","Statistics cards display correct data"
+"Code Mappings - Equivalency statistics display",Test,High,Code Mappings,"Verify Equivalency statistics cards show correct data","mappings,equivalency,TestCase","Manual","1. Database has 3 equivalencies
+2. User is on Equivalency Mappings tab","1. Navigate to /mappings
+2. Click Equivalency Mappings tab
+3. Verify statistics cards","1. Total Equivalencies card shows '3'
+2. Coverage Rate card displays correct percentage
+3. Avg Confidence card displays correct percentage
+4. Top Category card displays most common category","STORY-11","Statistics cards display correct data"
+"Code Mappings - Create Equivalency button opens dialog",Test,High,Code Mappings,"Verify Create Equivalency button opens creation dialog","mappings,equivalency,TestCase","Manual","1. User is on Equivalency Mappings tab","1. Navigate to /mappings
+2. Click Equivalency Mappings tab
+3. Click 'Create Equivalency' button
+4. Verify dialog opens","1. Creation dialog opens
+2. All required fields are visible
+3. Dialog opens within 300ms","STORY-11","Creation dialog opens"
+"Code Mappings - Create valid equivalency",Test,High,Code Mappings,"Verify creating a valid equivalency succeeds","mappings,equivalency,TestCase","Manual","1. User is in equivalency creation dialog
+2. Database has codes","1. Open equivalency creation dialog
+2. Enter name 'HbA1c Test Equivalency'
+3. Enter description
+4. Select category 'Laboratory'
+5. Select source 'Manual'
+6. Set confidence to 100%
+7. Search for source code '83036' (CPT)
+8. Select source code
+9. Search for target code '4548-4' (LOINC)
+10. Select target code
+11. Select relationship 'Exact Match'
+12. Set bidirectional to 'Yes'
+13. Click 'Create'
+14. Verify result","1. Equivalency is created successfully
+2. Success message displays
+3. Equivalency appears in table
+4. Dialog closes","STORY-11","Equivalency is created"
+"Code Mappings - Search for codes in equivalency dialog",Test,High,Code Mappings,"Verify code search displays suggestions in dialog","mappings,equivalency,TestCase","Manual","1. User is in equivalency creation dialog","1. Open equivalency creation dialog
+2. Type '83036' in source code field
+3. Verify suggestions dropdown","1. Code suggestions dropdown appears
+2. Shows '83036 - Hemoglobin A1c (CPT)'
+3. Can select from dropdown","STORY-11","Code search displays suggestions"
+"Code Mappings - Adjust confidence slider",Test,Medium,Code Mappings,"Verify confidence slider adjusts value 0-100%","mappings,equivalency,TestCase","Manual","1. User is in equivalency creation dialog","1. Open equivalency creation dialog
+2. Locate confidence slider
+3. Drag slider
+4. Verify value changes","1. Slider value changes from 0-100%
+2. Percentage badge updates
+3. Slider is smooth","STORY-11","Confidence slider works"
+"Code Mappings - Validate required fields in equivalency creation",Test,High,Code Mappings,"Verify validation prevents empty required fields","mappings,equivalency,TestCase","Manual","1. User is in equivalency creation dialog","1. Open equivalency creation dialog
+2. Leave name field empty
+3. Try to click 'Create'
+4. Verify validation","1. 'Name is required' error displays
+2. Dialog does not close
+3. Form does not submit","STORY-11","Validation prevents empty fields"
+"Code Mappings - Cancel equivalency creation",Test,Low,Code Mappings,"Verify Cancel button discards changes","mappings,equivalency,TestCase","Manual","1. User is in equivalency creation dialog
+2. User has entered some data","1. Open equivalency creation dialog
+2. Enter some data
+3. Click 'Cancel'
+4. Verify result","1. Dialog closes
+2. No equivalency is created
+3. Data is discarded","STORY-11","Cancel discards changes"
+"Code Mappings - View equivalency in table",Test,Medium,Code Mappings,"Verify equivalencies display correctly in table","mappings,equivalency,TestCase","Manual","1. Database has 3 equivalencies
+2. User is on Equivalency Mappings tab","1. Navigate to /mappings
+2. Click Equivalency Mappings tab
+3. View equivalencies table","1. 3 rows are displayed
+2. Each row shows name, category badge, source, confidence %, mapping count
+3. Category badge is color-coded","STORY-12","Table displays all equivalencies"
+"Code Mappings - Open equivalency details modal",Test,High,Code Mappings,"Verify clicking eye icon opens details modal","mappings,equivalency,TestCase","Manual","1. Database has equivalencies
+2. User is on Equivalency Mappings tab","1. Navigate to /mappings
+2. Click Equivalency Mappings tab
+3. Click eye icon on an equivalency
+4. Verify modal opens","1. Details modal opens
+2. Modal displays equivalency name as title
+3. Modal opens within 300ms","STORY-12","Eye icon opens details modal"
+"Code Mappings - View equivalency details",Test,High,Code Mappings,"Verify equivalency details display all properties","mappings,equivalency,TestCase","Manual","1. Equivalency details modal is open","1. Open equivalency details modal
+2. View content
+3. Verify all properties display","1. Description is displayed
+2. Category badge is displayed
+3. Source is displayed
+4. Confidence percentage is displayed
+5. All code mappings are displayed","STORY-12","Modal displays all properties"
+"Code Mappings - View code mappings in equivalency details",Test,High,Code Mappings,"Verify code mappings display as source → target pairs","mappings,equivalency,TestCase","Manual","1. Equivalency details modal is open
+2. Equivalency has code mappings","1. Open equivalency details modal
+2. View mappings section
+3. Verify display","1. Source code → target code pairs are displayed
+2. Code type badges (CPT, LOINC) display correctly
+3. Relationship badge (Exact, Broader, etc.) displays correctly
+4. Mappings are clearly formatted","STORY-12","Code mappings display correctly"
+"Code Mappings - Close equivalency details modal",Test,Low,Code Mappings,"Verify modal closes on Close button or X","mappings,equivalency,TestCase","Manual","1. Equivalency details modal is open","1. Open equivalency details modal
+2. Click 'Close' button
+3. Verify modal closes
+4. Open modal again
+5. Click X button
+6. Verify modal closes","1. Close button closes modal
+2. X button closes modal
+3. Returns to equivalencies table","STORY-12","Close button closes modal"
+"Value Sets - Total Value Sets statistic displays",Test,High,Value Sets,"Verify Total Value Sets statistic card shows correct count","value-sets,statistics,TestCase","Manual","1. Database has value sets
+2. User is authenticated","1. Navigate to /value-sets
+2. Locate Total Value Sets statistic card
+3. Verify displayed count","1. Total Value Sets card is visible
+2. Shows correct count
+3. Count matches database","STORY-13","Statistics cards display correct counts"
+"Value Sets - Total Codes statistic displays",Test,High,Value Sets,"Verify Total Codes statistic card shows correct count","value-sets,statistics,TestCase","Manual","1. Database has value sets with codes
+2. User is authenticated","1. Navigate to /value-sets
+2. Locate Total Codes statistic card
+3. Verify displayed count","1. Total Codes card is visible
+2. Shows correct count of all codes in value sets
+3. Count matches database","STORY-13","Statistics cards display correct counts"
+"Value Sets - Avg Codes per Set statistic displays",Test,Medium,Value Sets,"Verify Avg Codes per Set statistic card shows correct value","value-sets,statistics,TestCase","Manual","1. Database has value sets with codes
+2. User is authenticated","1. Navigate to /value-sets
+2. Locate Avg Codes per Set statistic card
+3. Verify displayed value","1. Avg Codes per Set card is visible
+2. Shows correct average
+3. Value is calculated correctly","STORY-13","Statistics cards display correct counts"
+"Value Sets - Browse value sets list",Test,High,Value Sets,"Verify value sets list displays all value sets","value-sets,display,TestCase","Manual","1. Database has value sets
+2. User is authenticated","1. Navigate to /value-sets
+2. View value sets list
+3. Verify all value sets display","1. All value sets are displayed
+2. Each value set shows name, code count, purpose
+3. Display is clear","STORY-13","Value sets list displays all sets"
+"Value Sets - Search value sets",Test,High,Value Sets,"Verify search filters value sets by name","value-sets,search,TestCase","Manual","1. Database has value sets
+2. User is on /value-sets page","1. Navigate to /value-sets
+2. Type 'diabetes' in search field
+3. Wait 500ms for results
+4. Verify filtered results","1. Results show only value sets with 'diabetes' in name
+2. Search is case-insensitive
+3. Results appear within 500ms","STORY-13","Search filters by value set name"
+"Value Sets - Create Value Set button opens form",Test,Medium,Value Sets,"Verify Create Value Set button opens creation form","value-sets,buttons,TestCase","Manual","1. User is on /value-sets page","1. Navigate to /value-sets
+2. Click 'Create Value Set' button
+3. Verify form opens","1. Creation form opens
+2. Form displays all required fields
+3. Form opens within 300ms","STORY-13","Create button opens creation form"
+"Value Sets - Refresh button reloads data",Test,Medium,Value Sets,"Verify Refresh button reloads value sets list","value-sets,buttons,TestCase","Manual","1. User is on /value-sets page","1. Navigate to /value-sets
+2. Click 'Refresh' button
+3. Observe loading indicator
+4. Verify data reloads","1. Loading indicator displays
+2. Value sets list reloads from API
+3. Statistics update
+4. No console errors","STORY-13","Refresh button reloads data"
+"Value Sets - Empty state displays when no results",Test,Low,Value Sets,"Verify empty state shows when no value sets match search","value-sets,display,TestCase","Manual","1. User is on /value-sets page","1. Navigate to /value-sets
+2. Enter search term with no matches
+3. Verify empty state","1. Empty state message is displayed
+2. Message is helpful
+3. No value sets are shown","STORY-13","Empty state shows when no results"
+"Value Sets - Open value set details modal",Test,High,Value Sets,"Verify clicking a value set opens details modal","value-sets,modal,TestCase","Manual","1. Database has value sets
+2. User is on /value-sets page","1. Navigate to /value-sets
+2. Click on a value set in the list
+3. Verify modal opens","1. Details modal opens
+2. Modal displays value set name
+3. Modal opens within 300ms","STORY-14","Modal opens on value set click"
+"Value Sets - View codes in value set",Test,High,Value Sets,"Verify value set modal displays associated codes","value-sets,modal,TestCase","Manual","1. Value set details modal is open
+2. Value set has codes","1. Open value set details modal
+2. View modal content
+3. Verify codes display","1. Value set name is displayed
+2. List of associated codes is displayed
+3. Each code shows code value, type, description","STORY-14","Modal displays value set name and codes"
+"Value Sets - Add code to value set",Test,High,Value Sets,"Verify Add Code button adds code to value set","value-sets,modal,TestCase","Manual","1. Value set details modal is open
+2. User has edit permissions","1. Open value set details modal
+2. Click 'Add Code' button
+3. Search for code '83036'
+4. Select code from results
+5. Verify result","1. Code search interface appears
+2. Code '83036' can be selected
+3. Code is added to value set
+4. Success message displays","STORY-14","Add Code button works"
+"Value Sets - Search for codes to add",Test,High,Value Sets,"Verify code search works when adding codes","value-sets,modal,TestCase","Manual","1. User is adding a code to a value set","1. Open value set details modal
+2. Click 'Add Code'
+3. Type '83036' in code search field
+4. Verify results","1. Matching codes are displayed
+2. Can select '83036 - Hemoglobin A1c (CPT)'
+3. Code is added to value set","STORY-14","Code selection adds to value set"
+"Value Sets - Remove code from value set",Test,High,Value Sets,"Verify remove icon removes code from value set","value-sets,modal,TestCase","Manual","1. Value set details modal is open
+2. Value set has codes","1. Open value set details modal
+2. Click remove icon on a code
+3. Verify result","1. Code is removed from value set
+2. Confirmation displays
+3. Code list updates","STORY-14","Remove icon removes code"
+"Value Sets - Close value set modal",Test,Low,Value Sets,"Verify modal closes on Close or X button","value-sets,modal,TestCase","Manual","1. Value set details modal is open","1. Open value set details modal
+2. Click 'Close' button
+3. Verify modal closes
+4. Open modal again
+5. Click X button
+6. Verify modal closes","1. Close button closes modal
+2. X button closes modal
+3. Changes are saved","STORY-14","Close button closes modal"
+"Products - View product statistics",Test,High,Products,"Verify product statistics cards display correct counts","products,statistics,TestCase","Manual","1. Database has products
+2. User is authenticated","1. Navigate to /products
+2. View statistics cards
+3. Verify displayed counts","1. Total Products card displays correct count
+2. Active Products card displays correct count
+3. Draft Products card displays correct count
+4. Published Products card displays correct count","STORY-15","Statistics cards display correct counts"
+"Products - View empty products list",Test,Medium,Products,"Verify empty state displays when no products exist","products,display,TestCase","Manual","1. Database has no products
+2. User is authenticated","1. Navigate to /products
+2. View page content","1. Empty state message is displayed
+2. 'Create Product' call-to-action is visible
+3. Message is helpful","STORY-15","Empty state displays when no products"
+"Products - Create Product button opens form",Test,High,Products,"Verify Create Product button opens creation form","products,buttons,TestCase","Manual","1. User is on /products page","1. Navigate to /products
+2. Click 'Create Product' button
+3. Verify form opens","1. Product creation form opens
+2. Form displays all required fields
+3. Form opens within 300ms","STORY-15","Create button opens creation form"
+"Products - Import button opens wizard",Test,Medium,Products,"Verify Import button opens import wizard","products,buttons,TestCase","Manual","1. User is on /products page","1. Navigate to /products
+2. Click 'Import' button
+3. Verify wizard opens","1. Import wizard opens
+2. File upload options are visible
+3. Wizard opens within 300ms","STORY-15","Import button opens import wizard"
+"Products - Export button downloads file",Test,Medium,Products,"Verify Export button downloads file or shows options","products,buttons,TestCase","Manual","1. User is on /products page
+2. Database has products","1. Navigate to /products
+2. Click 'Export' button
+3. Verify result","1. File download starts or export options are shown
+2. No console errors","STORY-15","Export button downloads or shows options"
+"Products - Refresh button reloads data",Test,Medium,Products,"Verify Refresh button reloads products list","products,buttons,TestCase","Manual","1. User is on /products page","1. Navigate to /products
+2. Click 'Refresh' button
+3. Observe loading indicator
+4. Verify data reloads","1. Loading indicator displays
+2. Products list reloads from API
+3. Statistics update
+4. No console errors","STORY-15","Refresh button reloads data"
+"Analytics - Page loads without errors",Test,High,Analytics,"Verify Analytics page loads successfully","analytics,display,TestCase","Manual","1. User is authenticated","1. Navigate to /analytics
+2. Wait for page to load
+3. Verify content","1. Page loads without errors
+2. Charts and visualizations are visible
+3. Key metrics are displayed
+4. Page loads within 3 seconds","STORY-16","Page loads without errors"
+"Analytics - Charts render correctly",Test,High,Analytics,"Verify all charts render with data","analytics,display,TestCase","Manual","1. User is on /analytics page
+2. Database has data","1. Navigate to /analytics
+2. Wait for charts to render
+3. Verify all charts","1. All charts render within 3 seconds
+2. Charts display data correctly
+3. No chart errors","STORY-16","Charts render within 3 seconds"
+"Analytics - Hover tooltips work",Test,Medium,Analytics,"Verify hover tooltips display on chart data points","analytics,interaction,TestCase","Manual","1. User is on /analytics page
+2. Charts are rendered","1. Navigate to /analytics
+2. Hover mouse over a chart data point
+3. Verify tooltip","1. Tooltip displays with details
+2. Tooltip shows relevant information
+3. Tooltip response < 100ms","STORY-16","Hover tooltips work on all charts"
+"Analytics - Legend toggle works",Test,Medium,Analytics,"Verify clicking legend item hides/shows data series","analytics,interaction,TestCase","Manual","1. User is on /analytics page
+2. Charts with legends are rendered","1. Navigate to /analytics
+2. Click a legend item
+3. Verify data series hides
+4. Click legend item again
+5. Verify data series shows","1. Clicking legend hides data series
+2. Clicking again shows data series
+3. Chart updates smoothly","STORY-16","Legend toggle works"
+"Analytics - Date range filter works",Test,High,Analytics,"Verify date range filter updates charts","analytics,filter,TestCase","Manual","1. User is on /analytics page","1. Navigate to /analytics
+2. Click date range picker
+3. Select custom date range
+4. Apply filter
+5. Verify charts update","1. Date range picker opens
+2. Custom date range can be selected
+3. Charts update with filtered data
+4. No errors","STORY-16","Date range filter works"
+"Analytics - Refresh button reloads data",Test,Medium,Analytics,"Verify Refresh button reloads analytics data","analytics,buttons,TestCase","Manual","1. User is on /analytics page","1. Navigate to /analytics
+2. Click 'Refresh' button
+3. Observe loading indicator
+4. Verify data reloads","1. Loading indicator displays
+2. All charts reload
+3. Data is current
+4. No console errors","STORY-16","Refresh button reloads data"
+"Analytics - Export button downloads report",Test,Medium,Analytics,"Verify Export button downloads report or shows options","analytics,buttons,TestCase","Manual","1. User is on /analytics page","1. Navigate to /analytics
+2. Click 'Export' button
+3. Verify result","1. Report downloads or export format options are shown
+2. No console errors","STORY-16","Export button downloads report"
+"Navigation - All menu items visible in sidebar",Test,High,Navigation,"Verify all navigation menu items are visible","navigation,ui,TestCase","Manual","1. User is authenticated","1. Log in to application
+2. View left sidebar
+3. Verify all menu items","1. All menu items are visible: Dashboard, Products, Code Library, Quality Measures, Value Sets, Code Mappings, Analytics, Settings, Support, Users
+2. Icons are visible for each item","STORY-19","Sidebar displays all menu items"
+"Navigation - Navigate to Code Library",Test,High,Navigation,"Verify clicking Code Library navigates correctly","navigation,ui,TestCase","Manual","1. User is on Dashboard","1. Navigate to /dashboard
+2. Click 'Code Library' in sidebar
+3. Verify navigation","1. Navigates to Code Library page
+2. 'Code Library' menu item is highlighted
+3. Page title shows 'Code Library'
+4. Navigation < 100ms","STORY-19","All navigation links work"
+"Navigation - Navigate to Quality Measures",Test,High,Navigation,"Verify clicking Quality Measures navigates correctly","navigation,ui,TestCase","Manual","1. User is on Dashboard","1. Navigate to /dashboard
+2. Click 'Quality Measures' in sidebar
+3. Verify navigation","1. Navigates to Quality Measures page
+2. 'Quality Measures' menu item is highlighted
+3. Page title shows 'Quality Measures'
+4. Navigation < 100ms","STORY-19","All navigation links work"
+"Navigation - Navigate to Value Sets",Test,High,Navigation,"Verify clicking Value Sets navigates correctly","navigation,ui,TestCase","Manual","1. User is on Dashboard","1. Navigate to /dashboard
+2. Click 'Value Sets' in sidebar
+3. Verify navigation","1. Navigates to Value Sets page
+2. 'Value Sets' menu item is highlighted
+3. Page title shows 'Value Sets'
+4. Navigation < 100ms","STORY-19","All navigation links work"
+"Navigation - Navigate to Code Mappings",Test,High,Navigation,"Verify clicking Code Mappings navigates correctly","navigation,ui,TestCase","Manual","1. User is on Dashboard","1. Navigate to /dashboard
+2. Click 'Code Mappings' in sidebar
+3. Verify navigation","1. Navigates to Code Mappings page
+2. 'Code Mappings' menu item is highlighted
+3. Page title shows 'Code Mappings'
+4. Navigation < 100ms","STORY-19","All navigation links work"
+"Navigation - Navigate to Products",Test,High,Navigation,"Verify clicking Products navigates correctly","navigation,ui,TestCase","Manual","1. User is on Dashboard","1. Navigate to /dashboard
+2. Click 'Products' in sidebar
+3. Verify navigation","1. Navigates to Products page
+2. 'Products' menu item is highlighted
+3. Page title shows 'Products'
+4. Navigation < 100ms","STORY-19","All navigation links work"
+"Navigation - Navigate to Analytics",Test,High,Navigation,"Verify clicking Analytics navigates correctly","navigation,ui,TestCase","Manual","1. User is on Dashboard","1. Navigate to /dashboard
+2. Click 'Analytics' in sidebar
+3. Verify navigation","1. Navigates to Analytics page
+2. 'Analytics' menu item is highlighted
+3. Page title shows 'Analytics'
+4. Navigation < 100ms","STORY-19","All navigation links work"
+"Navigation - Active menu item highlighted correctly",Test,High,Navigation,"Verify active menu item is highlighted on each page","navigation,ui,TestCase","Manual","1. User is authenticated","1. Navigate to /codes
+2. Verify 'Code Library' is highlighted
+3. Navigate to /quality-measures
+4. Verify 'Quality Measures' is highlighted
+5. Navigate to /mappings
+6. Verify 'Code Mappings' is highlighted","1. Active menu item is highlighted on each page
+2. Only one menu item is highlighted at a time
+3. Highlighting is visually distinct","STORY-19","Active menu item is highlighted"
+"Navigation - Collapse sidebar",Test,Medium,Navigation,"Verify sidebar collapses to icons only","navigation,ui,TestCase","Manual","1. Sidebar is expanded","1. View application with expanded sidebar
+2. Click collapse button (chevron left)
+3. Verify sidebar state","1. Sidebar collapses to icons only
+2. Page content expands
+3. Collapse animation is smooth","STORY-19","Collapse button works"
+"Navigation - Expand sidebar",Test,Medium,Navigation,"Verify sidebar expands to full width","navigation,ui,TestCase","Manual","1. Sidebar is collapsed","1. View application with collapsed sidebar
+2. Click expand button (chevron right)
+3. Verify sidebar state","1. Sidebar expands to full width
+2. Menu item labels are visible
+3. Expand animation is smooth","STORY-19","Expand button works"
+"Navigation - Sidebar state persists",Test,Low,Navigation,"Verify sidebar state persists across page navigation","navigation,ui,TestCase","Manual","1. User is authenticated","1. Collapse sidebar
+2. Navigate to different page
+3. Verify sidebar state
+4. Expand sidebar
+5. Navigate to different page
+6. Verify sidebar state","1. Collapsed state persists across navigation
+2. Expanded state persists across navigation","STORY-19","Sidebar state persists"
+"Navigation - Page title updates on navigation",Test,Medium,Navigation,"Verify top bar page title updates correctly","navigation,ui,TestCase","Manual","1. User is authenticated","1. Navigate to /dashboard
+2. Verify page title is 'Dashboard'
+3. Navigate to /codes
+4. Verify page title is 'Code Library'
+5. Navigate to /quality-measures
+6. Verify page title is 'Quality Measures'","1. Page title updates on each navigation
+2. Title matches current page name","STORY-19","Page title updates on navigation"
+"Navigation - Notifications icon works",Test,Low,Navigation,"Verify clicking notifications icon shows dropdown","navigation,ui,TestCase","Manual","1. User is authenticated","1. View top bar
+2. Click bell icon
+3. Verify dropdown","1. Notifications dropdown appears
+2. Notification count badge is visible (if notifications exist)","STORY-19","Notifications icon works"
+"Navigation - User profile icon works",Test,Low,Navigation,"Verify clicking user profile icon shows dropdown","navigation,ui,TestCase","Manual","1. User is authenticated","1. View top bar
+2. Click user icon
+3. Verify dropdown","1. Profile dropdown menu appears
+2. Profile options are visible","STORY-19","User profile icon works"
+"Responsive - Sidebar on mobile",Test,High,Responsive,"Verify sidebar collapses or becomes hamburger menu on mobile","responsive,mobile,TestCase","Manual","1. User is authenticated
+2. Browser width < 768px","1. Resize browser to mobile width (< 768px)
+2. View sidebar
+3. Verify behavior","1. Sidebar collapses or becomes hamburger menu
+2. Sidebar can be opened/closed
+3. Layout is usable on mobile","STORY-20","Sidebar collapses on mobile"
+"Responsive - Tables on mobile",Test,High,Responsive,"Verify tables are scrollable or stack on mobile","responsive,mobile,TestCase","Manual","1. User is on a page with table (e.g., /codes)
+2. Browser width < 768px","1. Resize browser to mobile width
+2. View table
+3. Verify behavior","1. Table is horizontally scrollable or stacks vertically
+2. All data is accessible
+3. Table is usable on mobile","STORY-20","Tables are scrollable on mobile"
+"Responsive - Statistics cards on mobile",Test,Medium,Responsive,"Verify statistics cards stack vertically on mobile","responsive,mobile,TestCase","Manual","1. User is on a page with statistics cards
+2. Browser width < 768px","1. Resize browser to mobile width
+2. View statistics cards
+3. Verify layout","1. Cards stack vertically
+2. Each card is full width
+3. All data is readable","STORY-20","Statistics cards stack on mobile"
+"Responsive - Forms on mobile",Test,High,Responsive,"Verify forms are responsive and usable on mobile","responsive,mobile,TestCase","Manual","1. User opens a form or modal
+2. Browser width < 768px","1. Resize browser to mobile width
+2. Open a form or modal
+3. Verify form usability","1. Form is responsive
+2. All fields are accessible
+3. Buttons are touch-friendly (min 44px)","STORY-20","Forms are responsive on mobile"
+"Responsive - Layout on tablet",Test,Medium,Responsive,"Verify layout adjusts appropriately on tablet","responsive,tablet,TestCase","Manual","1. User is authenticated
+2. Browser width 768-1024px","1. Resize browser to tablet width (768-1024px)
+2. View application
+3. Verify layout","1. Layout adjusts appropriately
+2. Sidebar is visible or collapsible
+3. Statistics cards display in 2-3 columns
+4. All features are accessible","STORY-20","Layout adjusts on tablet"
+"Performance - Code Library page loads quickly",Test,High,Performance,"Verify Code Library page loads in < 3 seconds","performance,codes,TestCase","Manual","1. User is authenticated
+2. Database has codes","1. Navigate to /codes
+2. Measure page load time
+3. Verify load time","1. Page loads in < 3 seconds
+2. Code list is visible
+3. Statistics display","STORY-21","Code Library page loads in < 3 seconds"
+"Performance - Search results appear quickly",Test,High,Performance,"Verify search results appear within 500ms","performance,search,TestCase","Manual","1. User is on /codes page","1. Navigate to /codes
+2. Type in search field
+3. Measure response time
+4. Verify timing","1. Results appear within 500ms
+2. Search feels responsive","STORY-21","Search response time < 500ms"
+"Performance - Modal opens quickly",Test,Medium,Performance,"Verify modals open within 300ms","performance,modal,TestCase","Manual","1. User is on any page with modals","1. Navigate to page with modal
+2. Click to open modal
+3. Measure open time
+4. Verify timing","1. Modal appears within 300ms
+2. Content loads smoothly","STORY-21","Modal open time < 300ms"
+"Error Handling - Network error displays helpful message",Test,High,Error Handling,"Verify network error shows user-friendly message","error,network,TestCase","Manual","1. User is on any page
+2. Network connection is available","1. Disconnect network
+2. Try to perform an action
+3. Verify error message","1. 'Network error' message is displayed
+2. Suggestions to check connection are shown
+3. Option to retry is available","STORY-22","Network errors display user-friendly messages"
+"Error Handling - Server error displays helpful message",Test,High,Error Handling,"Verify server error (500) shows user-friendly message","error,server,TestCase","Manual","1. User is on any page
+2. Server error can be simulated","1. Trigger server error (500)
+2. Verify error message","1. 'Server error' message is displayed
+2. User-friendly explanation is shown
+3. Option to refresh or contact support is available","STORY-22","Server errors display user-friendly messages"
+"Error Handling - 404 page displays",Test,Medium,Error Handling,"Verify 404 error page displays for non-existent pages","error,404,TestCase","Manual","1. User is authenticated","1. Navigate to non-existent page (e.g., /nonexistent)
+2. Verify 404 page","1. 404 error page is displayed
+2. Message indicates page was not found
+3. Link to return to dashboard is available","STORY-22","404 page exists and is helpful"
+"Error Handling - Form validation errors are clear",Test,High,Error Handling,"Verify form validation errors display clearly","error,validation,TestCase","Manual","1. User is filling out a form","1. Open any form
+2. Submit with invalid data
+3. Verify validation errors","1. Validation error messages are displayed
+2. Errors are displayed next to relevant fields
+3. Form does not submit","STORY-22","Form validation errors are clear"
+"Error Handling - No console errors on any page",Test,High,Error Handling,"Verify browser console has no red errors","error,console,TestCase","Manual","1. User is authenticated
+2. Browser DevTools Console is open","1. Open DevTools Console
+2. Navigate through all pages: Dashboard, Code Library, Quality Measures, Value Sets, Code Mappings, Products, Analytics
+3. Check console for red errors","1. No red console errors on any page
+2. Browser console is clean
+3. Only warnings or info messages (if any)","STORY-22","No red console errors on any page"
+

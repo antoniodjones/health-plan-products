@@ -1,0 +1,288 @@
+/**
+ * CAPS Design System - Input Styles
+ * 
+ * Implements form input styling with support for:
+ * - Multiple states (default, hover, focus, error, success, disabled)
+ * - Adornments (start/end icons or buttons)
+ * - Helper text and validation messages
+ * - Character counting
+ */
+
+@import '../../styles/tokens.css';
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+
+.caps-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+/* ============================================
+   LABEL
+   ============================================ */
+
+.caps-input-label {
+  display: block;
+  font-size: var(--font-size-body-2);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-body-2);
+}
+
+.caps-input-label__required {
+  color: var(--color-error);
+  margin-left: 4px;
+}
+
+/* ============================================
+   INPUT WRAPPER (Border Container)
+   ============================================ */
+
+.caps-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  background-color: var(--color-surface-base);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+/* Size Variants */
+.caps-input-wrapper--small {
+  height: var(--input-height-sm);
+  padding: 0 var(--space-2);
+}
+
+.caps-input-wrapper--medium {
+  height: var(--input-height-md);
+  padding: 0 var(--space-2);
+}
+
+.caps-input-wrapper--large {
+  height: var(--input-height-lg);
+  padding: 0 var(--space-3);
+}
+
+/* Hover State */
+.caps-input-wrapper:hover:not(.caps-input-wrapper--disabled):not(.caps-input-wrapper--error) {
+  border-color: var(--color-border-hover);
+}
+
+/* Focus State */
+.caps-input-wrapper--focused:not(.caps-input-wrapper--error) {
+  border-color: var(--color-border-focus);
+  border-width: 2px;
+  /* Adjust padding to prevent layout shift from border width change */
+  padding-left: 15px;
+  padding-right: 15px;
+  box-shadow: 0 0 0 3px var(--focus-ring-color);
+}
+
+.caps-input-wrapper--focused.caps-input-wrapper--small {
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.caps-input-wrapper--focused.caps-input-wrapper--large {
+  padding-left: 23px;
+  padding-right: 23px;
+}
+
+/* Error State */
+.caps-input-wrapper--error {
+  border-color: var(--color-error);
+  background-color: var(--color-error-light);
+}
+
+.caps-input-wrapper--error.caps-input-wrapper--focused {
+  border-width: 2px;
+  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+}
+
+/* Success State */
+.caps-input-wrapper--success {
+  border-color: var(--color-success);
+}
+
+.caps-input-wrapper--success.caps-input-wrapper--focused {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Disabled State */
+.caps-input-wrapper--disabled {
+  background-color: var(--color-bg-disabled);
+  border-color: var(--color-gray-300);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ============================================
+   INPUT FIELD
+   ============================================ */
+
+.caps-input-field {
+  /* Reset */
+  border: none;
+  outline: none;
+  background: transparent;
+  margin: 0;
+  
+  /* Flex */
+  flex: 1;
+  min-width: 0; /* Allow input to shrink */
+  
+  /* Typography */
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body-2);
+  line-height: var(--line-height-body-2);
+  color: var(--color-text-primary);
+}
+
+.caps-input-field::placeholder {
+  color: var(--color-text-disabled);
+}
+
+.caps-input-field:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-disabled);
+}
+
+/* Remove browser default styles */
+.caps-input-field::-webkit-outer-spin-button,
+.caps-input-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.caps-input-field[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Password reveal button styling (browser default) */
+.caps-input-field::-ms-reveal,
+.caps-input-field::-ms-clear {
+  display: none;
+}
+
+/* ============================================
+   ADORNMENTS (Start/End Icons)
+   ============================================ */
+
+.caps-input-adornment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+.caps-input-adornment svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.caps-input-wrapper--large .caps-input-adornment svg {
+  width: 20px;
+  height: 20px;
+}
+
+.caps-input-wrapper--small .caps-input-adornment svg {
+  width: 14px;
+  height: 14px;
+}
+
+.caps-input-adornment--start {
+  margin-right: -4px;
+}
+
+.caps-input-adornment--end {
+  margin-left: -4px;
+}
+
+/* ============================================
+   FOOTER (Helper Text + Character Count)
+   ============================================ */
+
+.caps-input-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-height: 16px; /* Prevent layout shift */
+}
+
+/* ============================================
+   HELPER TEXT
+   ============================================ */
+
+.caps-input-helper {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--color-text-secondary);
+  flex: 1;
+}
+
+.caps-input-helper--error {
+  color: var(--color-error-dark);
+}
+
+.caps-input-helper--success {
+  color: var(--color-success-dark);
+}
+
+/* ============================================
+   CHARACTER COUNT
+   ============================================ */
+
+.caps-input-count {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--color-text-disabled);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .caps-input-wrapper {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .caps-input-wrapper {
+    border-width: 2px;
+  }
+  
+  .caps-input-wrapper--focused {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+/* Dark mode support (future) */
+@media (prefers-color-scheme: dark) {
+  .caps-input-wrapper {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .caps-input-field {
+    color: #FFFFFF;
+  }
+  
+  .caps-input-field::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}

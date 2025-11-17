@@ -475,15 +475,29 @@ export default function QualityMeasuresPage() {
       <Dialog open={!!selectedMeasure} onOpenChange={() => setSelectedMeasure(null)}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <Award className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <div className="font-mono text-xl">{selectedMeasure?.measureId}</div>
-                <div className="text-sm font-normal text-gray-500">Quality Measure Details</div>
-              </div>
-            </DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                  <Award className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <div className="font-mono text-xl">{selectedMeasure?.measureId}</div>
+                  <div className="text-sm font-normal text-gray-500">Quality Measure Details</div>
+                </div>
+              </DialogTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (selectedMeasure) {
+                    window.location.href = `/quality-measures/${selectedMeasure.id}/edit-logic`;
+                  }
+                }}
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Logic
+              </Button>
+            </div>
           </DialogHeader>
 
           {selectedMeasure && (

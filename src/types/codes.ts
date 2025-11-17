@@ -1,37 +1,23 @@
 /**
  * Type definitions for Code Management System
+ * ALIGNED WITH PRISMA SCHEMA - NO EXTRA FIELDS
  */
 
-// Code Types (from Prisma schema)
+// Prisma Enums (from schema)
 export enum CodeType {
-  ICD_10 = 'ICD_10',
   CPT = 'CPT',
   HCPCS = 'HCPCS',
+  ICD_10_CM = 'ICD_10_CM',
+  ICD_10_PCS = 'ICD_10_PCS',
   NDC = 'NDC',
-  REVENUE = 'REVENUE',
-  DRG = 'DRG',
   LOINC = 'LOINC',
   SNOMED = 'SNOMED',
+  DRG = 'DRG',
+  REVENUE_CODE = 'REVENUE_CODE',
   CUSTOM = 'CUSTOM',
 }
 
-export enum CodeStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  DEPRECATED = 'DEPRECATED',
-  PENDING = 'PENDING',
-}
-
-export enum CodeSource {
-  CMS = 'CMS',
-  AMA = 'AMA',
-  WHO = 'WHO',
-  FDA = 'FDA',
-  INTERNAL = 'INTERNAL',
-  IMPORTED = 'IMPORTED',
-}
-
-// Frontend Types
+// Frontend Type - MATCHES CodeSet model exactly
 export interface MedicalCode {
   id: string;
   code: string;
@@ -39,50 +25,27 @@ export interface MedicalCode {
   description: string;
   longDescription?: string | null;
   category?: string | null;
-  subcategory?: string | null;
-  status: CodeStatus;
-  isActive: boolean; // Database field
+  isActive: boolean;
   effectiveDate: Date;
-  terminationDate?: Date | null; // Database field (replaces expirationDate)
-  expirationDate?: Date | null;
-  version?: string; // Database field
-  sourceSystem?: string | null; // Database field (replaces source)
-  source: CodeSource;
-  sourceVersion?: string | null;
-  additionalData?: Record<string, any>;
-  metadata?: Record<string, any>;
-  isCustom: boolean;
-  customCodePrefix?: string | null;
+  terminationDate?: Date | null;
+  version: string;
+  sourceSystem?: string | null;
+  metadata?: Record<string, any> | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface CodeCategory {
-  type: CodeType;
-  name: string;
-  description: string;
-  count: number;
-  icon: string;
-}
-
+// Simple search filters
 export interface CodeFilters {
-  codeType?: CodeType[];
-  status?: CodeStatus[];
-  source?: CodeSource[];
-  category?: string;
   search?: string;
-  effectiveDateFrom?: Date;
-  effectiveDateTo?: Date;
-  isCustom?: boolean;
-}
-
-export interface CodeSearchParams extends CodeFilters {
+  codeType?: CodeType[];
+  category?: string[];
+  isActive?: boolean;
   page?: number;
   pageSize?: number;
-  sortBy?: 'code' | 'description' | 'effectiveDate' | 'updatedAt';
-  sortOrder?: 'asc' | 'desc';
 }
 
+// API Response
 export interface CodeSearchResult {
   codes: MedicalCode[];
   total: number;
@@ -91,74 +54,11 @@ export interface CodeSearchResult {
   totalPages: number;
 }
 
-// Import Types
-export interface ImportCodeRow {
-  code: string;
-  codeType: CodeType;
-  description: string;
-  longDescription?: string;
-  category?: string;
-  subcategory?: string;
-  effectiveDate: string;
-  expirationDate?: string;
-  status?: CodeStatus;
-}
-
-export interface ImportValidationError {
-  row: number;
-  field: string;
-  message: string;
-}
-
-export interface ImportValidationResult {
-  valid: boolean;
-  validCount: number;
-  errorCount: number;
-  errors: ImportValidationError[];
-  preview: ImportCodeRow[];
-}
-
-export interface ImportProgress {
-  total: number;
-  processed: number;
-  successful: number;
-  failed: number;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
-}
-
-// Custom Code Types
-export interface CustomCodePrefix {
-  id: string;
-  prefix: string;
-  description: string;
-  codeType: CodeType;
-  pattern: string;
-  nextNumber: number;
-  organizationId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CustomCodeCreation {
-  description: string;
-  longDescription?: string;
-  category?: string;
-  subcategory?: string;
-  effectiveDate: Date;
-  expirationDate?: Date;
-  prefixId: string;
-  additionalData?: Record<string, any>;
-}
-
-// Code Statistics
+// Statistics
 export interface CodeStatistics {
   totalCodes: number;
-  activeCount: number;
-  inactiveCount: number;
-  customCount: number;
-  byType: Record<CodeType, number>;
-  bySource: Record<CodeSource, number>;
-  recentlyAdded: number;
-  recentlyUpdated: number;
+  activeCodes: number;
+  inactiveCodes: number;
+  codeTypeCount: number;
+  byType: Record<string, number>;
 }
-

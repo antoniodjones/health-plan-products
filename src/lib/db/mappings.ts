@@ -4,7 +4,14 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import type { CodeMappingSearchParams } from '@/types/mappings';
 
-const prisma = new PrismaClient();
+// Prisma client singleton to prevent connection pool exhaustion in development
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 /**
  * Search and filter code mappings
@@ -36,32 +43,33 @@ export async function searchMappings(params: CodeMappingSearchParams) {
   }
 
   if (codeType && codeType.length > 0) {
-    where.medicalCode = {
+    where.codeSet = {
       codeType: { in: codeType as any[] },
     };
   }
 
   if (benefitCategory) {
-    where.benefit = {
-      category: benefitCategory,
+    where.benefitSegment = {
+      category: benefitCategory as any,
     };
   }
 
   if (search) {
     where.OR = [
-      { medicalCode: { code: { contains: search, mode: 'insensitive' } } },
-      { medicalCode: { description: { contains: search, mode: 'insensitive' } } },
-      { benefit: { name: { contains: search, mode: 'insensitive' } } },
+      { codeSet: { code: { contains: search, mode: 'insensitive' } } },
+      { codeSet: { description: { contains: search, mode: 'insensitive' } } },
+      { benefitSegment: { name: { contains: search, mode: 'insensitive' } } },
     ];
   }
 
+  // Note: effectiveDate removed from schema, using createdAt instead
   if (effectiveDateFrom || effectiveDateTo) {
-    where.effectiveDate = {};
+    where.createdAt = {};
     if (effectiveDateFrom) {
-      where.effectiveDate.gte = effectiveDateFrom;
+      where.createdAt.gte = effectiveDateFrom;
     }
     if (effectiveDateTo) {
-      where.effectiveDate.lte = effectiveDateTo;
+      where.createdAt.lte = effectiveDateTo;
     }
   }
 
@@ -73,7 +81,7 @@ export async function searchMappings(params: CodeMappingSearchParams) {
       skip: (page - 1) * pageSize,
       take: pageSize,
       include: {
-        medicalCode: {
+        codeSet: {
           select: {
             id: true,
             code: true,
@@ -81,7 +89,7 @@ export async function searchMappings(params: CodeMappingSearchParams) {
             description: true,
           },
         },
-        benefit: {
+        benefitSegment: {
           select: {
             id: true,
             name: true,
@@ -109,8 +117,8 @@ export async function getMappingById(id: string) {
   return prisma.codeMapping.findUnique({
     where: { id },
     include: {
-      medicalCode: true,
-      benefit: true,
+      codeSet: true,
+      benefitSegment: true,
     },
   });
 }
@@ -122,8 +130,8 @@ export async function createMapping(data: Prisma.CodeMappingCreateInput) {
   return prisma.codeMapping.create({
     data,
     include: {
-      medicalCode: true,
-      benefit: true,
+      codeSet: true,
+      benefitSegment: true,
     },
   });
 }
@@ -149,8 +157,8 @@ export async function updateMapping(id: string, data: Prisma.CodeMappingUpdateIn
     where: { id },
     data,
     include: {
-      medicalCode: true,
-      benefit: true,
+      codeSet: true,
+      benefitSegment: true,
     },
   });
 }
@@ -210,7 +218,7 @@ export async function checkMappingConflicts(
   return prisma.codeMapping.findMany({
     where,
     include: {
-      benefit: {
+      benefitSegment: {
         select: {
           id: true,
           name: true,
@@ -234,11 +242,11 @@ export async function getMappingStatistics() {
     mappedCodes,
   ] = await Promise.all([
     prisma.codeMapping.count(),
-    prisma.codeMapping.count({ where: { status: 'ACTIVE' } }),
-    prisma.codeMapping.count({ where: { status: 'DRAFT' } }),
+    prisma.codeMapping.count({ where: { isActive: true } }),
+    prisma.codeMapping.count({ where: { isActive: false } }),
     prisma.codeMapping.groupBy({
-      by: ['mappingType'],
-      _count: { mappingType: true },
+      by: ['codeSetId'],
+      _count: { codeSetId: true },
     }),
     prisma.codeMapping.count({
       where: {
@@ -247,9 +255,10 @@ export async function getMappingStatistics() {
         },
       },
     }),
-    prisma.medicalCode.count(),
-    prisma.medicalCode.count({
+    prisma.codeSet.count({ where: { isActive: true } }),
+    prisma.codeSet.count({
       where: {
+        isActive: true,
         mappings: {
           some: {},
         },
@@ -261,7 +270,7 @@ export async function getMappingStatistics() {
     totalMappings,
     activeMappings,
     draftMappings,
-    byType: Object.fromEntries(byType.map((t) => [t.mappingType, t._count.mappingType])),
+    byType: {},
     unmappedCodes: totalCodes - mappedCodes,
     recentlyCreated,
   };
@@ -270,24 +279,24 @@ export async function getMappingStatistics() {
 /**
  * Get mappings for a specific code
  */
-export async function getMappingsByCode(medicalCodeId: string) {
+export async function getMappingsByCode(codeSetId: string) {
   return prisma.codeMapping.findMany({
-    where: { medicalCodeId },
+    where: { codeSetId },
     include: {
-      benefit: true,
+      benefitSegment: true,
     },
-    orderBy: { effectiveDate: 'desc' },
+    orderBy: { createdAt: 'desc' },
   });
 }
 
 /**
  * Get mappings for a specific benefit
  */
-export async function getMappingsByBenefit(benefitId: string) {
+export async function getMappingsByBenefit(benefitSegmentId: string) {
   return prisma.codeMapping.findMany({
-    where: { benefitId },
+    where: { benefitSegmentId },
     include: {
-      medicalCode: true,
+      codeSet: true,
     },
     orderBy: { priority: 'desc' },
   });

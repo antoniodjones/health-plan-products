@@ -19,32 +19,28 @@ export enum MappingStatus {
 // Frontend Types
 export interface CodeMapping {
   id: string;
-  mappingType: MappingType;
-  status: MappingStatus;
-  effectiveDate: Date;
-  expirationDate?: Date | null;
+  mappingType: string;
+  isActive: boolean;
   priority: number;
+  rules?: Record<string, any>;
+  metadata?: Record<string, any>;
   
-  // Medical Code relation
-  medicalCodeId: string;
-  medicalCode?: {
+  // Code Set relation
+  codeSetId: string;
+  codeSet?: {
     id: string;
     code: string;
     codeType: string;
     description: string;
   };
   
-  // Benefit relation
-  benefitId: string;
-  benefit?: {
+  // Benefit Segment relation
+  benefitSegmentId: string;
+  benefitSegment?: {
     id: string;
     name: string;
     category: string;
   };
-  
-  // Mapping rules
-  rules?: Record<string, any>;
-  metadata?: Record<string, any>;
   
   createdAt: Date;
   updatedAt: Date;
@@ -78,11 +74,9 @@ export interface CodeMappingSearchResult {
 
 // Bulk mapping creation
 export interface BulkMappingInput {
-  medicalCodeIds: string[];
-  benefitId: string;
-  mappingType: MappingType;
-  effectiveDate: Date;
-  expirationDate?: Date;
+  codeSetIds: string[];
+  benefitSegmentId: string;
+  mappingType: string;
   priority?: number;
   rules?: Record<string, any>;
 }
@@ -93,10 +87,8 @@ export interface MappingConflict {
   code: string;
   existingMappings: {
     id: string;
-    benefitId: string;
+    benefitSegmentId: string;
     benefitName: string;
-    effectiveDate: Date;
-    expirationDate?: Date;
   }[];
   conflictType: 'duplicate' | 'overlap' | 'priority';
 }

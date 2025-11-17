@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         : undefined,
       page: Number(searchParams.get('page')) || 1,
       pageSize: Number(searchParams.get('pageSize')) || 25,
-      sortBy: (searchParams.get('sortBy') || 'effectiveDate') as any,
+      sortBy: (searchParams.get('sortBy') || 'createdAt') as any,
       sortOrder: (searchParams.get('sortOrder') || 'desc') as any,
     };
 

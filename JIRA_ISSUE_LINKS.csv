@@ -1,0 +1,189 @@
+Source Issue Key,Link Type,Target Issue Key
+FEATURE-1,contains,EPIC-1
+FEATURE-1,contains,EPIC-2
+FEATURE-1,contains,EPIC-3
+FEATURE-2,contains,EPIC-4
+FEATURE-2,contains,EPIC-5
+FEATURE-2,contains,EPIC-6
+FEATURE-3,contains,EPIC-7
+FEATURE-3,contains,EPIC-8
+FEATURE-3,contains,EPIC-9
+FEATURE-4,contains,EPIC-10
+FEATURE-4,contains,EPIC-11
+FEATURE-5,contains,EPIC-12
+FEATURE-5,contains,EPIC-13
+FEATURE-6,contains,EPIC-14
+FEATURE-6,contains,EPIC-15
+FEATURE-7,contains,EPIC-16
+FEATURE-7,contains,EPIC-17
+FEATURE-8,contains,EPIC-18
+FEATURE-8,contains,EPIC-19
+FEATURE-8,contains,EPIC-20
+EPIC-1,is implemented by,STORY-1
+EPIC-1,is implemented by,STORY-2
+EPIC-1,is implemented by,STORY-3
+EPIC-1,is implemented by,STORY-4
+EPIC-2,is implemented by,STORY-5
+EPIC-3,is implemented by,STORY-6
+EPIC-4,is implemented by,STORY-7
+EPIC-4,is implemented by,STORY-8
+EPIC-5,is implemented by,STORY-9
+EPIC-7,is implemented by,STORY-10
+EPIC-8,is implemented by,STORY-11
+EPIC-8,is implemented by,STORY-12
+EPIC-9,is implemented by,STORY-13
+EPIC-10,is implemented by,STORY-14
+EPIC-11,is implemented by,STORY-15
+EPIC-12,is implemented by,STORY-16
+EPIC-14,is implemented by,STORY-17
+EPIC-16,is implemented by,STORY-19
+EPIC-17,is implemented by,STORY-20
+EPIC-18,is implemented by,STORY-21
+EPIC-19,is implemented by,STORY-22
+EPIC-20,is implemented by,STORY-23
+STORY-1,is tested by,TEST-C-005
+STORY-1,is tested by,TEST-C-006
+STORY-1,is tested by,TEST-C-007
+STORY-1,is tested by,TEST-C-008
+STORY-1,is tested by,TEST-C-009
+STORY-1,is implemented by,IMPL-1
+STORY-2,is tested by,TEST-C-011
+STORY-2,is tested by,TEST-C-012
+STORY-2,is tested by,TEST-C-013
+STORY-2,is tested by,TEST-C-014
+STORY-2,is tested by,TEST-C-020
+STORY-2,is implemented by,IMPL-2
+STORY-3,is tested by,TEST-C-001
+STORY-3,is tested by,TEST-C-002
+STORY-3,is tested by,TEST-C-003
+STORY-3,is tested by,TEST-C-004
+STORY-3,is implemented by,IMPL-3
+STORY-4,is tested by,TEST-C-021
+STORY-4,is tested by,TEST-C-022
+STORY-4,is tested by,TEST-C-023
+STORY-4,is tested by,TEST-C-024
+STORY-4,is tested by,TEST-C-025
+STORY-4,is implemented by,IMPL-4
+STORY-5,is implemented by,IMPL-5
+STORY-6,is implemented by,IMPL-6
+STORY-7,is tested by,TEST-Q-001
+STORY-7,is tested by,TEST-Q-002
+STORY-7,is tested by,TEST-Q-003
+STORY-7,is tested by,TEST-Q-004
+STORY-7,is tested by,TEST-Q-005
+STORY-7,is tested by,TEST-Q-006
+STORY-7,is tested by,TEST-Q-007
+STORY-7,is tested by,TEST-Q-008
+STORY-7,is implemented by,IMPL-7
+STORY-8,is tested by,TEST-Q-009
+STORY-8,is tested by,TEST-Q-010
+STORY-8,is tested by,TEST-Q-011
+STORY-8,is tested by,TEST-Q-012
+STORY-8,is tested by,TEST-Q-013
+STORY-8,is tested by,TEST-Q-014
+STORY-8,is tested by,TEST-Q-015
+STORY-8,is implemented by,IMPL-8
+STORY-9,is implemented by,IMPL-9
+STORY-10,is tested by,TEST-M-005
+STORY-10,is tested by,TEST-M-006
+STORY-10,is tested by,TEST-M-007
+STORY-10,is tested by,TEST-M-008
+STORY-10,is tested by,TEST-M-009
+STORY-10,is tested by,TEST-M-010
+STORY-10,is implemented by,IMPL-10
+STORY-11,is tested by,TEST-M-011
+STORY-11,is tested by,TEST-M-012
+STORY-11,is tested by,TEST-M-013
+STORY-11,is tested by,TEST-M-014
+STORY-11,is implemented by,IMPL-11
+STORY-12,is tested by,TEST-M-018
+STORY-12,is tested by,TEST-M-019
+STORY-12,is tested by,TEST-M-020
+STORY-12,is tested by,TEST-M-021
+STORY-12,is tested by,TEST-M-022
+STORY-12,is tested by,TEST-M-023
+STORY-12,is tested by,TEST-M-024
+STORY-12,is implemented by,IMPL-12
+STORY-13,is tested by,TEST-M-025
+STORY-13,is tested by,TEST-M-026
+STORY-13,is tested by,TEST-M-027
+STORY-13,is tested by,TEST-M-028
+STORY-13,is implemented by,IMPL-13
+STORY-14,is tested by,TEST-V-001
+STORY-14,is tested by,TEST-V-002
+STORY-14,is tested by,TEST-V-003
+STORY-14,is tested by,TEST-V-004
+STORY-14,is tested by,TEST-V-005
+STORY-14,is tested by,TEST-V-006
+STORY-14,is implemented by,IMPL-14
+STORY-15,is tested by,TEST-V-007
+STORY-15,is tested by,TEST-V-008
+STORY-15,is tested by,TEST-V-009
+STORY-15,is tested by,TEST-V-010
+STORY-15,is tested by,TEST-V-011
+STORY-15,is tested by,TEST-V-012
+STORY-15,is implemented by,IMPL-15
+STORY-16,is tested by,TEST-P-001
+STORY-16,is tested by,TEST-P-002
+STORY-16,is tested by,TEST-P-003
+STORY-16,is tested by,TEST-P-004
+STORY-16,is tested by,TEST-P-005
+STORY-16,is tested by,TEST-P-006
+STORY-16,is implemented by,IMPL-16
+STORY-17,is tested by,TEST-A-001
+STORY-17,is tested by,TEST-A-002
+STORY-17,is tested by,TEST-A-003
+STORY-17,is tested by,TEST-A-004
+STORY-17,is tested by,TEST-A-005
+STORY-17,is tested by,TEST-A-006
+STORY-17,is tested by,TEST-A-007
+STORY-17,is tested by,TEST-A-008
+STORY-17,is tested by,TEST-A-009
+STORY-17,is implemented by,IMPL-17
+STORY-19,is tested by,TEST-N-001
+STORY-19,is tested by,TEST-N-002
+STORY-19,is tested by,TEST-N-003
+STORY-19,is tested by,TEST-N-004
+STORY-19,is tested by,TEST-N-005
+STORY-19,is tested by,TEST-N-006
+STORY-19,is tested by,TEST-N-007
+STORY-19,is tested by,TEST-N-008
+STORY-19,is tested by,TEST-N-009
+STORY-19,is tested by,TEST-N-010
+STORY-19,is tested by,TEST-N-011
+STORY-19,is tested by,TEST-N-012
+STORY-19,is tested by,TEST-N-013
+STORY-19,is tested by,TEST-N-014
+STORY-19,is implemented by,IMPL-19
+STORY-20,is tested by,TEST-R-001
+STORY-20,is tested by,TEST-R-002
+STORY-20,is tested by,TEST-R-003
+STORY-20,is tested by,TEST-R-004
+STORY-20,is tested by,TEST-R-005
+STORY-20,is implemented by,IMPL-20
+STORY-21,is tested by,TEST-PERF-001
+STORY-21,is tested by,TEST-PERF-002
+STORY-21,is tested by,TEST-PERF-003
+STORY-21,is implemented by,IMPL-21
+STORY-22,is tested by,TEST-E-001
+STORY-22,is tested by,TEST-E-002
+STORY-22,is tested by,TEST-E-003
+STORY-22,is tested by,TEST-E-004
+STORY-22,is tested by,TEST-E-005
+STORY-22,is implemented by,IMPL-22
+STORY-23,is implemented by,IMPL-23
+IMPL-24,relates to,STORY-1
+IMPL-24,relates to,STORY-2
+IMPL-24,relates to,STORY-3
+IMPL-25,relates to,STORY-1
+IMPL-25,relates to,STORY-7
+IMPL-25,relates to,STORY-13
+IMPL-26,relates to,STORY-1
+IMPL-26,relates to,STORY-2
+IMPL-26,relates to,STORY-7
+IMPL-27,relates to,STORY-1
+IMPL-27,relates to,STORY-7
+IMPL-27,relates to,STORY-19
+IMPL-28,relates to,STORY-21
+IMPL-28,relates to,STORY-22
+

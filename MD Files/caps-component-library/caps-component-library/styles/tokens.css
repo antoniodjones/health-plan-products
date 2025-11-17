@@ -1,0 +1,239 @@
+/**
+ * CAPS Design System - Design Tokens
+ * Version: 1.0
+ * Last Updated: November 15, 2025
+ * 
+ * These tokens form the foundation of the CAPS design system.
+ * All components should reference these variables instead of hardcoded values.
+ */
+
+:root {
+  /* ============================================
+     COLOR PALETTE
+     ============================================ */
+  
+  /* Primary Colors - Journey-based System */
+  --color-primary: #00BCD4;        /* Cyan - Main actions, Activating stage */
+  --color-primary-dark: #0097A7;   /* Darker cyan for hover states */
+  --color-primary-light: #B2EBF2;  /* Lighter cyan for backgrounds */
+  
+  /* Secondary/Accent Colors */
+  --color-accent: #E91E63;         /* Magenta - Secondary actions */
+  --color-accent-dark: #C2185B;
+  --color-accent-light: #F8BBD0;
+  
+  /* Semantic Colors */
+  --color-success: #4CAF50;        /* Green - Engaged stage, positive actions */
+  --color-success-dark: #388E3C;
+  --color-success-light: #C8E6C9;
+  
+  --color-error: #F44336;          /* Red - Errors, critical alerts */
+  --color-error-dark: #D32F2F;
+  --color-error-light: #FFCDD2;
+  
+  --color-warning: #FF9800;        /* Orange - Warnings, Prospect stage */
+  --color-warning-dark: #F57C00;
+  --color-warning-light: #FFE0B2;
+  
+  --color-info: #2196F3;           /* Blue - Information */
+  --color-info-dark: #1976D2;
+  --color-info-light: #BBDEFB;
+  
+  /* Journey Stage Colors (for reference/special uses) */
+  --color-prospect: #FF9800;       /* Orange */
+  --color-applicant: #E91E63;      /* Magenta */
+  --color-enrollment: #FDD835;     /* Yellow */
+  --color-new-member: #9C27B0;     /* Purple */
+  --color-activating: #00BCD4;     /* Cyan */
+  --color-engaged: #4CAF50;        /* Green */
+  
+  /* Grayscale */
+  --color-gray-50: #FAFAFA;
+  --color-gray-100: #F5F5F5;
+  --color-gray-200: #EEEEEE;
+  --color-gray-300: #E0E0E0;
+  --color-gray-400: #BDBDBD;
+  --color-gray-500: #9E9E9E;
+  --color-gray-600: #757575;
+  --color-gray-700: #616161;
+  --color-gray-800: #424242;
+  --color-gray-900: #212121;
+  
+  /* Text Colors */
+  --color-text-primary: #212121;
+  --color-text-secondary: #757575;
+  --color-text-disabled: #9E9E9E;
+  --color-text-inverse: #FFFFFF;
+  
+  /* Surface Colors */
+  --color-surface-base: #FFFFFF;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Border Colors */
+  --color-border-default: #E0E0E0;
+  --color-border-hover: #757575;
+  --color-border-focus: #00BCD4;
+  
+  /* Background Colors */
+  --color-bg-default: #FAFAFA;
+  --color-bg-paper: #FFFFFF;
+  --color-bg-disabled: #F5F5F5;
+  
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+  
+  /* Font Families */
+  --font-family-sans: 'SF Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                      'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  
+  /* Font Sizes */
+  --font-size-display-1: 72px;
+  --font-size-display-2: 60px;
+  --font-size-headline: 48px;
+  --font-size-title: 34px;
+  --font-size-subhead: 24px;
+  --font-size-body-1: 16px;
+  --font-size-body-2: 14px;
+  --font-size-caption: 12px;
+  --font-size-overline: 10px;
+  
+  /* Line Heights */
+  --line-height-display-1: 88px;
+  --line-height-display-2: 72px;
+  --line-height-headline: 58px;
+  --line-height-title: 42px;
+  --line-height-subhead: 32px;
+  --line-height-body-1: 24px;
+  --line-height-body-2: 20px;
+  --line-height-caption: 16px;
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* ============================================
+     SPACING
+     8px Grid System
+     ============================================ */
+  
+  --space-0: 0px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+  
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+  
+  /* ============================================
+     ELEVATION (Box Shadows)
+     ============================================ */
+  
+  --elevation-0: none;
+  --elevation-1: 0px 1px 3px rgba(0, 0, 0, 0.12);
+  --elevation-2: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  --elevation-3: 0px 6px 12px rgba(0, 0, 0, 0.20);
+  --elevation-4: 0px 10px 20px rgba(0, 0, 0, 0.24);
+  --elevation-5: 0px 15px 25px rgba(0, 0, 0, 0.28);
+  
+  /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+  
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal-backdrop: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-tooltip: 1600;
+  
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+  
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ============================================
+     COMPONENT-SPECIFIC TOKENS
+     ============================================ */
+  
+  /* Button Heights */
+  --button-height-sm: 32px;
+  --button-height-md: 40px;
+  --button-height-lg: 48px;
+  
+  /* Input Heights */
+  --input-height-sm: 32px;
+  --input-height-md: 40px;
+  --input-height-lg: 48px;
+  
+  /* Focus Ring */
+  --focus-ring-width: 3px;
+  --focus-ring-color: var(--color-primary-light);
+  --focus-ring-offset: 2px;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body-1);
+  line-height: var(--line-height-body-1);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-default);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
